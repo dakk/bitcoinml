@@ -1,15 +1,11 @@
 module SStack : sig
     type t = bytes Stack.t
 
-    val create  : unit -> t 
-    val pop     : t -> bytes
-    val popi    : t -> int 
-    
-    val top     : t -> bytes
-    val topi    : t -> int 
-
-    val push    : bytes -> t -> unit
-    val pushi    : int -> t -> unit
+    val create      : unit -> t 
+    val pop         : t -> int
+    val top         : t -> int 
+    val push        : int -> t -> unit
+    val push_data   : bytes -> t -> unit
 end
 
 

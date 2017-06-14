@@ -20,7 +20,7 @@ depends: [
   "stdio" {build & >= "v0.9.0"}
   "configurator" {build & >= "v0.9.1"}
   "bitstring" {build & >= "2.1.0"}
-  "hex" {test & >= "1.1.1"}
+  "stdint" {build & >= "0.3.0-0"}
   "ounit" {test & >= "2.2.2"}
 ]
 

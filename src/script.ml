@@ -1,16 +1,20 @@
 module SStack = struct
-    type t = bytes Stack.t;;
+    type t = int Stack.t;;
 
     let create () = Stack.create ();;
 
-    let pop st = "";;
-    let popi st = 0;;
+    let pop st = Stack.pop st;;
     
-    let top st = "";;
-    let topi st = 0;;
+    let top st = Stack.top st;;
 
-    let push v st = ();;
-    let pushi vi st = ();;
+    let rec push_data d st = match Bytes.length d with 
+    | 0 -> ()
+    | n -> 
+        Stack.push (Bytes.get d 0) st;
+        push_data (Bytes.sub d 1 (n-1)) st
+    ;;
+
+    let push v st = Stack.push v st;;
 end
 
 
@@ -612,40 +616,40 @@ let rec _eval st altst scr =
         | _ -> to_endif st altst scr'
     in
     match scr with
-    | [] -> (SStack.popi st) <> 0
+    | [] -> (SStack.pop st) <> 0
     | op::scr' -> match op with
         (* Constants *)
         | OP_0
         | OP_FALSE -> SStack.push 0 st; _eval st altst scr'
-        | OP_DATA (s, data) -> SStack.push data st; _eval st altst scr'
-        | OP_PUSHDATA1 (s, data) -> SStack.push data st; _eval st altst scr'
-        | OP_PUSHDATA2 (a, b, data) -> SStack.push data st; _eval st altst scr'
-        | OP_PUSHDATA4 (a, b, c, d, data) -> SStack.push data st; _eval st altst scr'
-        | OP_1NEGATE -> SStack.pushi (-1) st; _eval st altst scr'
+        | OP_DATA (s, data) -> SStack.push_data data st; _eval st altst scr'
+        | OP_PUSHDATA1 (s, data) -> SStack.push_data data st; _eval st altst scr'
+        | OP_PUSHDATA2 (a, b, data) -> SStack.push_data data st; _eval st altst scr'
+        | OP_PUSHDATA4 (a, b, c, d, data) -> SStack.push_data data st; _eval st altst scr'
+        | OP_1NEGATE -> SStack.push (-1) st; _eval st altst scr'
         | OP_1
-        | OP_TRUE -> SStack.pushi 1 st; _eval st altst scr'
-        | OP_2 -> SStack.pushi 2 st; _eval st altst scr'
-        | OP_3 -> SStack.pushi 3 st; _eval st altst scr'
-        | OP_4 -> SStack.pushi 4 st; _eval st altst scr'
-        | OP_5 -> SStack.pushi 5 st; _eval st altst scr'
-        | OP_6 -> SStack.pushi 6 st; _eval st altst scr'
-        | OP_7 -> SStack.pushi 7 st; _eval st altst scr'
-        | OP_8 -> SStack.pushi 8 st; _eval st altst scr'
-        | OP_9 -> SStack.pushi 9 st; _eval st altst scr'
-        | OP_10 -> SStack.pushi 10 st; _eval st altst scr'
-        | OP_11 -> SStack.pushi 11 st; _eval st altst scr'
-        | OP_12 -> SStack.pushi 12 st; _eval st altst scr'
-        | OP_13 -> SStack.pushi 13 st; _eval st altst scr'
-        | OP_14 -> SStack.pushi 14 st; _eval st altst scr'
-        | OP_15 -> SStack.pushi 15 st; _eval st altst scr'
-        | OP_16 -> SStack.pushi 16 st; _eval st altst scr'
+        | OP_TRUE -> SStack.push 1 st; _eval st altst scr'
+        | OP_2 -> SStack.push 2 st; _eval st altst scr'
+        | OP_3 -> SStack.push 3 st; _eval st altst scr'
+        | OP_4 -> SStack.push 4 st; _eval st altst scr'
+        | OP_5 -> SStack.push 5 st; _eval st altst scr'
+        | OP_6 -> SStack.push 6 st; _eval st altst scr'
+        | OP_7 -> SStack.push 7 st; _eval st altst scr'
+        | OP_8 -> SStack.push 8 st; _eval st altst scr'
+        | OP_9 -> SStack.push 9 st; _eval st altst scr'
+        | OP_10 -> SStack.push 10 st; _eval st altst scr'
+        | OP_11 -> SStack.push 11 st; _eval st altst scr'
+        | OP_12 -> SStack.push 12 st; _eval st altst scr'
+        | OP_13 -> SStack.push 13 st; _eval st altst scr'
+        | OP_14 -> SStack.push 14 st; _eval st altst scr'
+        | OP_15 -> SStack.push 15 st; _eval st altst scr'
+        | OP_16 -> SStack.push 16 st; _eval st altst scr'
 
         (* Flow *)
-        | OP_IF -> if SStack.popi st <> 0 then _eval st altst scr' else to_endif_or_else st altst scr'
-        | OP_NOTIF -> if SStack.popi st = 0 then _eval st altst scr' else to_endif_or_else st altst scr'
+        | OP_IF -> if SStack.pop st <> 0 then _eval st altst scr' else to_endif_or_else st altst scr'
+        | OP_NOTIF -> if SStack.pop st = 0 then _eval st altst scr' else to_endif_or_else st altst scr'
         | OP_ELSE -> to_endif st altst scr'
         | OP_ENDIF -> _eval st altst scr'
-        | OP_VERIFY -> if SStack.popi st <> 0 then true else false
+        | OP_VERIFY -> if SStack.pop st <> 0 then true else false
         | OP_RETURN (data) -> false
 
         (* Stack *)
@@ -693,95 +697,95 @@ let rec _eval st altst scr =
 
         (* Arithmetic*)
         | OP_1ADD -> 
-            let ap = SStack.topi st in SStack.pushi (ap + 1) st; 
+            let ap = SStack.top st in SStack.push (ap + 1) st; 
             _eval st altst scr' 
         | OP_1SUB -> 
-            let ap = SStack.topi st in SStack.pushi (ap - 1) st; 
+            let ap = SStack.top st in SStack.push (ap - 1) st; 
             _eval st altst scr' 
         | OP_NEGATE -> 
-            let ap = SStack.topi st in SStack.pushi (-ap) st; 
+            let ap = SStack.top st in SStack.push (-ap) st; 
             _eval st altst scr'        
         | OP_ABS -> 
-            let ap = SStack.topi st in SStack.pushi (abs ap) st; 
+            let ap = SStack.top st in SStack.push (abs ap) st; 
             _eval st altst scr' 
         | OP_NOT -> 
-            let ap = SStack.topi st in 
-            if ap = 0 then SStack.pushi 1 st else SStack.pushi 0 st;
+            let ap = SStack.top st in 
+            if ap = 0 then SStack.push 1 st else SStack.push 0 st;
             _eval st altst scr' 
         | OP_0NOTEQUAL -> 
-            let ap = SStack.topi st in 
-            if ap = 0 then SStack.pushi 0 st else SStack.pushi 1 st;
+            let ap = SStack.top st in 
+            if ap = 0 then SStack.push 0 st else SStack.push 1 st;
             _eval st altst scr' 
         | OP_ADD -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            SStack.pushi (a + b) st; 
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            SStack.push (a + b) st; 
             _eval st altst scr'      
         | OP_SUB -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            SStack.pushi (a - b) st; 
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            SStack.push (a - b) st; 
             _eval st altst scr'   
         | OP_BOOLAND -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            (if a <> 0 && b <> 0 then SStack.pushi 1 st else SStack.pushi 0 st);
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            (if a <> 0 && b <> 0 then SStack.push 1 st else SStack.push 0 st);
             _eval st altst scr'  
         | OP_BOOLOR -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            (if a <> 0 || b <> 0 then SStack.pushi 1 st else SStack.pushi 0 st);
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            (if a <> 0 || b <> 0 then SStack.push 1 st else SStack.push 0 st);
             _eval st altst scr'  
         | OP_NUMEQUAL -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            (if a = b then SStack.pushi 1 st else SStack.pushi 0 st);
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            (if a = b then SStack.push 1 st else SStack.push 0 st);
             _eval st altst scr'  
         | OP_NUMEQUALVERIFY -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
+            let a = SStack.top st in 
+            let b = SStack.top st in 
             (if a = b then true else false);
             _eval st altst scr' 
         | OP_NUMNOTEQUAL -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            (if a <> b then SStack.pushi 1 st else SStack.pushi 0 st);
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            (if a <> b then SStack.push 1 st else SStack.push 0 st);
             _eval st altst scr'  
         | OP_LESSTHAN -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            (if a < b then SStack.pushi 1 st else SStack.pushi 0 st);
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            (if a < b then SStack.push 1 st else SStack.push 0 st);
             _eval st altst scr'  
         | OP_GREATERTHAN -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            (if a > b then SStack.pushi 1 st else SStack.pushi 0 st);
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            (if a > b then SStack.push 1 st else SStack.push 0 st);
             _eval st altst scr'  
         | OP_LESSTHANOREQUAL -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            (if a <= b then SStack.pushi 1 st else SStack.pushi 0 st);
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            (if a <= b then SStack.push 1 st else SStack.push 0 st);
             _eval st altst scr'  
         | OP_GREATERTHANOREQUAL -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            (if a >= b then SStack.pushi 1 st else SStack.pushi 0 st);
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            (if a >= b then SStack.push 1 st else SStack.push 0 st);
             _eval st altst scr'  
         | OP_MIN -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            (if a > b then SStack.pushi b st else SStack.pushi a st);
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            (if a > b then SStack.push b st else SStack.push a st);
             _eval st altst scr' 
         | OP_MAX -> 
-            let a = SStack.topi st in 
-            let b = SStack.topi st in 
-            (if a > b then SStack.pushi a st else SStack.pushi b st);
+            let a = SStack.top st in 
+            let b = SStack.top st in 
+            (if a > b then SStack.push a st else SStack.push b st);
             _eval st altst scr' 
         | OP_WITHIN -> 
-            let x = SStack.topi st in 
-            let min = SStack.topi st in 
-            let max = SStack.topi st in 
-            (if x >= min && x < max then SStack.pushi 1 st else SStack.pushi 0 st);
+            let x = SStack.top st in 
+            let min = SStack.top st in 
+            let max = SStack.top st in 
+            (if x >= min && x < max then SStack.push 1 st else SStack.push 0 st);
             _eval st altst scr' 
 
         (* Crypto *)
