@@ -1,0 +1,7 @@
+(jbuild_version 1)
+
+(library
+ ((name        bitcoinml)
+  (public_name bitcoinml)
+  (libraries ())))
+
