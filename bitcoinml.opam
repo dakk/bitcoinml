@@ -19,6 +19,7 @@ depends: [
   "base" {build & >= "v0.9.2"}
   "stdio" {build & >= "v0.9.0"}
   "configurator" {build & >= "v0.9.1"}
+  "bitstring" {build & >= "2.1.0"}
   "hex" {test & >= "1.1.1"}
   "ounit" {test & >= "2.2.2"}
 ]

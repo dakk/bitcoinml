@@ -1,8 +1,8 @@
 all:
-    	jbuilder build @install @runtest
+	jbuilder build @install @runtest
 
 clean:
-      	rm -rf _build
+	rm -rf _build
 
 
 

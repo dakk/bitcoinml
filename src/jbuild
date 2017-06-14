@@ -3,5 +3,5 @@
 (library
  ((name        bitcoinml)
   (public_name bitcoinml)
-  (libraries ())))
+  (libraries (bitstring))))
 

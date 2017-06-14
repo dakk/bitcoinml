@@ -1,0 +1,15 @@
+lib: [
+  "_build/install/default/lib/bitcoinml/META" {"META"}
+  "_build/install/default/lib/bitcoinml/opam" {"opam"}
+  "_build/install/default/lib/bitcoinml/bitcoinml.cmi"
+  "_build/install/default/lib/bitcoinml/bitcoinml.cmx"
+  "_build/install/default/lib/bitcoinml/bitcoinml.cmt"
+  "_build/install/default/lib/bitcoinml/bitcoinml.ml-gen"
+  "_build/install/default/lib/bitcoinml/bitcoinml.cma"
+  "_build/install/default/lib/bitcoinml/bitcoinml.cmxa"
+  "_build/install/default/lib/bitcoinml/bitcoinml.a"
+  "_build/install/default/lib/bitcoinml/bitcoinml.cmxs"
+]
+doc: [
+  "_build/install/default/doc/bitcoinml/README.md"
+]

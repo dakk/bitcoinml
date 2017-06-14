@@ -1,0 +1,4 @@
+B ../_build/default/src
+FLG -open Bitcoinml -w -40
+PKG bitstring
+PKG unix
