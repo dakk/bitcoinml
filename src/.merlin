@@ -1,8 +1,9 @@
 B ../_build/default/src
 FLG -open Bitcoinml -w -40
+FLG -ppx "../_build/default/.ppx/ppx_bitstring/ppx.exe --as-ppx --cookie 'library-name="bitcoinml"'"
 PKG bitstring
-PKG bitstring.syntax
 PKG bytes
-PKG camlp4
+PKG cryptokit
 PKG stdint
 PKG unix
+PKG zarith

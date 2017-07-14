@@ -1,3 +1,5 @@
+open Base58;;
+
 module SStack = struct
     type t = int Stack.t;;
 
@@ -10,7 +12,7 @@ module SStack = struct
     let rec push_data d st = match Bytes.length d with 
     | 0 -> ()
     | n -> 
-        Stack.push (Bytes.get d 0) st;
+        Stack.push (Char.code (Bytes.get d 0)) st;
         push_data (Bytes.sub d 1 (n-1)) st
     ;;
 
@@ -744,8 +746,7 @@ let rec _eval st altst scr =
         | OP_NUMEQUALVERIFY -> 
             let a = SStack.top st in 
             let b = SStack.top st in 
-            (if a = b then true else false);
-            _eval st altst scr' 
+            if a = b then true else false
         | OP_NUMNOTEQUAL -> 
             let a = SStack.top st in 
             let b = SStack.top st in 
@@ -882,11 +883,11 @@ let is_spendable scr =
 let spendable_by scr = 
     let addr_of_pkh prefix pkh = 
         let epkh = (Bytes.make 1 @@ Char.chr prefix) ^ pkh in
-        let shrip = Bytes.sub (Crypto.dsha256 epkh) 0 4 in 
+        let shrip = Bytes.sub (Hash.dsha256 epkh) 0 4 in 
         (epkh ^ shrip) |> Base58.encode_check
     in
     let addr_of_pk prefix pk = 
-        pk |> Crypto.sha256 |> Crypto.ripemd160 |> addr_of_pkh prefix
+        pk |> Hash.sha256 |> Hash.ripemd160 |> addr_of_pkh prefix
     in
     match fst scr with
     (* P2PH *)

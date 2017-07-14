@@ -1,5 +1,5 @@
 module SStack : sig
-    type t = bytes Stack.t
+    type t = int Stack.t
 
     val create      : unit -> t 
     val pop         : t -> int

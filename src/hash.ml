@@ -1,3 +1,5 @@
+open Cryptokit;;
+
 type t = string;;
 type hash = t;;
 type b = bytes;;
@@ -80,3 +82,18 @@ let to_bigint h =
 	let res0 = Big_int.big_int_of_int64 (Int64.of_string ("0x" ^ (String.sub h 56 8))) in
 	Big_int.or_big_int result (Big_int.shift_left_big_int res0 (0 * 32))
 ;;
+
+
+
+
+
+let sha1 data = hash_string (Hash.sha1 ()) data;;
+let sha256 data = hash_string (Hash.sha256 ()) data;;
+
+let ripemd160 data = hash_string (Hash.ripemd160 ()) data;;
+let dsha256 data = sha256 (sha256 data);;
+
+let hash160 data = ripemd160 (sha256 data);;
+let hash256 data = dsha256 data;;
+
+let checksum4 data = String.sub (dsha256 data) 0 4;;

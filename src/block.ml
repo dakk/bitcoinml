@@ -1,7 +1,7 @@
 open Stdint;;
 open Bitstring;;
-open Crypto;;
-open Parser;;
+open Varint;;
+open Hash;;
 
 
 module Header = struct
@@ -22,14 +22,14 @@ module Header = struct
 		Uint32.to_bytes_little_endian h.bits bbits 0;
 		let bnonce = Bytes.create 4 in
 		Uint32.to_bytes_little_endian h.nonce bnonce 0;
-		let bs = BITSTRING {
+		let%bitstring bs = {|
 			h.version 							: 4*8 : littleendian;
 			Hash.to_bin h.prev_block			: 32*8: string; 
 			Hash.to_bin h.merkle_root			: 32*8: string;
 			btime								: 32 : string;
 			bbits								: 32 : string;
 			bnonce								: 32 : string
-		} in Bitstring.string_of_bitstring bs
+		|} in Bitstring.string_of_bitstring bs
 	;;
 	
 	let parse data = 
@@ -44,15 +44,15 @@ module Header = struct
 			Big_int.lt_big_int h' t'
 		in
 		let bdata = bitstring_of_string data in
-		bitmatch bdata with 
-		| {
+		match%bitstring bdata with 
+		| {|
 			version 	: 4*8 : littleendian;
 			prev_block	: 32*8: string; 
 			merkle_root	: 32*8: string;
 			time		: 32 : string;
 			bits		: 32 : string;
 			nonce		: 32 : string
-		} -> 
+		|} -> 
 			let hash = Hash.of_bin (hash256 data) in
 			if check_target hash bits then Some ({
 				hash			= hash;
@@ -64,7 +64,7 @@ module Header = struct
 				nonce			= Uint32.of_bytes_little_endian nonce 0;
 			})
 			else None
-		| { _ } -> None
+		| {| _ |} -> None
 	;;
 end
 

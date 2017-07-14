@@ -1,6 +1,6 @@
 open Stdint;;
 open Bitstring;;
-open Parser;;
+open Varint;;
 
 
 module In = struct 
@@ -12,12 +12,12 @@ module In = struct
 	};;
 
 	let serialize txin = 
-		let out = Bitstring.string_of_bitstring (BITSTRING { 
+		let out = Bitstring.string_of_bitstring ([%bitstring {|
 			Hash.to_bin txin.out_hash : 32 * 8 : string;
 			Uint32.to_int32 txin.out_n : 32 : littleendian
-		}) in 
-		let sclen = string_of_bitstring (Parser.bitstring_of_varint (Int64.of_int (Script.length txin.script))) in
-		let sequence = Bitstring.string_of_bitstring (BITSTRING { Uint32.to_int32 txin.sequence : 32 : littleendian }) in 
+		|}]) in 
+		let sclen = string_of_bitstring (Varint.bitstring_of_varint (Int64.of_int (Script.length txin.script))) in
+		let sequence = Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 txin.sequence : 32 : littleendian |}]) in 
 		out ^ sclen ^ Script.serialize (txin.script) ^ sequence
 	;;
 
@@ -26,24 +26,24 @@ module In = struct
 		| [] -> ""
 		| i::ins' -> (serialize i) ^ (serialize_all' ins')
 		in
-		let len = string_of_bitstring (Parser.bitstring_of_varint (Int64.of_int (List.length txins))) in
+		let len = string_of_bitstring (Varint.bitstring_of_varint (Int64.of_int (List.length txins))) in
 		len ^ (serialize_all' txins) 
 	;;
 
 	let parse ?(coinbase=false) bdata = 
-		bitmatch bdata with 
-		| {
+		match%bitstring bdata with 
+		| {|
 			out_hash	: 32*8: string; 
 			out_n		: 32 : littleendian;
 			rest		: -1 : bitstring
-		} -> 
+		|} -> 
 			let sclen, rest' = parse_varint rest in
-			bitmatch rest' with
-			| {
+			match%bitstring rest' with
+			| {|
 				script 		: Uint64.to_int (sclen) * 8 : string;
 				sequence	: 32 : littleendian;
 				rest'		: -1 : bitstring
-			} -> 
+			|} -> 
 				let sc = match coinbase with 
 					| true -> Script.parse_coinbase script
 					| false -> Script.parse script 
@@ -56,7 +56,7 @@ module In = struct
 					sequence= Uint32.of_int32 sequence;
 					}))
 				
-		| { _ } -> (bitstring_of_string "", None)
+		| {| _ |} -> (bitstring_of_string "", None)
 	;;
 
 	let parse_all ?(coinbase=false) data = 
@@ -83,8 +83,8 @@ module Out = struct
 	let spendable_by txout = Script.spendable_by txout.script;;
 
 	let serialize txout = 
-		let value = Bitstring.string_of_bitstring (BITSTRING { txout.value : 64 : littleendian }) in 
-		let sclen = string_of_bitstring @@ Parser.bitstring_of_varint (Int64.of_int (Script.length txout.script)) in
+		let value = Bitstring.string_of_bitstring ([%bitstring {| txout.value : 64 : littleendian |}]) in 
+		let sclen = string_of_bitstring @@ Varint.bitstring_of_varint (Int64.of_int (Script.length txout.script)) in
 		let sc = Script.serialize (txout.script) in
 		value ^ sclen ^ sc
 	;;
@@ -94,25 +94,25 @@ module Out = struct
 		| [] -> ""
 		| o::outs' -> (serialize o) ^ (serialize_all' outs')
 		in
-		let len = string_of_bitstring @@ Parser.bitstring_of_varint (Int64.of_int (List.length txouts)) in
+		let len = string_of_bitstring @@ Varint.bitstring_of_varint (Int64.of_int (List.length txouts)) in
 		len ^ (serialize_all' txouts) 
 	;;
 	
 	let parse bdata =
-		bitmatch bdata with 
-		| {
+		match%bitstring bdata with 
+		| {|
 			value		: 64 : littleendian;
 			rest		: -1 : bitstring
-		} -> 
+		|} -> 
 			let sclen, rest' = parse_varint rest in
-			bitmatch rest' with
-			| {
+			match%bitstring rest' with
+			| {|
 				script 		: Uint64.to_int (sclen) * 8 : string;
 				rest''		: -1 : bitstring
-			} -> 
+			|} -> 
 			let sc = Script.parse script in		
 			(rest'', Some ({ value= value; script= sc; }))
-		| { _ } -> (bitstring_of_string "", None)
+		| {| _ |} -> (bitstring_of_string "", None)
 	;;
 
 
@@ -141,11 +141,11 @@ type t = {
 
 let parse ?(coinbase=false) data = 
 	let bdata = bitstring_of_string data in
-	bitmatch bdata with 
-	| {
+	match%bitstring bdata with 
+	| {|
 		version		: 32 : littleendian;
 		rest		: -1 : bitstring
-	} -> 
+	|} -> 
 		let rest', txin = In.parse_all ~coinbase:coinbase rest in
 		let rest'', txout = Out.parse_all rest' in
 		match (txin, txout) with
@@ -154,14 +154,14 @@ let parse ?(coinbase=false) data =
 		| Some (txout), None -> ("", None)
 		| Some (txin), Some (txout) ->
 			let bdata = rest'' in
-			bitmatch bdata with 
-			| {
+			match%bitstring bdata with 
+			| {|
 				locktime	: 32 : littleendian;
 				rest		: -1 : bitstring
-			} -> 
+			|} -> 
 				let rest''' = string_of_bitstring rest in
 				let txlen = (Bytes.length data) - (Bytes.length rest''') in
-				let txhash = Hash.of_bin (Crypto.hash256 (Bytes.sub data 0 txlen)) in
+				let txhash = Hash.of_bin (Hash.hash256 (Bytes.sub data 0 txlen)) in
 				(rest''', Some ({
 					hash	= txhash;
 					version	= version;
@@ -169,8 +169,8 @@ let parse ?(coinbase=false) data =
 					txout	= List.rev txout;
 					locktime= Uint32.of_int32 locktime;
 				}))
-			| { _ } -> ("", None)
-	| { _ } -> ("", None)
+			| {| _ |} -> ("", None)
+	| {| _ |} -> ("", None)
 ;;
 
 
@@ -181,9 +181,9 @@ let print tx =
 ;;
 
 let serialize tx = 
-	let res = Bitstring.string_of_bitstring (BITSTRING { tx.version : 32 : littleendian }) in 
+	let res = Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}]) in 
 	let res = res ^ (In.serialize_all tx.txin) ^ (Out.serialize_all tx.txout) in
-	let ltime = Bitstring.string_of_bitstring (BITSTRING { Uint32.to_int32 tx.locktime : 32 : littleendian }) in 
+	let ltime = Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}]) in 
 	res ^ ltime
 ;;
 
