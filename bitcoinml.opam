@@ -9,7 +9,7 @@ authors: [
 homepage: "https://github.com/dakk/bitcoinml"
 bug-reports: "https://github.com/dakk/bitcoinml/issues"
 license: "MIT"
-dev-repo: "git+https://github.com/dakk/bitcoinml"
+dev-repo: "https://github.com/dakk/bitcoinml.git"
 build: [
   ["jbuilder" "build" "-p" name "-j" jobs]
 ]
