@@ -8,8 +8,7 @@ let ints_to_bytes il =
 ;;
 
 let ints_to_bytes_test octx = 
-	ints_to_bytes [ 0x63; 0x69; 0x61; 0x6f ] |>
-	assert_equal "ciao"
+	ints_to_bytes [ 0x63; 0x69; 0x61; 0x6f ] |> assert_equal "ciao"
 ;;
 
 let base58_encode_check_test octx =
