@@ -26,7 +26,8 @@ let varint_parse_test bl res octx =
 ;;
 
 let varint_serialize_test bl res octx = 
-	assert_equal 0 0
+	let l = Varint.bitstring_of_varint (Int64.of_int res) in
+	assert_equal (Bitstring.string_of_bitstring l) (ints_to_bytes bl)
 ;;
 
 let suite =
