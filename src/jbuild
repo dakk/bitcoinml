@@ -4,5 +4,5 @@
  ((name        bitcoinml)
   (public_name bitcoinml)
   (preprocess (pps (ppx_bitstring)))
-  (libraries (bitstring stdint cryptokit))))
+  (libraries (bitstring stdint cryptokit bignum))))
 
