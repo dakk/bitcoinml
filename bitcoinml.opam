@@ -25,6 +25,7 @@ depends: [
   "cryptokit" {build & >= "1.11"}
   "stdint" {build & >= "0.3.0-0"}
   "ounit" {test & >= "2.2.2"}
+  "odoc" {test & >= "1.1.1"}
 ]
 
 depexts: [
