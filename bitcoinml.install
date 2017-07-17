@@ -20,6 +20,11 @@ lib: [
   "_build/install/default/lib/bitcoinml/bitcoinml__Hash.cmt"
   "_build/install/default/lib/bitcoinml/bitcoinml__Hash.cmti"
   "_build/install/default/lib/bitcoinml/hash.mli"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Keypair.cmi"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Keypair.cmx"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Keypair.cmt"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Keypair.cmti"
+  "_build/install/default/lib/bitcoinml/keypair.mli"
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmi"
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmx"
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmt"
@@ -30,6 +35,11 @@ lib: [
   "_build/install/default/lib/bitcoinml/bitcoinml__Tx.cmt"
   "_build/install/default/lib/bitcoinml/bitcoinml__Tx.cmti"
   "_build/install/default/lib/bitcoinml/tx.mli"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Txbuilder.cmi"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Txbuilder.cmx"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Txbuilder.cmt"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Txbuilder.cmti"
+  "_build/install/default/lib/bitcoinml/txbuilder.mli"
   "_build/install/default/lib/bitcoinml/bitcoinml__Varint.cmi"
   "_build/install/default/lib/bitcoinml/bitcoinml__Varint.cmx"
   "_build/install/default/lib/bitcoinml/bitcoinml__Varint.cmt"
@@ -42,4 +52,5 @@ lib: [
 ]
 doc: [
   "_build/install/default/doc/bitcoinml/README.md"
+  "_build/install/default/doc/bitcoinml/LICENSE"
 ]

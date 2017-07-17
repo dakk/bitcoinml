@@ -1,6 +1,6 @@
 (executable
  ((name test)
-  (libraries (bitcoinml hex oUnit))))
+  (libraries (bitcoinml oUnit))))
 
 (alias
  ((name    runtest)
