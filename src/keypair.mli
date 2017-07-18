@@ -1,9 +1,12 @@
 type t = {
-    pub  : string;
-    priv : string;
+    pub     : string;
+    priv    : string;
+    address : string;
 };;
 
 
 val from_wif        : string -> t 
-val from_mnemonic   : string -> t
+
+val sign            : t -> bytes -> bytes
+val verify          : t -> bytes -> bool
 
