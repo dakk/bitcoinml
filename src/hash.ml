@@ -15,7 +15,9 @@ let reverse s =
 	reverse_string_acc s "" 0 (String.length s)
 ;;
 
+
 let zero () = String.make 64 '0';;
+
 
 (* Binary to hash *)
 let of_bin b =
@@ -24,7 +26,7 @@ let of_bin b =
 		match String.length h with
 		| 0 -> ""
 		| n -> (tos h.[0]) ^ of_bin' (String.sub h 1 ((String.length h) - 1))
-	in 
+	in
 	of_bin' (reverse b)
 ;;
 
@@ -35,14 +37,14 @@ let of_bin_norev b =
 		match String.length h with
 		| 0 -> ""
 		| n -> (tos h.[0]) ^ of_bin' (String.sub h 1 ((String.length h) - 1))
-	in 
+	in
 	of_bin' b
 ;;
 
 
 (* Hash to binary *)
 let to_bin h =
-	let rec to_bin' h = 
+	let rec to_bin' h =
 		let tob cc = String.make 1 (Char.chr (Scanf.sscanf cc "%2x" (fun i -> i))) in
 		match String.length h with
 		| 0 -> ""
@@ -52,14 +54,13 @@ let to_bin h =
 ;;
 
 
-
 let print_bin b =
 	let rec of_bin' h =
 		let tos c = Printf.sprintf "%02x" (int_of_char c) in
 		match String.length h with
 		| 0 -> ""
 		| n -> (tos h.[0]) ^ of_bin' (String.sub h 1 ((String.length h) - 1))
-	in 
+	in
 	of_bin' b
 ;;
 
@@ -82,9 +83,6 @@ let to_bigint h =
 	let res0 = Big_int.big_int_of_int64 (Int64.of_string ("0x" ^ (String.sub h 56 8))) in
 	Big_int.or_big_int result (Big_int.shift_left_big_int res0 (0 * 32))
 ;;
-
-
-
 
 
 let sha1 data = hash_string (Hash.sha1 ()) data;;

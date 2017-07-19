@@ -1,9 +1,9 @@
 type t = {
-    mutable tx  : Tx.t;
+	mutable tx  : Tx.t;
 };;
 
 let from_tx tx =
-    { tx= tx }
+	{ tx= tx }
 ;;
 
 let sign txb kp = txb;;

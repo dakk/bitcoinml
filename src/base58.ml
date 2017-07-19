@@ -3,14 +3,12 @@ open Big_int;;
 let bitcoin_alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";;
 let big_base = big_int_of_int 58;;
 
-
-
 let encode_check data =
 	let bytes_to_bigint data =
 		let rec btb data acc = match Bytes.length data with
 		| 0 -> acc
-		| n -> 
-			let c' = Bytes.get data 0 |> Char.code in 
+		| n ->
+			let c' = Bytes.get data 0 |> Char.code in
 			let rest = Bytes.sub data 1 (n - 1) in
 			btb rest @@ add_int_big_int c' (mult_int_big_int 0x100 acc)
 		in btb data zero_big_int

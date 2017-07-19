@@ -7,9 +7,9 @@ module In : sig
 		out_hash: string;
 		out_n	: uint32;
 		script	: Script.t;
-		sequence: uint32;	
+		sequence: uint32;
 	}
-	
+
 	val parse 			: ?coinbase:bool -> bitstring -> bitstring * t option
 	val parse_all		: ?coinbase:bool -> bitstring -> bitstring * t list option
 	val serialize		: t -> bytes
@@ -19,9 +19,9 @@ end
 module Out : sig
 	type t = {
 		value	: int64;
-		script	: Script.t;	
+		script	: Script.t;
 	}
-	
+
 	val parse			: bitstring -> bitstring * t option
 	val parse_all		: bitstring -> bitstring * t list option
 	val serialize		: t -> bytes

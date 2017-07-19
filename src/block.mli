@@ -1,6 +1,5 @@
 open Stdint
 
-
 module Header : sig
 	type t = {
 		hash		: Hash.t;
@@ -11,7 +10,7 @@ module Header : sig
 		bits		: uint32;
 		nonce		: uint32;
 	}
-	
+
 	val parse 		: bytes -> t option
 	val serialize	: t -> bytes
 end

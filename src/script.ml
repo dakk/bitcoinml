@@ -6,12 +6,12 @@ module SStack = struct
     let create () = Stack.create ();;
 
     let pop st = Stack.pop st;;
-    
+
     let top st = Stack.top st;;
 
-    let rec push_data d st = match Bytes.length d with 
+    let rec push_data d st = match Bytes.length d with
     | 0 -> ()
-    | n -> 
+    | n ->
         Stack.push (Char.code (Bytes.get d 0)) st;
         push_data (Bytes.sub d 1 (n-1)) st
     ;;
@@ -20,7 +20,7 @@ module SStack = struct
 end
 
 
-type opcode = 
+type opcode =
 | OP_COINBASE of bytes
 (* Constants *)
 | OP_0
@@ -286,7 +286,7 @@ let opcode_to_string oc = match oc with
 | OP_NOP (x) -> Printf.sprintf "OP_NOP(%x)" x
 ;;
 
-let opcode_to_hex oc = 
+let opcode_to_hex oc =
     let rec data_to_bytearray d = match Bytes.length d with
     | 0 -> []
     | n -> (Char.code @@ Bytes.get d 0) :: data_to_bytearray (Bytes.sub d 1 (n-1))
@@ -425,7 +425,7 @@ let opcode_to_hex oc =
 ;;
 
 
-let opcode_of_hex s = 
+let opcode_of_hex s =
     let consume_next s =
         match Bytes.length s with
         | 0 -> failwith "Not enough bytes"
@@ -443,27 +443,27 @@ let opcode_of_hex s =
            (Bytes.sub s 0 sizea, Bytes.sub s sizea ((Bytes.length s) - sizea))
     in
     let c, s' = consume_next s in
-    match (Bytes.length s', c) with 
+    match (Bytes.length s', c) with
     (* Constants *)
     | l, 0x00 -> (OP_0, s')
     | l, 0x00 -> (OP_FALSE, s')
-    | l, x when x >= 0x01 && x <= 0x4b -> 
+    | l, x when x >= 0x01 && x <= 0x4b ->
         let d, s'' = consume_bytes s' [x] in
         (OP_DATA (x, d), s'')
-    | l, 0x4c when l >= 1 -> 
+    | l, 0x4c when l >= 1 ->
         let c', s'' = consume_next s' in
         let d, s'' = consume_bytes s'' [c'] in
         (OP_PUSHDATA1 (c', d), s'')
     | l, 0x4c when l < 1 ->
         (OP_NOP (0x4c), s')
-    | l, 0x4d when l >= 2 -> 
+    | l, 0x4d when l >= 2 ->
         let c', s'' = consume_next s' in
         let c'', s'' = consume_next s'' in
         let d, s'' = consume_bytes s'' [c'; c''] in
         (OP_PUSHDATA2 (c', c'', d), s'')
     | l, 0x4d when l < 2 ->
         (OP_NOP (0x4d), s')
-    | l, 0x4e when l >= 4 -> 
+    | l, 0x4e when l >= 4 ->
         let c', s'' = consume_next s' in
         let c'', s'' = consume_next s'' in
         let c''', s'' = consume_next s'' in
@@ -471,7 +471,7 @@ let opcode_of_hex s =
         let d, s'' = consume_bytes s'' [c'; c''; c'''; c''''] in
         (OP_PUSHDATA4 (c', c'', c''', c'''', d), s'')
     | l, 0x4e when l < 4 ->
-        (OP_NOP (0x4e), s')        
+        (OP_NOP (0x4e), s')
     | l, 0x4f -> (OP_1NEGATE, s')
     | l, 0x51 -> (OP_1, s')
     | l, 0x51 -> (OP_TRUE, s')
@@ -599,11 +599,11 @@ let opcode_of_hex s =
 
 ;;
 
-(* 
-    https://github.com/bitcoin/bitcoin/blob/master/src/script/interpreter.cpp 
+(*
+    https://github.com/bitcoin/bitcoin/blob/master/src/script/interpreter.cpp
     https://en.bitcoin.it/wiki/Script
 *)
-let rec _eval st altst scr = 
+let rec _eval st altst scr =
     let rec to_endif_or_else st altst scr = match scr with
     | [] -> false
     | op::scr' -> match op with
@@ -655,19 +655,19 @@ let rec _eval st altst scr =
         | OP_RETURN (data) -> false
 
         (* Stack *)
-        | OP_TOALTSTACK -> 
-            let ap = SStack.pop st in SStack.push ap altst; 
+        | OP_TOALTSTACK ->
+            let ap = SStack.pop st in SStack.push ap altst;
             _eval st altst scr'
-        | OP_FROMALTSTACK -> 
-            let ap = SStack.pop altst in SStack.push ap st; 
+        | OP_FROMALTSTACK ->
+            let ap = SStack.pop altst in SStack.push ap st;
             _eval st altst scr'
         | OP_IFDUP -> true
         | OP_DEPTH -> true
-        | OP_DROP -> 
+        | OP_DROP ->
             SStack.pop st |> ignore;
             _eval st altst scr'
-        | OP_DUP -> 
-            let ap = SStack.top st in SStack.push ap st; 
+        | OP_DUP ->
+            let ap = SStack.top st in SStack.push ap st;
             _eval st altst scr'
         | OP_NIP -> true
         | OP_OVER -> true
@@ -687,107 +687,107 @@ let rec _eval st altst scr =
         | OP_SIZE -> true
 
         (* Bitwise logic *)
-        | OP_EQUAL -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+        | OP_EQUAL ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a = b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr' 
-        | OP_EQUALVERIFY -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_EQUALVERIFY ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             if a = b then true else false
 
         (* Arithmetic*)
-        | OP_1ADD -> 
-            let ap = SStack.top st in SStack.push (ap + 1) st; 
-            _eval st altst scr' 
-        | OP_1SUB -> 
-            let ap = SStack.top st in SStack.push (ap - 1) st; 
-            _eval st altst scr' 
-        | OP_NEGATE -> 
-            let ap = SStack.top st in SStack.push (-ap) st; 
-            _eval st altst scr'        
-        | OP_ABS -> 
-            let ap = SStack.top st in SStack.push (abs ap) st; 
-            _eval st altst scr' 
-        | OP_NOT -> 
-            let ap = SStack.top st in 
+        | OP_1ADD ->
+            let ap = SStack.top st in SStack.push (ap + 1) st;
+            _eval st altst scr'
+        | OP_1SUB ->
+            let ap = SStack.top st in SStack.push (ap - 1) st;
+            _eval st altst scr'
+        | OP_NEGATE ->
+            let ap = SStack.top st in SStack.push (-ap) st;
+            _eval st altst scr'
+        | OP_ABS ->
+            let ap = SStack.top st in SStack.push (abs ap) st;
+            _eval st altst scr'
+        | OP_NOT ->
+            let ap = SStack.top st in
             if ap = 0 then SStack.push 1 st else SStack.push 0 st;
-            _eval st altst scr' 
-        | OP_0NOTEQUAL -> 
-            let ap = SStack.top st in 
+            _eval st altst scr'
+        | OP_0NOTEQUAL ->
+            let ap = SStack.top st in
             if ap = 0 then SStack.push 0 st else SStack.push 1 st;
-            _eval st altst scr' 
-        | OP_ADD -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
-            SStack.push (a + b) st; 
-            _eval st altst scr'      
-        | OP_SUB -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
-            SStack.push (a - b) st; 
-            _eval st altst scr'   
-        | OP_BOOLAND -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_ADD ->
+            let a = SStack.top st in
+            let b = SStack.top st in
+            SStack.push (a + b) st;
+            _eval st altst scr'
+        | OP_SUB ->
+            let a = SStack.top st in
+            let b = SStack.top st in
+            SStack.push (a - b) st;
+            _eval st altst scr'
+        | OP_BOOLAND ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a <> 0 && b <> 0 then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'  
-        | OP_BOOLOR -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_BOOLOR ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a <> 0 || b <> 0 then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'  
-        | OP_NUMEQUAL -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_NUMEQUAL ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a = b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'  
-        | OP_NUMEQUALVERIFY -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_NUMEQUALVERIFY ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             if a = b then true else false
-        | OP_NUMNOTEQUAL -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+        | OP_NUMNOTEQUAL ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a <> b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'  
-        | OP_LESSTHAN -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_LESSTHAN ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a < b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'  
-        | OP_GREATERTHAN -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_GREATERTHAN ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a > b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'  
-        | OP_LESSTHANOREQUAL -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_LESSTHANOREQUAL ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a <= b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'  
-        | OP_GREATERTHANOREQUAL -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_GREATERTHANOREQUAL ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a >= b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'  
-        | OP_MIN -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_MIN ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a > b then SStack.push b st else SStack.push a st);
-            _eval st altst scr' 
-        | OP_MAX -> 
-            let a = SStack.top st in 
-            let b = SStack.top st in 
+            _eval st altst scr'
+        | OP_MAX ->
+            let a = SStack.top st in
+            let b = SStack.top st in
             (if a > b then SStack.push a st else SStack.push b st);
-            _eval st altst scr' 
-        | OP_WITHIN -> 
-            let x = SStack.top st in 
-            let min = SStack.top st in 
-            let max = SStack.top st in 
+            _eval st altst scr'
+        | OP_WITHIN ->
+            let x = SStack.top st in
+            let min = SStack.top st in
+            let max = SStack.top st in
             (if x >= min && x < max then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr' 
+            _eval st altst scr'
 
         (* Crypto *)
         | OP_RIPEMD160 -> true
@@ -830,7 +830,7 @@ let to_string scr =
     in tos' (fst scr)
 ;;
 
-let eval scr = 
+let eval scr =
     let st = SStack.create () in
     let altst = SStack.create () in
     try _eval st altst (fst scr) with _ -> false
@@ -840,26 +840,26 @@ let join s1 s2 = ((fst s1) @ (fst s2), (snd s1) + (snd s2));;
 
 let length scr = snd scr;;
 
-let serialize scr = 
+let serialize scr =
     let rec serialize' scr = match scr with
     | [] -> ""
     | op::scr' ->
-        let r = List.fold_right 
-            (fun x acc -> (Bytes.make 1 (Char.chr x)) ^ acc) 
-            (opcode_to_hex op) "" 
+        let r = List.fold_right
+            (fun x acc -> (Bytes.make 1 (Char.chr x)) ^ acc)
+            (opcode_to_hex op) ""
         in r ^ (serialize' scr')
-    in 
+    in
     let s = serialize' (fst scr) in
     match (snd scr, Bytes.length s) with
-    | (n, n') when n = n' -> s 
+    | (n, n') when n = n' -> s
     | (n, n') -> Printf.printf "Wrong size %d %d\n%!" n n'; failwith "Wrong serialize size"
 ;;
 
-let parse s = 
+let parse s =
     let rec parse' s = match Bytes.length s with
     | 0 -> []
-    | n -> 
-        let op, s' = opcode_of_hex s in 
+    | n ->
+        let op, s' = opcode_of_hex s in
         op :: (parse' s')
     in (parse' s, String.length s)
 ;;
@@ -874,19 +874,19 @@ let is_spendable scr =
     let rec iss ops = match ops with
     | [] -> true
     | OP_RETURN (data) :: xl' -> false
-    | _ :: xl' -> iss xl' 
+    | _ :: xl' -> iss xl'
     in iss (fst scr)
 ;;
 
 (* Check for common pattern: http://bitcoin.stackexchange.com/questions/35456/which-bitcoin-script-forms-should-be-detected-when-tracking-wallet-balance*)
 (* https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses *)
-let spendable_by scr = 
-    let addr_of_pkh prefix pkh = 
+let spendable_by scr =
+    let addr_of_pkh prefix pkh =
         let epkh = (Bytes.make 1 @@ Char.chr prefix) ^ pkh in
-        let shrip = Bytes.sub (Hash.dsha256 epkh) 0 4 in 
+        let shrip = Bytes.sub (Hash.dsha256 epkh) 0 4 in
         (epkh ^ shrip) |> Base58.encode_check
     in
-    let addr_of_pk prefix pk = 
+    let addr_of_pk prefix pk =
         pk |> Hash.sha256 |> Hash.ripemd160 |> addr_of_pkh prefix
     in
     match fst scr with
