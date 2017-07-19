@@ -13,12 +13,16 @@ PKG bytes
 PKG core_kernel
 PKG core_kernel.base_for_tests
 PKG cryptokit
+PKG cstruct
 PKG fieldslib
+PKG hex
 PKG jane-street-headers
 PKG num
 PKG num.core
 PKG oUnit
 PKG oUnit.advanced
+PKG ocplib-endian
+PKG ocplib-endian.bigstring
 PKG ppx_assert.runtime-lib
 PKG ppx_bench.runtime-lib
 PKG ppx_compare.runtime-lib
