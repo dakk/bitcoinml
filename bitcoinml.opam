@@ -24,7 +24,8 @@ depends: [
   "bignum" {build & >= "v0.9.0"}
   "cryptokit" {build & >= "1.11"}
   "stdint" {build & >= "0.3.0-0"}
-  "hex" {build & >= "1.1.1"}
+  "secp256k1" {build & >= "0.2.5"}
+  "hex" {test & >= "1.1.1"}
   "ounit" {test & >= "2.2.2"}
   "odoc" {test & >= "1.1.1"}
 ]

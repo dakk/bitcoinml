@@ -881,23 +881,15 @@ let is_spendable scr =
 (* Check for common pattern: http://bitcoin.stackexchange.com/questions/35456/which-bitcoin-script-forms-should-be-detected-when-tracking-wallet-balance*)
 (* https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses *)
 let spendable_by scr =
-    let addr_of_pkh prefix pkh =
-        let epkh = (Bytes.make 1 @@ Char.chr prefix) ^ pkh in
-        let shrip = Bytes.sub (Hash.dsha256 epkh) 0 4 in
-        (epkh ^ shrip) |> Base58.encode_check
-    in
-    let addr_of_pk prefix pk =
-        pk |> Hash.sha256 |> Hash.ripemd160 |> addr_of_pkh prefix
-    in
     match fst scr with
     (* P2PH *)
     | OP_DUP :: OP_HASH160 :: OP_DATA (20, pkh) :: OP_EQUALVERIFY :: OP_CHECKSIG :: [] ->
-        Some (addr_of_pkh 0x00 pkh)
+        Some (Keypair.addr_of_pkh 0x00 pkh)
     (* P2SH *)
     | OP_HASH160 :: OP_DATA (20, pkh) :: OP_EQUAL :: [] ->
-        Some (addr_of_pkh 0x05 pkh)
+        Some (Keypair.addr_of_pkh 0x05 pkh)
     (* P2PK *)
     | OP_DATA (n, pkh) :: OP_CHECKSIG :: [] when n = 33 || n = 65 ->
-       Some (addr_of_pk 0x00 pkh)
+       Some (Keypair.addr_of_pk 0x00 pkh)
     | _ -> None
 ;;
