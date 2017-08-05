@@ -93,3 +93,10 @@ let serialize block =
 	let d = Bytes.cat d (string_of_bitstring (bitstring_of_varint (Int64.of_int (List.length block.txs)))) in
 	Bytes.cat d (Tx.serialize_all block.txs)
 ;;
+
+
+
+
+let to_string block =
+	""
+;;
