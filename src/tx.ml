@@ -2,7 +2,6 @@ open Stdint;;
 open Bitstring;;
 open Varint;;
 
-
 module In = struct
 	type t = {
 		out_hash: string;
@@ -10,6 +9,14 @@ module In = struct
 		script	: Script.t;
 		sequence: uint32;
 	};;
+
+	let to_string txin =
+		"TxIn ("
+		^ "\n\tout_hash=" ^ (Hash.print_string txin.out_hash)
+		^ "\n\tout_n=" ^ (Uint32.to_string txin.out_n)
+		^ "\n\tsequence=" ^ (Uint32.to_string txin.sequence)
+		^ "\n)"
+	;;
 
 	let serialize txin =
 		let out = Bitstring.string_of_bitstring ([%bitstring {|
@@ -78,6 +85,12 @@ module Out = struct
 		script	: Script.t;
 	};;
 
+	let to_string txout =
+		"TxOut ("
+		^ "\n\tvalue=" ^ (Int64.to_string txout.value)
+		^ "\n)"
+	;;
+
 	let is_spendable txout = Script.is_spendable txout.script;;
 
 	let spendable_by txout = Script.spendable_by txout.script;;
@@ -140,6 +153,15 @@ type t = {
 };;
 
 
+let to_string tx =
+	"TX ("
+		^ "\n\tversion=" ^ (Int32.to_string tx.version)
+		^ "\n\thash=" ^ (Hash.print_bin tx.hash)
+		^ "\n\tlocktime=" ^ (Uint32.to_string tx.locktime)
+		^ "\n\tsize=" ^ (Printf.sprintf "%d" tx.size)
+	^ "\n)"
+;;
+
 let parse ?(coinbase=false) data =
 	let bdata = bitstring_of_string data in
 	match%bitstring bdata with
@@ -175,12 +197,6 @@ let parse ?(coinbase=false) data =
 	| {| _ |} -> ("", None)
 ;;
 
-
-
-
-let to_string tx =
-	""
-;;
 
 let serialize tx =
 	let res = Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}]) in
