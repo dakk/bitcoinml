@@ -136,6 +136,7 @@ type t = {
 	txin 		: In.t list;
 	txout 		: Out.t list;
 	locktime	: uint32;
+	size			: int;
 };;
 
 
@@ -168,6 +169,7 @@ let parse ?(coinbase=false) data =
 					txin	= List.rev txin;
 					txout	= List.rev txout;
 					locktime= Uint32.of_int32 locktime;
+					size= Bytes.length data - (Bytes.length rest''');
 				}))
 			| {| _ |} -> ("", None)
 	| {| _ |} -> ("", None)
@@ -176,8 +178,8 @@ let parse ?(coinbase=false) data =
 
 
 
-let print tx =
-	Printf.printf ""; ()
+let to_string tx =
+	""
 ;;
 
 let serialize tx =
@@ -186,6 +188,10 @@ let serialize tx =
 	let ltime = Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}]) in
 	res ^ ltime
 ;;
+
+
+
+
 
 let rec serialize_all txs = match txs with
 | [] -> ""
