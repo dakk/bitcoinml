@@ -64,7 +64,7 @@ let keypair_from_priv_test key adr octx =
 	match Keypair.from_priv key with
 	| None -> assert_equal false true
 	| Some (kp) ->
-		assert_equal kp.address adr
+		assert_equal (Keypair.to_address kp) adr
 ;;
 
 let suite = "bitcoinml" >::: [

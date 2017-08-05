@@ -1,19 +1,18 @@
 type t = {
 	pub     : string;
-	priv    : string;
-	address : string;
+	priv		: string;
 };;
 
 
-let addr_of_pkh prefix pkh =
+let addr_of_pubhash prefix pkh =
   let epkh = (Bytes.make 1 @@ Char.chr prefix) ^ pkh in
   let shrip = Bytes.sub (Hash.dsha256 epkh) 0 4 in
   (epkh ^ shrip) |> Base58.encode_check
 ;;
 
 
-let addr_of_pk prefix pk =
-	pk |> Hash.sha256 |> Hash.ripemd160 |> addr_of_pkh prefix
+let addr_of_pub prefix pk =
+	pk |> Hash.sha256 |> Hash.ripemd160 |> addr_of_pubhash prefix
 ;;
 
 let priv_to_wif p =
@@ -39,13 +38,34 @@ let from_priv priv =
 			|> Hex.of_cstruct
 			|> Hex.to_string 
 		in
-		Some ({ pub=pubr; priv=priv; address=addr_of_pk 0x00 pubr })
+		Some ({ pub=pubr; priv=priv })
 ;;
 
 let from_wif wif = from_priv @@ wif_to_priv wif;;
 
 let to_wif kp = priv_to_wif kp.priv;;
+let to_address kp = addr_of_pub 0x00 kp.pub;;
 
-let sign kp data = "";;
 
-let verify kp signed_data = true;;
+let verify pubkey' msg' signature' = 
+	let buffer_of_string s =
+		let { Cstruct.buffer } = Hex.to_cstruct @@ Hex.of_string s in
+		buffer
+	in
+	let pk_of_string ctx s =
+		let { Cstruct.buffer } = Hex.to_cstruct @@ Hex.of_string s in
+		Secp256k1.Public.of_bytes_exn ctx buffer
+	in
+	let signature_of_string ctx s =
+  	let { Cstruct.buffer } = Hex.to_cstruct @@ Hex.of_string s in
+		Secp256k1.Sign.of_der_exn ctx buffer
+	in
+
+	let ctx = Secp256k1.Context.create [ Verify ] in
+
+	let msg = buffer_of_string msg' in
+	let signature = signature_of_string ctx signature' in
+	let pubkey = pk_of_string ctx pubkey' in
+
+	Secp256k1.Sign.verify ctx ~signature ~msg ~pubkey
+;;
