@@ -12,7 +12,7 @@ val of_bin				: b -> t
 val of_bin_norev  : b -> t
 val zero					: unit -> t
 
-val print_bin     : bytes -> string
+val to_string     : bytes -> string
 
 
 val sha1		  	: bytes -> bytes

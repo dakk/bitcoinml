@@ -54,7 +54,7 @@ let to_bin h =
 ;;
 
 
-let print_bin b =
+let to_string b =
 	let rec of_bin' h =
 		let tos c = Printf.sprintf "%02x" (int_of_char c) in
 		match String.length h with

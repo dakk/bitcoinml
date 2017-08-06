@@ -12,7 +12,7 @@ module In = struct
 
 	let to_string txin =
 		"TxIn ("
-		^ "\n\tout_hash=" ^ (Hash.print_string txin.out_hash)
+		^ "\n\tout_hash=" ^ (Hash.to_string txin.out_hash)
 		^ "\n\tout_n=" ^ (Uint32.to_string txin.out_n)
 		^ "\n\tsequence=" ^ (Uint32.to_string txin.sequence)
 		^ "\n)"
@@ -156,7 +156,7 @@ type t = {
 let to_string tx =
 	"TX ("
 		^ "\n\tversion=" ^ (Int32.to_string tx.version)
-		^ "\n\thash=" ^ (Hash.print_bin tx.hash)
+		^ "\n\thash=" ^ (Hash.to_string tx.hash)
 		^ "\n\tlocktime=" ^ (Uint32.to_string tx.locktime)
 		^ "\n\tsize=" ^ (Printf.sprintf "%d" tx.size)
 	^ "\n)"
@@ -232,8 +232,8 @@ let parse_all data ntx =
 
 			if (subs <> ser) then (
 				Printf.printf "Wrong!\n%!";
-				Printf.printf "Original: %s\n%!" (Hash.print_bin d);
-				Printf.printf "New: %s\n%!" (Hash.print_bin (serialize mtx));
+				Printf.printf "Original: %s\n%!" (Hash.to_string d);
+				Printf.printf "New: %s\n%!" (Hash.to_string (serialize mtx));
 				None
 			) else (
 				parse_all' (n-1) rest (mtx::acc)
