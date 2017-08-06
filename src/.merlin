@@ -1,6 +1,6 @@
 B ../_build/default/src
 FLG -open Bitcoinml -w -40
-FLG -ppx "../_build/default/.ppx/ppx_bitstring+ppx_sexp_conv/ppx.exe --as-ppx --cookie 'library-name="bitcoinml"'"
+FLG -ppx "../_build/default/.ppx/ppx_bitstring/ppx.exe --as-ppx --cookie 'library-name="bitcoinml"'"
 PKG base
 PKG base.caml
 PKG base.shadow_stdlib

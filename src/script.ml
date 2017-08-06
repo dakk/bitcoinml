@@ -884,12 +884,12 @@ let spendable_by scr =
     match fst scr with
     (* P2PH *)
     | OP_DUP :: OP_HASH160 :: OP_DATA (20, pkh) :: OP_EQUALVERIFY :: OP_CHECKSIG :: [] ->
-        Some (Keypair.addr_of_pubhash 0x00 pkh)
+        Some (Address.of_pubhash 0x00 pkh)
     (* P2SH *)
     | OP_HASH160 :: OP_DATA (20, pkh) :: OP_EQUAL :: [] ->
-        Some (Keypair.addr_of_pubhash 0x05 pkh)
+        Some (Address.of_pubhash 0x05 pkh)
     (* P2PK *)
     | OP_DATA (n, pkh) :: OP_CHECKSIG :: [] when n = 33 || n = 65 ->
-       Some (Keypair.addr_of_pub 0x00 pkh)
+       Some (Address.of_pub 0x00 pkh)
     | _ -> None
 ;;

@@ -1,6 +1,11 @@
 lib: [
   "_build/install/default/lib/bitcoinml/META" {"META"}
   "_build/install/default/lib/bitcoinml/opam" {"opam"}
+  "_build/install/default/lib/bitcoinml/bitcoinml__Address.cmi"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Address.cmx"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Address.cmt"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Address.cmti"
+  "_build/install/default/lib/bitcoinml/address.mli"
   "_build/install/default/lib/bitcoinml/bitcoinml__Base58.cmi"
   "_build/install/default/lib/bitcoinml/bitcoinml__Base58.cmx"
   "_build/install/default/lib/bitcoinml/bitcoinml__Base58.cmt"
@@ -20,11 +25,6 @@ lib: [
   "_build/install/default/lib/bitcoinml/bitcoinml__Hash.cmt"
   "_build/install/default/lib/bitcoinml/bitcoinml__Hash.cmti"
   "_build/install/default/lib/bitcoinml/hash.mli"
-  "_build/install/default/lib/bitcoinml/bitcoinml__Keypair.cmi"
-  "_build/install/default/lib/bitcoinml/bitcoinml__Keypair.cmx"
-  "_build/install/default/lib/bitcoinml/bitcoinml__Keypair.cmt"
-  "_build/install/default/lib/bitcoinml/bitcoinml__Keypair.cmti"
-  "_build/install/default/lib/bitcoinml/keypair.mli"
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmi"
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmx"
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmt"
