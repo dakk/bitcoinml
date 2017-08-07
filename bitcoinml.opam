@@ -34,7 +34,7 @@ depends: [
   "stdint" {>= "0.3.0-0"}
   
   "hex" {test & >= "1.1.1"}
-  "ounit" {test & >= "2.2.2"}
+  "ounit" {test & >= "2.0.0"}
   "odoc" {test & >= "1.1.1"}
 ]
 
