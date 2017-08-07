@@ -1,16 +1,25 @@
 language: c
-sudo: false
-services:
-  - docker
-install: wget https://raw.githubusercontent.com/ocaml/ocaml-travisci-skeleton/master/.travis-docker.sh
-script: bash ./.travis-docker.sh
-env:
- global:
-   - PRE_INSTALL_HOOK="cd /home/opam/opam-repository && git pull origin master && opam update -u -y"
-   - PACKAGE="bitcoinml"
- matrix:
-   - DISTRO=debian-stable OCAML_VERSION=4.02.3
-   - DISTRO=debian-testing OCAML_VERSION=4.03.0
-   - DISTRO=debian-unstable OCAML_VERSION=4.04.0
-   - DISTRO=ubuntu-16.04 OCAML_VERSION=4.04.1
-   - DISTRO=centos-7 OCAML_VERSION=4.03.0
+install: bash -e .travis-ci-install.sh
+script: bash -e .travis-ci.sh
+cache: apt
+dist: trusty
+sudo: required
+matrix:
+  include:
+  - os: linux
+    env: OCAML_VERSION=4.05 OPAM_VERSION=1.2.2
+  - os: linux
+    env: OCAML_VERSION=4.04 OPAM_VERSION=1.2.2
+  - os: linux
+    env: OCAML_VERSION=4.03 OPAM_VERSION=1.2.2
+  - os: linux
+    env: OCAML_VERSION=4.02 OPAM_VERSION=1.2.2
+  - os: linux
+    env: OCAML_VERSION=4.01 OPAM_VERSION=1.2.2
+  - os: linux
+    env: OCAML_VERSION=4.00 OPAM_VERSION=1.2.2
+  - os: linux
+    env: OCAML_VERSION=3.12 OPAM_VERSION=1.2.2
+  - os: osx
+    osx_image: xcode7.3
+    env: OCAML_VERSION=4.03 OPAM_VERSION=1.2.2
