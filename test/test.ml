@@ -85,12 +85,14 @@ let address_of_pubhash_test prefix pub addr octx =
 
 let suite = "bitcoinml" >::: [
 	"base58.encode_check" 	>:: base58_encode_check_test;
+	
 	"varint.parse" 			>:: varint_parse_test (`Hex "16") 0x16;
 	"varint.parse2" 		>:: varint_parse_test (`Hex "FE32323232") 0x32323232;
 	(*"varint.parse3" 		>:: varint_parse_test (`Hex "FF3232323232323232") 0x3232323232323232;*)
 	"varint.serialize"		>:: varint_serialize_test (`Hex "16") 0x16;
 	"varint.serialize2" 	>:: varint_serialize_test (`Hex "FE32323232") 0x32323232;
 	(*"varint.serialize3"	>:: varint_serialize_test (`Hex "FF3232323232323232") 0x3232323232323232;*)
+
 	"script.parse" 			>:: script_parse_test (`Hex "76A91489ABCDEFABBAABBAABBAABBAABBAABBAABBAABBA88AC")
 		([
 			Script.OP_DUP; Script.OP_HASH160; Script.OP_DATA (20, Hex.to_string (`Hex "89ABCDEFABBAABBAABBAABBAABBAABBAABBAABBA"));
@@ -112,7 +114,6 @@ let suite = "bitcoinml" >::: [
 			Script.OP_EQUALVERIFY; Script.OP_CHECKSIG
 		], 25)
 		"1DYwPTpZuLjY2qApmJdHaSAuWRvEF5skCN";
-	
 	"script.to_string" >:: script_to_string_test
 		([
 			Script.OP_DUP; Script.OP_HASH160; Script.OP_DATA (20, Hex.to_string (`Hex "89ABCDEFABBAABBAABBAABBAABBAABBAABBAABBA"));
