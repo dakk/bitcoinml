@@ -7,7 +7,7 @@ open Conv;;
 open Convhelper;;
 
 module Merkle = struct
-	type t = Hash.t;;
+	type t = Hash.t [@@deriving sexp];;
 
 	let of_hashes hashl =
 		let to_odd tl = 
@@ -32,7 +32,7 @@ module Header = struct
 		hash		: Hash.t;
 		version		: int32;
 		prev_block	: Hash.t;
-		merkle_root : Hash.t;
+		merkle_root : Merkle.t;
 		time		: float;
 		bits		: uint32;
 		nonce		: uint32;
