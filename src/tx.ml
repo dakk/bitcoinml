@@ -168,7 +168,7 @@ let parse ?(coinbase=false) data =
 			| {|
 				locktime	: 32 : littleendian;
 				rest		: -1 : bitstring
-			|} ->
+			|} -> 
 				let rest''' = string_of_bitstring rest in
 				let txlen = (Bytes.length data) - (Bytes.length rest''') in
 				let txhash = Hash.of_bin (Hash.hash256 (Bytes.sub data 0 txlen)) in
@@ -181,7 +181,6 @@ let parse ?(coinbase=false) data =
 					size= Bytes.length data - (Bytes.length rest''');
 				}))
 			| {| _ |} -> ("", None)
-	| {| _ |} -> ("", None)
 ;;
 
 

@@ -449,7 +449,6 @@ let opcode_of_hex s =
     match (Bytes.length s', c) with
     (* Constants *)
     | l, 0x00 -> (OP_0, s')
-    | l, 0x00 -> (OP_FALSE, s')
     | l, x when x >= 0x01 && x <= 0x4b ->
         let d, s'' = consume_bytes s' [x] in
         (OP_DATA (x, d), s'')
@@ -477,7 +476,6 @@ let opcode_of_hex s =
         (OP_NOP (0x4e), s')
     | l, 0x4f -> (OP_1NEGATE, s')
     | l, 0x51 -> (OP_1, s')
-    | l, 0x51 -> (OP_TRUE, s')
     | l, 0x52 -> (OP_2, s')
     | l, 0x53 -> (OP_3, s')
     | l, 0x54 -> (OP_4, s')
@@ -594,8 +592,6 @@ let opcode_of_hex s =
     | l, 0x65 -> (OP_VERIF, s')
     | l, 0x66 -> (OP_VERNOTIF, s')
     | l, 0x89 -> (OP_RESERVED1, s')
-    | l, 0x81 -> (OP_RESERVED2, s')
-
 
     | l, x when x = 0x61 || (x >= 0xb0 && x <= 0xb9) -> (OP_NOP (x), s')
     | l, x -> (OP_NOP (x), s')
