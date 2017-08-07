@@ -11,7 +11,7 @@ bug-reports: "https://github.com/dakk/bitcoinml/issues"
 license: "MIT"
 dev-repo: "https://github.com/dakk/bitcoinml.git"
 build: [
-  ["jbuilder" "build" "-p" name "-j" jobs]
+  ["jbuilder" "build" "-p" name "-j" jobs "@install"]
 ]
 build-test: [
   ["jbuilder" "build" "-p" name "-j" jobs "@runtest" "@doc"]
