@@ -27,9 +27,9 @@ depends: [
   "cryptokit" {>= "1.11"}
   "stdint" {>= "0.3.0-0"}
   
-  "hex" {test & >= "1.1.1"}
-  "ounit" {test & >= "2.2.2"}
-  "odoc" {test & >= "1.1.1"}
+  "hex" {test & build & >= "1.1.1"}
+  "ounit" {test & build & >= "2.2.2"}
+  "odoc" {test & build & >= "1.1.1"}
 ]
 
 depexts: [
