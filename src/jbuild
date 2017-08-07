@@ -3,10 +3,7 @@
 (library
  ((name        bitcoinml)
   (public_name bitcoinml)
-  (libraries (core
-              ppx_jane
-              ppx_sexp_conv
-              sexplib 
+  (libraries (ppx_jane
               bitstring 
               stdint 
               cryptokit 

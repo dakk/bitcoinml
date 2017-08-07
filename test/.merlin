@@ -12,7 +12,6 @@ PKG bitstring
 PKG bytes
 PKG compiler-libs
 PKG compiler-libs.common
-PKG core
 PKG core_kernel
 PKG core_kernel.base_for_tests
 PKG cryptokit
@@ -82,15 +81,10 @@ PKG ppx_type_conv
 PKG ppx_typerep_conv
 PKG ppx_variants_conv
 PKG result
-PKG secp256k1
 PKG sexplib
 PKG sexplib.0
-PKG sexplib.unix
-PKG spawn
 PKG stdint
 PKG stdio
-PKG threads
-PKG threads.posix
 PKG typerep
 PKG unix
 PKG variantslib
