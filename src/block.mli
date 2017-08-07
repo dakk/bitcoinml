@@ -9,17 +9,18 @@ module Header : sig
 		time		: float;
 		bits		: uint32;
 		nonce		: uint32;
-	}
+	} [@@deriving sexp]
 
 	val parse 		: bytes -> t option
 	val serialize	: t -> bytes
+	val to_string	: t -> string
 end
 
 type t = {
 	header	: Header.t;
 	txs			: Tx.t list;
 	size		:	int;
-}
+} [@@deriving sexp]
 
 val parse		: bytes -> t option
 val serialize	: t -> bytes

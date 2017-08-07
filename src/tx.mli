@@ -1,5 +1,8 @@
 open Stdint
 open Bitstring
+open Sexplib
+open Conv
+open Convhelper
 
 
 module In : sig
@@ -8,7 +11,7 @@ module In : sig
 		out_n	: uint32;
 		script	: Script.t;
 		sequence: uint32;
-	} 
+	} [@@deriving sexp] 
 
 	val parse 			: ?coinbase:bool -> bitstring -> bitstring * t option
 	val parse_all		: ?coinbase:bool -> bitstring -> bitstring * t list option
@@ -21,7 +24,7 @@ module Out : sig
 	type t = {
 		value	: int64;
 		script	: Script.t;
-	}
+	} [@@deriving sexp]
 
 	val parse			: bitstring -> bitstring * t option
 	val parse_all		: bitstring -> bitstring * t list option
@@ -41,7 +44,7 @@ type t = {
 	txout 		: Out.t list;
 	locktime	: uint32;
 	size			: int;
-} 
+} [@@deriving sexp]
 
 val parse 			: ?coinbase:bool -> bytes -> bytes * t option
 val parse_all		: bytes -> int -> t list option

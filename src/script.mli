@@ -140,12 +140,14 @@ type opcode =
 	| OP_RESERVED1
 	| OP_RESERVED2
 	| OP_NOP of int
+	[@@deriving sexp]
 
+	
 val opcode_to_string    : opcode -> string
 val opcode_to_hex       : opcode -> int list
 val opcode_of_hex       : bytes -> opcode * bytes
 
-type t = opcode list * int
+type t = opcode list * int [@@deriving sexp]
 
 
 val length              : t -> int

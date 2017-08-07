@@ -2,6 +2,9 @@ open Stdint;;
 open Bitstring;;
 open Varint;;
 open Hash;;
+open Sexplib;;
+open Conv;;
+open Convhelper;;
 
 module Header = struct
 	type t = {
@@ -12,7 +15,9 @@ module Header = struct
 		time		: float;
 		bits		: uint32;
 		nonce		: uint32;
-	};;
+	} [@@deriving sexp];;
+
+	let to_string h = sexp_of_t h |> Sexp.to_string;;
 
 	let serialize h =
 		let btime = Bytes.create 4 in
@@ -71,7 +76,7 @@ type t = {
 	header	: Header.t;
 	txs			: Tx.t list;
 	size		: int;
-};;
+} [@@deriving sexp];;
 
 
 let parse data =
@@ -98,6 +103,6 @@ let serialize block =
 
 
 
-let to_string block =
-	""
-;;
+let to_string b = sexp_of_t b |> Sexp.to_string;;
+
+

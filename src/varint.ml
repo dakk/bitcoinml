@@ -31,3 +31,4 @@ let bitstring_of_varint i =
 	| i when i < 0xFFFFFFFFL -> [%bitstring {| 0xFE : 1*8; Int64.to_int32 i : 4*8 : littleendian |}]
 	| i -> [%bitstring {| 0xFF : 1*8; i : 8*8 : littleendian |}]
 ;;
+

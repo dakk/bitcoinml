@@ -1,6 +1,9 @@
 open Stdint;;
 open Bitstring;;
 open Varint;;
+open Sexplib;;
+open Conv;;
+open Convhelper;;
 
 module In = struct
 	type t = {
@@ -8,15 +11,9 @@ module In = struct
 		out_n	: uint32;
 		script	: Script.t;
 		sequence: uint32;
-	};;
+	} [@@deriving sexp];;
 
-	let to_string txin =
-		"TxIn ("
-		^ "\n\tout_hash=" ^ (Hash.to_string txin.out_hash)
-		^ "\n\tout_n=" ^ (Uint32.to_string txin.out_n)
-		^ "\n\tsequence=" ^ (Uint32.to_string txin.sequence)
-		^ "\n)"
-	;;
+	let to_string txin = sexp_of_t txin |> Sexp.to_string;;
 
 	let serialize txin =
 		let out = Bitstring.string_of_bitstring ([%bitstring {|
@@ -83,13 +80,9 @@ module Out = struct
 	type t = {
 		value	: int64;
 		script	: Script.t;
-	};;
+	} [@@deriving sexp];;
 
-	let to_string txout =
-		"TxOut ("
-		^ "\n\tvalue=" ^ (Int64.to_string txout.value)
-		^ "\n)"
-	;;
+	let to_string txout = sexp_of_t txout |> Sexp.to_string;;
 
 	let is_spendable txout = Script.is_spendable txout.script;;
 
@@ -150,17 +143,11 @@ type t = {
 	txout 		: Out.t list;
 	locktime	: uint32;
 	size			: int;
-};;
+} [@@deriving sexp];;
 
 
-let to_string tx =
-	"TX ("
-		^ "\n\tversion=" ^ (Int32.to_string tx.version)
-		^ "\n\thash=" ^ (Hash.to_string tx.hash)
-		^ "\n\tlocktime=" ^ (Uint32.to_string tx.locktime)
-		^ "\n\tsize=" ^ (Printf.sprintf "%d" tx.size)
-	^ "\n)"
-;;
+let to_string tx = sexp_of_t tx |> Sexp.to_string;;
+
 
 let parse ?(coinbase=false) data =
 	let bdata = bitstring_of_string data in
@@ -241,3 +228,4 @@ let parse_all data ntx =
 	in
 	parse_all' ntx data []
 ;;
+

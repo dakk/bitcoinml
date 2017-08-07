@@ -3,6 +3,14 @@
 (library
  ((name        bitcoinml)
   (public_name bitcoinml)
-  (libraries (sexplib bitstring stdint cryptokit bignum hex secp256k1))
-  (preprocess (pps (ppx_bitstring ppx_sexp_conv)))))
+  (libraries (core
+              ppx_jane
+              ppx_sexp_conv
+              sexplib 
+              bitstring 
+              stdint 
+              cryptokit 
+              bignum 
+              secp256k1))
+  (preprocess (pps (ppx_jane ppx_bitstring -no-check ppx_driver.runner)))))
 

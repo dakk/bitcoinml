@@ -1,4 +1,7 @@
 open Base58;;
+open Sexplib;;
+open Conv;;
+open Convhelper;;
 
 module SStack = struct
     type t = int Stack.t;;
@@ -150,9 +153,9 @@ type opcode =
 | OP_RESERVED1
 | OP_RESERVED2
 | OP_NOP of int
-;;
+[@@deriving sexp];;
 
-type t = opcode list * int;;
+type t = opcode list * int [@@deriving sexp];;
 
 
 let opcode_to_string oc = match oc with
@@ -823,12 +826,8 @@ let rec _eval st altst scr =
 ;;
 
 
-let to_string scr =
-    let rec tos' ops = match ops with
-    | [] -> ""
-    | o::ops' -> (opcode_to_string o) ^ " " ^ (tos' ops')
-    in tos' (fst scr)
-;;
+let to_string scr = sexp_of_t scr |> Sexp.to_string;;
+
 
 let eval scr =
     let st = SStack.create () in
