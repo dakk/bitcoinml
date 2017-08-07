@@ -1,4 +1,3 @@
-(* Hash in letchain are the readable string representation *)
 type t = string [@@deriving sexp]
 type hash = t [@@deriving sexp]
 type b = bytes [@@deriving sexp]
