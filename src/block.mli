@@ -17,7 +17,8 @@ end
 
 type t = {
 	header	: Header.t;
-	txs		: Tx.t list;
+	txs			: Tx.t list;
+	size		:	int;
 }
 
 val parse		: bytes -> t option

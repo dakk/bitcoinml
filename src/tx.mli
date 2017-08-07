@@ -35,13 +35,13 @@ end
 
 
 type t = {
-	hash		: Hash.t;
+	hash			: Hash.t;
 	version		: int32;
-	txin 		: In.t list;
+	txin 			: In.t list;
 	txout 		: Out.t list;
 	locktime	: uint32;
 	size			: int;
-}
+} 
 
 val parse 			: ?coinbase:bool -> bytes -> bytes * t option
 val parse_all		: bytes -> int -> t list option

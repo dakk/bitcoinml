@@ -69,7 +69,8 @@ end
 
 type t = {
 	header	: Header.t;
-	txs		: Tx.t list;
+	txs			: Tx.t list;
+	size		: int;
 };;
 
 
@@ -82,7 +83,7 @@ let parse data =
 		let txn, rest' = parse_varint bdata in
 		let txs = Tx.parse_all (string_of_bitstring rest') (Uint64.to_int txn) in
 		match txs with
-		| Some (txs) -> Some ({ header= header; txs= txs; })
+		| Some (txs) -> Some ({ header= header; txs= txs; size= Bytes.length data })
 		| None -> None
 ;;
 
