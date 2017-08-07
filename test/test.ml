@@ -83,6 +83,11 @@ let address_of_pubhash_test prefix pub addr octx =
 		addr @@ Address.of_pubhash prefix (Hex.to_string pub) 
 ;;
 
+let merkle_of_hashes_test hl mr octx =
+	assert_equal 
+		(Hex.to_string mr) @@ Merkle.of_hashes (List.map (fun x -> Hex.to_string x) hl)
+;;
+
 let suite = "bitcoinml" >::: [
 	"base58.encode_check" 	>:: base58_encode_check_test;
 	
@@ -134,6 +139,8 @@ let suite = "bitcoinml" >::: [
 	"address.of_pub" >:: address_of_pub_test 0x0 (`Hex "0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B23522CD470243453A299FA9E77237716103ABC11A1DF38855ED6F2EE187E9C582BA6") "16UwLL9Risc3QfPqBUvKofHmBQ7wMtjvM";
 	"address.of_pubhash" >:: address_of_pubhash_test 0x05 (`Hex "010966776006953D5567439E5E39F86A0D273BEE") "31nVrspaydBz8aMpxH9WkS2DuhgqS1fCuG";
 	"address.of_pubhash2" >:: address_of_pubhash_test 0x00 (`Hex "010966776006953D5567439E5E39F86A0D273BEE") "16UwLL9Risc3QfPqBUvKofHmBQ7wMtjvM";
+
+	"merkle.of_hashes" >:: merkle_of_hashes_test [`Hex "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"; `Hex "3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d"] (`Hex "029fd80ca2dd66e7c527428fc148e812a9d99a5e41483f28892ef9013eee4a19");
 ];;
 
 let () = run_test_tt_main suite;;
