@@ -57,16 +57,6 @@ let to_bin h =
 ;;
 
 
-let to_string b =
-	let rec of_bin' h =
-		let tos c = Printf.sprintf "%02x" (int_of_char c) in
-		match String.length h with
-		| 0 -> ""
-		| n -> (tos h.[0]) ^ of_bin' (String.sub h 1 ((String.length h) - 1))
-	in
-	of_bin' b
-;;
-
 
 let to_bigint h =
 	let res7 = Big_int.big_int_of_int64 (Int64.of_string ("0x" ^ (String.sub h 0 8))) in
