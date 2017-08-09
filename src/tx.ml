@@ -216,14 +216,7 @@ let parse_all data ntx =
 			let rlen = (String.length rest) in
 			let subs = String.sub d 0 (dlen - rlen) in
 
-			if (subs <> ser) then (
-				Printf.printf "Wrong!\n%!";
-				Printf.printf "Original: %s\n%!" (Hash.to_string d);
-				Printf.printf "New: %s\n%!" (Hash.to_string (serialize mtx));
-				None
-			) else (
-				parse_all' (n-1) rest (mtx::acc)
-			)
+			if (subs <> ser) then None else parse_all' (n-1) rest (mtx::acc)
 	in
 	parse_all' ntx data []
 ;;
