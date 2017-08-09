@@ -36,17 +36,20 @@ module Header = struct
 		|} in Bitstring.string_of_bitstring bs
 	;;
 
-	let parse data =
-		let check_target h b =
-			let calc_target b =
-				let exp = Int64.of_bytes_little_endian ((Bytes.sub b 0 1) ^ (Bytes.make 7 (Char.chr 0))) 0 in
-				let body = Int64.of_bytes_little_endian ((Bytes.sub b 1 3) ^ (Bytes.make 5 (Char.chr 0))) 0 in
-				Big_int.power_big_int_positive_big_int (Big_int.big_int_of_int64 body) (Big_int.big_int_of_int64 exp)
-			in
-			let t' = calc_target b in
-			let h' = Hash.to_bigint h in
-			Big_int.lt_big_int h' t'
+	let check_target h =
+		let calc_target b =
+			let exp = Int64.of_bytes_little_endian ((Bytes.sub b 0 1) ^ (Bytes.make 7 (Char.chr 0))) 0 in
+			let body = Int64.of_bytes_little_endian ((Bytes.sub b 1 3) ^ (Bytes.make 5 (Char.chr 0))) 0 in
+			Big_int.power_big_int_positive_big_int (Big_int.big_int_of_int64 body) (Big_int.big_int_of_int64 exp)
 		in
+		let buf = Bytes.create 32 in
+		let _ = Uint32.to_bytes_little_endian h.bits buf 0 in
+		let t' = calc_target buf in
+		let h' = Hash.to_bigint h.hash in
+		Big_int.lt_big_int h' t'
+	;;
+
+	let parse data =
 		let bdata = bitstring_of_string data in
 		match%bitstring bdata with
 		| {|
@@ -58,7 +61,7 @@ module Header = struct
 			nonce		: 32 : string
 		|} ->
 			let hash = Hash.of_bin (hash256 data) in
-			if check_target hash bits then Some ({
+			Some ({
 				hash			= hash;
 				version			= version;
 				prev_block		= Hash.of_bin prev_block;
@@ -67,7 +70,6 @@ module Header = struct
 				bits			= Uint32.of_bytes_little_endian bits 0;
 				nonce			= Uint32.of_bytes_little_endian nonce 0;
 			})
-			else None
 		| {| _ |} -> None
 	;;
 end

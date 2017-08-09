@@ -14,6 +14,7 @@ module Header : sig
 	val parse 		: bytes -> t option
 	val serialize	: t -> bytes
 	val to_string	: t -> string
+	val check_target : t -> bool
 end
 
 type t = {
