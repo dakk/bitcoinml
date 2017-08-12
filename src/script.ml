@@ -851,12 +851,12 @@ let serialize scr =
 ;;
 
 let parse s =
-    let rec parse' s = match Bytes.length s with
-    | 0 -> []
-    | n ->
-        let op, s' = opcode_of_hex s in
-        op :: (parse' s')
-    in (parse' s, String.length s)
+    let rec parse' s acc = match Bytes.length s with
+    | 0 -> acc
+    | n -> 
+        let op, s' = opcode_of_hex s in 
+        parse' s' @@ acc @ [op]
+    in (parse' s [], String.length s)
 ;;
 
 
