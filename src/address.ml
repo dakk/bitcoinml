@@ -1,3 +1,9 @@
+type prefix = {
+  pubkeyhash: int;
+  scripthash: int;
+};;
+
+
 let of_pubhash prefix pkh =
   let epkh = (Bytes.make 1 @@ Char.chr prefix) ^ pkh in
   let shrip = Bytes.sub (Hash.dsha256 epkh) 0 4 in

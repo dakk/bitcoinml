@@ -2,6 +2,7 @@ open Base58;;
 open Sexplib;;
 open Conv;;
 open Convhelper;;
+open Address;;
 
 module SStack = struct
     type t = int Stack.t;;
@@ -875,16 +876,16 @@ let is_spendable scr =
 
 (* Check for common pattern: http://bitcoin.stackexchange.com/questions/35456/which-bitcoin-script-forms-should-be-detected-when-tracking-wallet-balance*)
 (* https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses *)
-let spendable_by scr =
+let spendable_by scr prefix =
     match fst scr with
     (* P2PH *)
     | OP_DUP :: OP_HASH160 :: OP_DATA (20, pkh) :: OP_EQUALVERIFY :: OP_CHECKSIG :: [] ->
-        Some (Address.of_pubhash 0x00 pkh)
+        Some (Address.of_pubhash prefix.pubkeyhash pkh)
     (* P2SH *)
     | OP_HASH160 :: OP_DATA (20, pkh) :: OP_EQUAL :: [] ->
-        Some (Address.of_pubhash 0x05 pkh)
+        Some (Address.of_pubhash prefix.scripthash pkh)
     (* P2PK *)
     | OP_DATA (n, pkh) :: OP_CHECKSIG :: [] when n = 33 || n = 65 ->
-       Some (Address.of_pub 0x00 pkh)
+       Some (Address.of_pub prefix.pubkeyhash pkh)
     | _ -> None
 ;;

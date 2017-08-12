@@ -149,7 +149,6 @@ val opcode_of_hex       : bytes -> opcode * bytes
 
 type t = opcode list * int [@@deriving sexp]
 
-
 val length              : t -> int
 val serialize           : t -> bytes
 val parse               : bytes -> t
@@ -158,5 +157,5 @@ val verify              : t -> t -> bool
 val to_string           : t -> string
 
 val is_spendable        : t -> bool
-val spendable_by        : t -> string option
+val spendable_by        : t -> Address.prefix -> string option
 

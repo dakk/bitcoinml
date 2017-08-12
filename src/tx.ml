@@ -86,7 +86,7 @@ module Out = struct
 
 	let is_spendable txout = Script.is_spendable txout.script;;
 
-	let spendable_by txout = Script.spendable_by txout.script;;
+	let spendable_by txout prefix = Script.spendable_by txout.script prefix;;
 
 	let serialize txout =
 		let value = Bitstring.string_of_bitstring ([%bitstring {| txout.value : 64 : littleendian |}]) in

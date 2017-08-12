@@ -38,8 +38,8 @@ let script_is_spendable_test sc octx =
 	assert_equal (Script.is_spendable sc) true
 ;;
 
-let script_spendable_by_test sc adr octx =
-	let s = Script.spendable_by sc in
+let script_spendable_by_test prefix sc adr octx =
+	let s = Script.spendable_by sc prefix in
 	assert_equal s (Some adr)
 ;;
 
@@ -132,6 +132,7 @@ let suite = "bitcoinml" >::: [
 			Script.OP_EQUALVERIFY; Script.OP_CHECKSIG
 		], 25);
 	"script.spendable_by"	>:: script_spendable_by_test
+		{ pubkeyhash= 0x00; scripthash= 0x05 }
 		([
 			Script.OP_DUP; Script.OP_HASH160; Script.OP_DATA (20, Hex.to_string (`Hex "89ABCDEFABBAABBAABBAABBAABBAABBAABBAABBA"));
 			Script.OP_EQUALVERIFY; Script.OP_CHECKSIG

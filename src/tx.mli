@@ -32,7 +32,7 @@ module Out : sig
 	val serialize_all	: t list -> bytes
 
 	val is_spendable	: t -> bool
-	val spendable_by	: t -> string option
+	val spendable_by	: t -> Address.prefix -> string option
 	val to_string			: t -> string
 end
 
