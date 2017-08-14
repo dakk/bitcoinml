@@ -7,10 +7,11 @@ open Convhelper
 
 module In : sig
 	type t = {
-		out_hash: string;
-		out_n	: uint32;
-		script	: Script.t;
-		sequence: uint32;
+		out_hash			: string;
+		out_n					: uint32;
+		script				: Script.t;
+		witness_script: Script.t option;
+		sequence			: uint32;
 	} [@@deriving sexp] 
 
 	val parse 			: ?coinbase:bool -> bitstring -> bitstring * t option
@@ -36,6 +37,15 @@ module Out : sig
 	val to_string			: t -> string
 end
 
+module Witness : sig 
+	type t = {
+		hash		: Hash.t;
+		marker	: int32;
+		flag		: int32;
+		size		: int;
+	} [@@deriving sexp]
+end
+
 
 type t = {
 	hash			: Hash.t;
@@ -44,6 +54,7 @@ type t = {
 	txout 		: Out.t list;
 	locktime	: uint32;
 	size			: int;
+	witness		: Witness.t option;
 } [@@deriving sexp]
 
 val parse 			: ?coinbase:bool -> bytes -> bytes * t option

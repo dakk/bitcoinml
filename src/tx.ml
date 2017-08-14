@@ -7,10 +7,11 @@ open Convhelper;;
 
 module In = struct
 	type t = {
-		out_hash: string;
-		out_n	: uint32;
-		script	: Script.t;
-		sequence: uint32;
+		out_hash			: string;
+		out_n					: uint32;
+		script				: Script.t;
+		witness_script: Script.t option;
+		sequence			: uint32;
 	} [@@deriving sexp];;
 
 	let to_string txin = sexp_of_t txin |> Sexp.to_string;;
@@ -58,6 +59,7 @@ module In = struct
 					out_n= Uint32.of_int32 out_n;
 					script= sc;
 					sequence= Uint32.of_int32 sequence;
+					witness_script= None;
 					}))
 
 		| {| _ |} -> (bitstring_of_string "", None)
@@ -135,14 +137,25 @@ module Out = struct
 	;;
 end
 
+module Witness = struct 
+	type t = {
+		hash		: Hash.t;
+		marker	: int32;
+		flag		: int32;
+		size		: int;
+	} [@@deriving sexp]
+end
+
+
 
 type t = {
-	hash		: Hash.t;
+	hash			: Hash.t;
 	version		: int32;
-	txin 		: In.t list;
+	txin 			: In.t list;
 	txout 		: Out.t list;
 	locktime	: uint32;
 	size			: int;
+	witness		: Witness.t option;
 } [@@deriving sexp];;
 
 
@@ -179,6 +192,7 @@ let parse ?(coinbase=false) data =
 					txout	= List.rev txout;
 					locktime= Uint32.of_int32 locktime;
 					size= Bytes.length data - (Bytes.length rest''');
+					witness= None;
 				}))
 			| {| _ |} -> ("", None)
 ;;
