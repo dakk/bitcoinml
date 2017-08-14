@@ -10,9 +10,14 @@ module In = struct
 		out_hash			: string;
 		out_n					: uint32;
 		script				: Script.t;
-		witness_script: bytes list option;
+		witness_script: Script.data list option;
 		sequence			: uint32;
 	} [@@deriving sexp];;
+
+	let has_witness txin = match txin.witness_script with
+	| None -> false
+	| Some (wl) -> true
+	;;
 
 	let to_string txin = sexp_of_t txin |> Sexp.to_string;;
 
@@ -145,8 +150,21 @@ module Witness = struct
 		size		: int;
 	} [@@deriving sexp]
 
-	let rec serialize_fields ins = 
-		""
+	let rec serialize_fields ins = match ins with 
+	| [] -> ""
+	| i :: ins' -> match i.In.witness_script with
+		| None -> serialize_fields ins'
+		| Some (ws) ->
+			let rec serws ws' = match ws' with
+			| [] -> ""
+			| si :: ws'' ->
+				(string_of_bitstring @@ Varint.bitstring_of_varint (Int64.of_int (Bytes.length si)))
+				^ si 
+				^ serws ws''
+			in
+			(string_of_bitstring @@ Varint.bitstring_of_varint (Int64.of_int (List.length ws)))
+			^	serws (List.rev ws)
+			^ serialize_fields ins'
 	;;
 
 	let parse_fields data n = 
@@ -160,7 +178,7 @@ module Witness = struct
 					let wslen, rest' = parse_varint rest' in
 					match%bitstring rest' with
 					| {|
-						stitem : Uint64.to_int wslen : bitstring;
+						stitem : Uint64.to_int wslen * 8 : bitstring;
 						rest'' : -1 : bitstring
 					|} ->
 						pfs rest'' (n-1) ((string_of_bitstring stitem) :: acc)
@@ -276,15 +294,22 @@ let parse ?(coinbase=false) data = match coinbase with
 
 
 let serialize_legacy tx =
-	let res = Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}]) in
-	let res = res ^ (In.serialize_all tx.txin) ^ (Out.serialize_all tx.txout) in
-	let ltime = Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}]) in
-	res ^ ltime
+	Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}]) 
+	^ (In.serialize_all tx.txin) 
+	^ (Out.serialize_all tx.txout)
+	^ Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}])
 ;;
 
 let serialize tx = match tx.witness with
 | None -> serialize_legacy tx
-| Some (w) -> serialize_legacy tx
+| Some (w) -> 
+	Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}])
+	^ Bitstring.string_of_bitstring ([%bitstring {| w.marker : 8 : littleendian |}])
+	^ Bitstring.string_of_bitstring ([%bitstring {| w.flag : 8 : littleendian |}])
+	^ (In.serialize_all tx.txin) 
+	^ (Out.serialize_all tx.txout)
+	^ (Witness.serialize_fields tx.txin)
+	^ Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}])
 ;;
 
 

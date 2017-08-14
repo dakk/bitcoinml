@@ -10,7 +10,7 @@ module In : sig
 		out_hash			: string;
 		out_n					: uint32;
 		script				: Script.t;
-		witness_script: bytes list option;
+		witness_script: Script.data list option;
 		sequence			: uint32;
 	} [@@deriving sexp] 
 
@@ -19,6 +19,7 @@ module In : sig
 	val serialize		: t -> bytes
 	val serialize_all	: t list -> bytes
 	val to_string		: t -> string
+	val has_witness	: t -> bool
 end
 
 module Out : sig
