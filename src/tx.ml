@@ -10,7 +10,7 @@ module In = struct
 		out_hash			: string;
 		out_n					: uint32;
 		script				: Script.t;
-		witness_script: Script.t option;
+		witness_script: bytes list option;
 		sequence			: uint32;
 	} [@@deriving sexp];;
 
@@ -140,10 +140,40 @@ end
 module Witness = struct 
 	type t = {
 		hash		: Hash.t;
-		marker	: int32;
-		flag		: int32;
+		marker	: int;
+		flag		: int;
 		size		: int;
 	} [@@deriving sexp]
+
+	let rec serialize_fields ins = 
+		""
+	;;
+
+	let parse_fields data n = 
+		let rec pfields d n acc =
+			let parse_field d =
+				let wflen, rest' = parse_varint d in
+
+				let rec pfs rest' n acc = match n with
+				| 0 -> (rest', acc)
+				| n ->
+					let wslen, rest' = parse_varint rest' in
+					match%bitstring rest' with
+					| {|
+						stitem : Uint64.to_int wslen : bitstring;
+						rest'' : -1 : bitstring
+					|} ->
+						pfs rest'' (n-1) ((string_of_bitstring stitem) :: acc)
+				in pfs rest' (Uint64.to_int wflen) []
+			in 
+			match n with
+			| 0 -> (d, acc)
+			| n ->
+				let rest, items = parse_field d in
+				pfields rest (n-1) (acc @ [items]);
+		in 
+			let rest, litems = pfields data n [] in
+			(rest, Some (litems));;
 end
 
 
@@ -162,7 +192,7 @@ type t = {
 let to_string tx = sexp_of_t tx |> Sexp.to_string;;
 
 
-let parse ?(coinbase=false) data =
+let parse_legacy ?(coinbase=false) data =
 	let bdata = bitstring_of_string data in
 	match%bitstring bdata with
 	| {|
@@ -191,21 +221,71 @@ let parse ?(coinbase=false) data =
 					txin	= List.rev txin;
 					txout	= List.rev txout;
 					locktime= Uint32.of_int32 locktime;
-					size= Bytes.length data - (Bytes.length rest''');
+					size= txlen;
 					witness= None;
 				}))
 			| {| _ |} -> ("", None)
 ;;
 
+let parse ?(coinbase=false) data = match coinbase with
+| true -> parse_legacy ~coinbase:true data
+| false -> 
+	let bdata = bitstring_of_string data in
+	match%bitstring bdata with
+	| {|
+		version		: 32 : littleendian;
+		marker		: 8 : littleendian;
+		flag			: 8 : littleendian;
+		rest			: -1: bitstring
+	|} ->
+		if marker <> 0x00 || flag <> 0x01 then parse_legacy ~coinbase:false data
+		else 
+			let rest', txin = In.parse_all rest in
+			let rest'', txout = Out.parse_all rest' in
+			match (txin, txout) with
+			| None, None -> ("", None)
+			| None, Some (txout) -> ("", None)
+			| Some (txout), None -> ("", None)
+			| Some (txin), Some (txout) ->
+				let rest''', fields = Witness.parse_fields rest'' @@ List.length txin in match fields with | Some (fields') ->
+				match%bitstring rest''' with
+				| {|
+					locktime	: 32 : littleendian;
+					rest		: -1 : bitstring
+				|} -> 
+					let rest''' = string_of_bitstring rest in
+					let txlen = (Bytes.length data) - (Bytes.length rest''') in
+					let txhash = Hash.of_bin (Hash.hash256 (Bytes.sub data 0 txlen)) in
+					let txin' = List.mapi (fun j tin -> { tin with In.witness_script= Some (List.nth fields' j) }) (List.rev txin) in
+					(rest''', Some ({
+						hash	= txhash;
+						version	= version;
+						txin	= txin';
+						txout	= List.rev txout;
+						locktime= Uint32.of_int32 locktime;
+						size= txlen;
+						witness= Some ({ (* TODO *)
+							hash= Hash.zero;
+							marker= marker;
+							flag= flag;
+							size= 0;
+						});
+					}))
+				| {| _ |} -> ("", None)
+;;
 
-let serialize tx =
+
+let serialize_legacy tx =
 	let res = Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}]) in
 	let res = res ^ (In.serialize_all tx.txin) ^ (Out.serialize_all tx.txout) in
 	let ltime = Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}]) in
 	res ^ ltime
 ;;
 
-
+let serialize tx = match tx.witness with
+| None -> serialize_legacy tx
+| Some (w) -> serialize_legacy tx
+;;
 
 
 

@@ -9,7 +9,7 @@ val to_bigint     : t -> Big_int.big_int
 
 val of_bin				: b -> t
 val of_bin_norev  : b -> t
-val zero					: unit -> t
+val zero					: t
 
 
 

@@ -10,7 +10,7 @@ module In : sig
 		out_hash			: string;
 		out_n					: uint32;
 		script				: Script.t;
-		witness_script: Script.t option;
+		witness_script: bytes list option;
 		sequence			: uint32;
 	} [@@deriving sexp] 
 
@@ -40,10 +40,13 @@ end
 module Witness : sig 
 	type t = {
 		hash		: Hash.t;
-		marker	: int32;
-		flag		: int32;
+		marker	: int;
+		flag		: int;
 		size		: int;
 	} [@@deriving sexp]
+
+	val serialize_fields 	: In.t list -> bytes
+	val parse_fields			: bitstring -> int -> bitstring * bytes list list option
 end
 
 
@@ -58,10 +61,12 @@ type t = {
 } [@@deriving sexp]
 
 val parse 			: ?coinbase:bool -> bytes -> bytes * t option
+val parse_legacy: ?coinbase:bool -> bytes -> bytes * t option
 val parse_all		: bytes -> int -> t list option
 
-val serialize		: t -> bytes
-val serialize_all	: t list -> bytes
+val serialize					: t -> bytes
+val serialize_legacy	: t -> bytes
+val serialize_all			: t list -> bytes
 
 val is_witness	: t -> bool
 val to_string		: t -> string

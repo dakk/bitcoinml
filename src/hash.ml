@@ -19,7 +19,7 @@ let reverse s =
 ;;
 
 
-let zero () = String.make 64 '0';;
+let zero = String.make 64 '0';;
 
 
 (* Binary to hash *)

@@ -54,7 +54,9 @@ let tx_to_string_test raw r octx =
 	let raw', tx = Tx.parse (Hex.to_string raw) in
 	match tx with
 	| None -> assert_equal true false
-	| Some (t) -> Tx.to_string t |> assert_equal r
+	| Some (t) -> 
+		(*Printf.printf "%s\n" @@ Tx.to_string t;*)
+		Tx.to_string t |> assert_equal r
 ;;
 
 let block_header_parse_test raw octx =
