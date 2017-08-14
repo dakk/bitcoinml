@@ -235,3 +235,9 @@ let parse_all data ntx =
 	parse_all' ntx data []
 ;;
 
+
+
+let is_witness tx = match tx.witness with
+| None -> false
+| Some (w) -> true
+;;

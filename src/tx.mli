@@ -63,5 +63,6 @@ val parse_all		: bytes -> int -> t list option
 val serialize		: t -> bytes
 val serialize_all	: t list -> bytes
 
+val is_witness	: t -> bool
 val to_string		: t -> string
 
