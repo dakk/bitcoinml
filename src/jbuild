@@ -7,7 +7,6 @@
               bitstring 
               stdint 
               cryptokit 
-              hex
               bignum))
   (preprocess (pps (ppx_jane ppx_bitstring -no-check ppx_driver.runner)))))
 
