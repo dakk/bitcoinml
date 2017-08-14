@@ -24,15 +24,20 @@ module SStack = struct
 end
 
 
+type data = bytes;;
+
+let data_of_sexp b = Hash.to_bin (string_of_sexp b);;
+let sexp_of_data b = sexp_of_string (Hash.of_bin b);;
+
 type opcode =
 | OP_COINBASE of bytes
 (* Constants *)
 | OP_0
 | OP_FALSE
-| OP_DATA of int * bytes
-| OP_PUSHDATA1 of int *  bytes
-| OP_PUSHDATA2 of int * int * bytes
-| OP_PUSHDATA4 of int * int * int * int * bytes
+| OP_DATA of int * data
+| OP_PUSHDATA1 of int *  data
+| OP_PUSHDATA2 of int * int * data
+| OP_PUSHDATA4 of int * int * int * int * data
 | OP_1NEGATE
 | OP_1
 | OP_TRUE

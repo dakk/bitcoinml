@@ -1,3 +1,5 @@
+open Sexplib
+
 module SStack : sig
 	type t = int Stack.t
 
@@ -9,16 +11,21 @@ module SStack : sig
 end
 
 
+type data = bytes
+
+val data_of_sexp : Sexp.t -> Bytes.t
+val sexp_of_data : Bytes.t -> Sexp.t
+
 type opcode =
 	| OP_COINBASE of bytes
 
 	(* Constants *)
 	| OP_0
 	| OP_FALSE
-	| OP_DATA of int * bytes
-	| OP_PUSHDATA1 of int * bytes
-	| OP_PUSHDATA2 of int * int * bytes
-	| OP_PUSHDATA4 of int * int * int * int * bytes
+	| OP_DATA of int * data
+	| OP_PUSHDATA1 of int * data
+	| OP_PUSHDATA2 of int * int * data
+	| OP_PUSHDATA4 of int * int * int * int * data
 	| OP_1NEGATE
 	| OP_1
 	| OP_TRUE
@@ -44,7 +51,7 @@ type opcode =
 	| OP_ELSE
 	| OP_ENDIF
 	| OP_VERIFY
-	| OP_RETURN of bytes
+	| OP_RETURN of data
 
 	(* Stack *)
 	| OP_TOALTSTACK
