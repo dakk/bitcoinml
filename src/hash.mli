@@ -5,6 +5,7 @@ type b = bytes [@@deriving sexp]
 val reverse				: string -> string
 
 val to_bin				: t -> b
+val to_bin_norev	: t -> b
 val to_bigint     : t -> Big_int.big_int
 
 val of_bin				: b -> t

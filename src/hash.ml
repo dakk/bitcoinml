@@ -57,6 +57,17 @@ let to_bin h =
 ;;
 
 
+let to_bin_norev h =
+	let rec to_bin' h =
+		let tob cc = String.make 1 (Char.chr (Scanf.sscanf cc "%2x" (fun i -> i))) in
+		match String.length h with
+		| 0 -> ""
+		| 1 -> failwith "Hash can't have odd size"
+		| n -> (tob (String.sub h 0 2)) ^ (to_bin' (String.sub h 2 ((String.length h) - 2)))
+	in to_bin' h
+;;
+
+
 
 let to_bigint h =
 	let res7 = Big_int.big_int_of_int64 (Int64.of_string ("0x" ^ (String.sub h 0 8))) in

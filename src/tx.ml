@@ -163,7 +163,7 @@ module Witness = struct
 				^ serws ws''
 			in
 			(string_of_bitstring @@ Varint.bitstring_of_varint (Int64.of_int (List.length ws)))
-			^	serws (List.rev ws)
+			^	serws ws
 			^ serialize_fields ins'
 	;;
 
@@ -173,7 +173,7 @@ module Witness = struct
 				let wflen, rest' = parse_varint d in
 
 				let rec pfs rest' n acc = match n with
-				| 0 -> (rest', acc)
+				| 0 -> (rest', List.rev acc)
 				| n ->
 					let wslen, rest' = parse_varint rest' in
 					match%bitstring rest' with
