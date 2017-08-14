@@ -1,0 +1,2 @@
+# Big transaction
+curl https://testnet-api.smartbit.com.au/v1/blockchain/transaction/c333a53f0174166236e341af9cad795d21578fb87ad7a1b6d2cf8aa9c722083c/hex | jq -r '.hex | .[] | .hex' > tx_c333a53f0174166236e341af9cad795d21578fb87ad7a1b6d2cf8aa9c722083c.hex

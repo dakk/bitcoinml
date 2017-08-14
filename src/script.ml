@@ -712,27 +712,36 @@ let join s1 s2 = ((fst s1) @ (fst s2), (snd s1) + (snd s2));;
 let length scr = snd scr;;
 
 let serialize scr =
-    let rec serialize' scr = match scr with
-    | [] -> ""
+    let rec serialize' scr acc = match scr with
+    | [] -> acc
     | op::scr' ->
         let r = List.fold_right
             (fun x acc -> (Bytes.make 1 (Char.chr x)) ^ acc)
             (opcode_to_hex op) ""
-        in r ^ (serialize' scr')
+        in serialize' scr' (acc ^ r)
     in
-    let s = serialize' (fst scr) in
+    let s = serialize' (fst scr) "" in
     match (snd scr, Bytes.length s) with
     | (n, n') when n = n' -> s
     | (n, n') -> Printf.printf "Wrong size %d %d\n%!" n n'; failwith "Wrong serialize size"
 ;;
 
 let parse s =
+    let rec chunkize s acc = match Bytes.length s with
+    | 0 -> acc
+    | n when n <= 8192 -> acc @ [ OP_COINBASE (s) ]
+    | n ->
+        let chunk = Bytes.sub s 0 8192 in
+        chunkize (Bytes.sub s 8192 @@ n - 8192) acc @ [ OP_COINBASE (chunk)]
+    in
     let rec parse' s acc = match Bytes.length s with
     | 0 -> acc
     | n -> 
         let op, s' = opcode_of_hex s in 
         parse' s' @@ acc @ [op]
-    in (parse' s [], String.length s)
+    in 
+    if String.length s > 50000 then (chunkize s [], String.length s)
+    else (parse' s [], String.length s)
 ;;
 
 
