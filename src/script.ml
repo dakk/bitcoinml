@@ -26,8 +26,8 @@ end
 
 type data = bytes;;
 
-let data_of_sexp b = Hash.to_bin (string_of_sexp b);;
-let sexp_of_data b = sexp_of_string (Hash.of_bin b);;
+let data_of_sexp b = Hash.to_bin_norev (string_of_sexp b);;
+let sexp_of_data b = sexp_of_string (Hash.of_bin_norev b);;
 
 type opcode =
 | OP_COINBASE of bytes
