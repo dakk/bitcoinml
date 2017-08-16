@@ -23,6 +23,7 @@ type t = {
 	size		:	int;
 } [@@deriving sexp]
 
-val parse		: bytes -> t option
-val serialize	: t -> bytes
-val to_string	: t -> string
+val parse					: bytes -> t option
+val parse_legacy	: bytes -> t option
+val serialize			: t -> bytes
+val to_string			: t -> string

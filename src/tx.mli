@@ -61,13 +61,15 @@ type t = {
 	witness		: Witness.t option;
 } [@@deriving sexp]
 
-val parse 			: ?coinbase:bool -> bytes -> bytes * t option
-val parse_legacy: ?coinbase:bool -> bytes -> bytes * t option
-val parse_all		: bytes -> int -> t list option
+val parse 						: ?coinbase:bool -> bytes -> bytes * t option
+val parse_legacy			: ?coinbase:bool -> bytes -> bytes * t option
+val parse_all					: bytes -> int -> t list option
+val parse_all_legacy	: bytes -> int -> t list option
 
-val serialize					: t -> bytes
-val serialize_legacy	: t -> bytes
-val serialize_all			: t list -> bytes
+val serialize							: t -> bytes
+val serialize_legacy			: t -> bytes
+val serialize_all					: t list -> bytes
+val serialize_all_legacy	: t list -> bytes
 
 val is_witness	: t -> bool
 val to_string		: t -> string

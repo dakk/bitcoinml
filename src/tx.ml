@@ -319,6 +319,11 @@ let rec serialize_all txs = match txs with
 | tx::txs' -> (serialize tx) ^ (serialize_all txs')
 ;;
 
+let rec serialize_all_legacy txs = match txs with
+| [] -> ""
+| tx::txs' -> (serialize_legacy tx) ^ (serialize_all_legacy txs')
+;;
+
 let parse_all data ntx =
 	let rec parse_all' n d acc =
 		(*Printf.printf "Loop! %d\n%!" n;*)
@@ -331,6 +336,28 @@ let parse_all data ntx =
 		| None -> None
 		| Some (mtx) ->
 			let ser = serialize mtx in
+			let dlen = (String.length d) in
+			let rlen = (String.length rest) in
+			let subs = String.sub d 0 (dlen - rlen) in
+
+			if (subs <> ser) then None else parse_all' (n-1) rest (mtx::acc)
+	in
+	parse_all' ntx data []
+;;
+
+
+let parse_all_legacy data ntx =
+	let rec parse_all' n d acc =
+		(*Printf.printf "Loop! %d\n%!" n;*)
+
+	match n with
+	| 0 -> (*Printf.printf "End! %d\n%!" n;*) Some (acc)
+	| n ->
+		let rest, tx = if n = ntx then parse_legacy d ~coinbase:true else parse_legacy d in
+		match tx with
+		| None -> None
+		| Some (mtx) ->
+			let ser = serialize_legacy mtx in
 			let dlen = (String.length d) in
 			let rlen = (String.length rest) in
 			let subs = String.sub d 0 (dlen - rlen) in

@@ -30,7 +30,7 @@ let data_of_sexp b = Hash.to_bin_norev (string_of_sexp b);;
 let sexp_of_data b = sexp_of_string (Hash.of_bin_norev b);;
 
 type opcode =
-| OP_COINBASE of bytes
+| OP_COINBASE of data
 (* Constants *)
 | OP_0
 | OP_FALSE
@@ -716,7 +716,7 @@ let serialize scr =
     | [] -> acc
     | op::scr' ->
         let r = List.fold_right
-            (fun x acc -> (Bytes.make 1 (Char.chr x)) ^ acc)
+            (fun x acc' -> (Bytes.make 1 (Char.chr x)) ^ acc')
             (opcode_to_hex op) ""
         in serialize' scr' (acc ^ r)
     in
@@ -732,7 +732,7 @@ let parse s =
     | n when n <= 8192 -> acc @ [ OP_COINBASE (s) ]
     | n ->
         let chunk = Bytes.sub s 0 8192 in
-        chunkize (Bytes.sub s 8192 @@ n - 8192) acc @ [ OP_COINBASE (chunk)]
+        chunkize (Bytes.sub s 8192 @@ n - 8192) (acc @ [ OP_COINBASE (chunk)])
     in
     let rec parse' s acc = match Bytes.length s with
     | 0 -> acc

@@ -94,6 +94,19 @@ let parse data =
 		| None -> None
 ;;
 
+let parse_legacy data =
+	let header = Header.parse (Bytes.sub data 0 80) in
+	match header with
+	| None -> None
+	| Some (header) ->	
+		let bdata = bitstring_of_string  (Bytes.sub data 80 ((Bytes.length data) - 80)) in
+		let txn, rest' = parse_varint bdata in
+		let txs = Tx.parse_all_legacy (string_of_bitstring rest') (Uint64.to_int txn) in
+		match txs with
+		| Some (txs) -> Some ({ header= header; txs= List.rev txs; size= Bytes.length data })
+		| None -> None
+;;
+
 
 
 let serialize block =
