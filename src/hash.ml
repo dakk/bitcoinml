@@ -33,15 +33,16 @@ let of_bin b =
 	of_bin' (reverse b)
 ;;
 
+
 (* Binary to hash *)
 let of_bin_norev b =
-	let rec of_bin' h =
+	let rec of_bin' h acc =
 		let tos c = Printf.sprintf "%02x" (int_of_char c) in
 		match String.length h with
-		| 0 -> ""
-		| n -> (tos h.[0]) ^ of_bin' (String.sub h 1 ((String.length h) - 1))
+		| 0 -> acc
+		| n -> of_bin' (String.sub h 1 ((String.length h) - 1)) @@ acc ^ (tos h.[0])
 	in
-	of_bin' b
+	of_bin' b ""
 ;;
 
 
@@ -58,13 +59,13 @@ let to_bin h =
 
 
 let to_bin_norev h =
-	let rec to_bin' h =
+	let rec to_bin' h acc =
 		let tob cc = String.make 1 (Char.chr (Scanf.sscanf cc "%2x" (fun i -> i))) in
 		match String.length h with
-		| 0 -> ""
+		| 0 -> acc
 		| 1 -> failwith "Hash can't have odd size"
-		| n -> (tob (String.sub h 0 2)) ^ (to_bin' (String.sub h 2 ((String.length h) - 2)))
-	in to_bin' h
+		| n -> to_bin' (String.sub h 2 ((String.length h) - 2)) @@ acc ^ (tob (String.sub h 0 2))
+	in to_bin' h ""
 ;;
 
 
