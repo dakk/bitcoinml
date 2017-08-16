@@ -203,6 +203,7 @@ type t = {
 	txout 		: Out.t list;
 	locktime	: uint32;
 	size			: int;
+	vsize			: int;
 	witness		: Witness.t option;
 } [@@deriving sexp];;
 
@@ -240,6 +241,7 @@ let parse_legacy ?(coinbase=false) data =
 					txout	= List.rev txout;
 					locktime= Uint32.of_int32 locktime;
 					size= txlen;
+					vsize= txlen;
 					witness= None;
 				}))
 			| {| _ |} -> ("", None)
@@ -265,7 +267,8 @@ let parse ?(coinbase=false) data = match coinbase with
 			| None, Some (txout) -> ("", None)
 			| Some (txout), None -> ("", None)
 			| Some (txin), Some (txout) ->
-				let rest''', fields = Witness.parse_fields rest'' @@ List.length txin in match fields with | Some (fields') ->
+				let rest''', fields = Witness.parse_fields rest'' @@ List.length txin in 
+				match fields with | None -> ("", None) | Some (fields') ->
 				let witlen = (Bytes.length @@ string_of_bitstring rest'') - (Bytes.length @@ string_of_bitstring rest''') + 2 in
 				match%bitstring rest''' with
 				| {|
@@ -274,21 +277,24 @@ let parse ?(coinbase=false) data = match coinbase with
 				|} -> 
 					let rest''' = string_of_bitstring rest in
 					let txlen = (Bytes.length data) - (Bytes.length rest''') in
-					let txhash = Hash.of_bin (Hash.hash256 (Bytes.sub data 0 txlen)) in
+					let vsize = int_of_float @@ ceil ((3. *. float_of_int (txlen - witlen) +. float_of_int txlen) /. 4.) in
+					let withash = Hash.of_bin (Hash.hash256 (Bytes.sub data 0 txlen)) in
+					let txhash = Hash.of_bin @@ Hash.dsha256 (
+						Bitstring.string_of_bitstring ([%bitstring {| version : 32 : littleendian |}]) 
+						^ (In.serialize_all txin) 
+						^ (Out.serialize_all txout)
+						^ Bitstring.string_of_bitstring ([%bitstring {| locktime : 32 : littleendian |}])) in
 					let txin' = List.mapi (fun j tin -> { tin with In.witness_script= Some (List.nth fields' j) }) (List.rev txin) in
 					(rest''', Some ({
-						hash= Hash.of_bin @@ Hash.dsha256 (
-							Bitstring.string_of_bitstring ([%bitstring {| version : 32 : littleendian |}]) 
-							^ (In.serialize_all txin) 
-							^ (Out.serialize_all txout)
-							^ Bitstring.string_of_bitstring ([%bitstring {| locktime : 32 : littleendian |}]));
+						hash= txhash;
 						version	= version;
 						txin	= txin';
 						txout	= List.rev txout;
 						locktime= Uint32.of_int32 locktime;
 						size= txlen - witlen;
+						vsize= vsize;
 						witness= Some ({ 
-							hash= txhash;
+							hash= withash;
 							marker= marker;
 							flag= flag;
 							size= witlen;

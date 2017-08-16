@@ -58,6 +58,7 @@ type t = {
 	txout 		: Out.t list;
 	locktime	: uint32;
 	size			: int;
+	vsize			: int;
 	witness		: Witness.t option;
 } [@@deriving sexp]
 

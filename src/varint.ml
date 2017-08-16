@@ -32,3 +32,10 @@ let bitstring_of_varint i =
 	| i -> [%bitstring {| 0xFF : 1*8; i : 8*8 : littleendian |}]
 ;;
 
+
+let encoding_length i = match Uint64.to_int64 i with
+| i when i < 0xFDL -> 1
+| i when i < 0xFFFFL -> 3
+| i when i < 0xFFFFFFFFL -> 5
+| i -> 9
+;;

@@ -103,7 +103,11 @@ let parse_legacy data =
 		let txn, rest' = parse_varint bdata in
 		let txs = Tx.parse_all_legacy (string_of_bitstring rest') (Uint64.to_int txn) in
 		match txs with
-		| Some (txs) -> Some ({ header= header; txs= List.rev txs; size= Bytes.length data })
+		| Some (txs) -> Some ({ 
+			header= header; 
+			txs= List.rev txs; 
+			size= 80 + Varint.encoding_length txn + List.fold_left (fun a x -> a + x.Tx.size) 0 txs;
+		})
 		| None -> None
 ;;
 

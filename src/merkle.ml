@@ -7,7 +7,7 @@ let of_hashes hashl =
 	| [] -> []
 	in
 	let rec m hs = match List.length hs with
-		| 0 -> Hash.of_bin @@ Hash.dsha256 (Hash.to_bin "0000000000000000000000000000000000000000000000000000000000000000")
+		| 0 -> Hash.of_bin @@ Hash.dsha256 (Hash.to_bin Hash.zero)
 		| 1 -> Hash.of_bin (List.hd hs)
 		| n when n > 1 -> m @@ mround hs
 	in 
