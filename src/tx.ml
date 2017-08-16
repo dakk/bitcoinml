@@ -266,6 +266,7 @@ let parse ?(coinbase=false) data = match coinbase with
 			| Some (txout), None -> ("", None)
 			| Some (txin), Some (txout) ->
 				let rest''', fields = Witness.parse_fields rest'' @@ List.length txin in match fields with | Some (fields') ->
+				let witlen = (Bytes.length @@ string_of_bitstring rest'') - (Bytes.length @@ string_of_bitstring rest''') + 2 in
 				match%bitstring rest''' with
 				| {|
 					locktime	: 32 : littleendian;
@@ -276,17 +277,21 @@ let parse ?(coinbase=false) data = match coinbase with
 					let txhash = Hash.of_bin (Hash.hash256 (Bytes.sub data 0 txlen)) in
 					let txin' = List.mapi (fun j tin -> { tin with In.witness_script= Some (List.nth fields' j) }) (List.rev txin) in
 					(rest''', Some ({
-						hash	= txhash;
+						hash= Hash.of_bin @@ Hash.dsha256 (
+							Bitstring.string_of_bitstring ([%bitstring {| version : 32 : littleendian |}]) 
+							^ (In.serialize_all txin) 
+							^ (Out.serialize_all txout)
+							^ Bitstring.string_of_bitstring ([%bitstring {| locktime : 32 : littleendian |}]));
 						version	= version;
 						txin	= txin';
 						txout	= List.rev txout;
 						locktime= Uint32.of_int32 locktime;
-						size= txlen;
-						witness= Some ({ (* TODO *)
-							hash= Hash.zero;
+						size= txlen - witlen;
+						witness= Some ({ 
+							hash= txhash;
 							marker= marker;
 							flag= flag;
-							size= 0;
+							size= witlen;
 						});
 					}))
 				| {| _ |} -> ("", None)
