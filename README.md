@@ -1,6 +1,7 @@
 # BitcoinML
 
 [![Build Status](https://travis-ci.org/dakk/bitcoinml.svg)](https://travis-ci.org/dakk/bitcoinml)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dakk/letchain/blob/master/LICENSE)
 [![docs](https://img.shields.io/badge/doc-online-blue.svg)](https://dakk.github.io/bitcoinml/bitcoinml/Bitcoinml/index.html)
 
 Bitcoin data-structures library for OCaml.
