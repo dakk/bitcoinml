@@ -1,3 +1,4 @@
 _build
 bitcoinml.0.2.4
+bitcoinml.0.3.0
 test/data/*.hex

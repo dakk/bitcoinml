@@ -18,9 +18,9 @@ Bitcoinml provides support for the following data-structures:
 - Varint (CompactSize)
 
 ### Segwit
-The library is now (0.3.0) fully compatible with segwit transactions. The parser automatically recognize
-segwit transaction, but for those who want to avoid this behaviour, there are *_legacy functions with 
-disabled segwit.
+The library is now fully compatible with segwit transactions (from version 0.3.0). The parser automatically recognize
+segwit transaction, and parse/serialize it consequently. For those who want to avoid this behaviour, there are 
+*_legacy functions with disabled segwit.
 
 ### Sexp serialization
 For every type of the library, bitcoinml also offers sexp to_string readable serialization:
