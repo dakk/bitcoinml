@@ -17,6 +17,12 @@ Bitcoinml provides support for the following data-structures:
 - Tx (In, Out, Witness)
 - Varint (CompactSize)
 
+### Segwit
+The library is now (0.3.0) fully compatible with segwit transactions. The parser automatically recognize
+segwit transaction, but for those who want to avoid this behaviour, there are *_legacy functions with 
+disabled segwit.
+
+### Sexp serialization
 For every type of the library, bitcoinml also offers sexp to_string readable serialization:
 
 ```sexp
@@ -45,6 +51,8 @@ For every type of the library, bitcoinml also offers sexp to_string readable ser
         (size 110))))
 )
 ```
+
+This implies that for each type there is a ```t_of_sexp``` and ```sexp_of_t``` conversion functions.
 
 
 ## Installation
