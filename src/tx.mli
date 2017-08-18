@@ -73,5 +73,6 @@ val serialize_all					: t list -> bytes
 val serialize_all_legacy	: t list -> bytes
 
 val is_witness	: t -> bool
+val is_coinbase	: t -> bool
 val to_string		: t -> string
 

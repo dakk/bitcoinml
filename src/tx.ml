@@ -384,3 +384,14 @@ let is_witness tx = match tx.witness with
 | None -> false
 | Some (w) -> true
 ;;
+
+
+let is_coinbase tx = 
+	if List.length tx.txin <> 1 then false
+	else
+		match (List.nth tx.txin 0) with
+		| i when i.out_hash = Hash.zero && i.out_n = (Uint32.sub Uint32.zero Uint32.one) -> (match i.script with
+			| ([OP_COINBASE (s)], l) when l >= 2 && l <= 100 -> true
+			| _ -> false)
+		| _ -> false
+;;
