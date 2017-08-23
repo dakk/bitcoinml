@@ -8,5 +8,5 @@
               stdint 
               cryptokit 
               bignum))
-  (preprocess (pps (ppx_jane ppx_bitstring -no-check ppx_driver.runner)))))
+  (preprocess (pps (ppx_jane ppx_bitstring -no-check ppx_driver.runner bisect_ppx)))))
 
