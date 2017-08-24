@@ -2,20 +2,10 @@ open Stdint;;
 
 type e = BTC | XTN | BCH | SIDECHAIN | NOTFOUND;;
 
-type genesis = {
-	hash		: Hash.t;
-	version		: int32;
-	prev_block	: Hash.t;
-	merkle_root : Hash.t;
-	time		: float;
-	bits		: uint32;
-	nonce		: uint32;
-};;
-
 
 type t = { 
 	block_size		: int;
-	genesis			: genesis;
+	genesis			: Block.Header.t;
 	magic				: int;
 	port				: int;
 	seeds				: string list;
