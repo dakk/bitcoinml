@@ -61,7 +61,7 @@ let tx_parse_test raw octx =
 		assert_equal (Tx.serialize t) (Hex.to_string raw)
 ;;
 
-let tx_parse_segwit_test raw dest sizes vsize hashes ?prefix:(prefix={ Address.pubkeyhash = 0x6f; scripthash = 0xc4; }) octx =
+let tx_parse_segwit_test raw dest sizes vsize hashes ?prefix:(prefix=(Params.of_network XTN).prefixes) octx =
 	let raw', tx = Tx.parse (Hex.to_string raw) in
 	match tx with
 	| None -> assert_equal true false
@@ -208,7 +208,7 @@ let suite = "bitcoinml" >::: [
 		"38Segwituno6sUoEkh57ycM6K7ej5gvJhM"
 		(106, 110) 134
 		("c586389e5e4b3acb9d6c8be1c19ae8ab2795397633176f5a6442a261bbdefc3a", "b759d39a8596b70b3a46700b83e1edb247e17ba58df305421864fe7a9ac142ea")
-		~prefix:{ Address.pubkeyhash = 0x00; scripthash = 0x05; };
+		~prefix:(Params.of_network BTC).prefixes;
 
 	"tx.to_string" >:: tx_to_string_test
 		(`Hex "01000000017b1eabe0209b1fe794124575ef807057c77ada2138ae4fa8d6c4de0398a14f3f00000000494830450221008949f0cb400094ad2b5eb399d59d01c14d73d8fe6e96df1a7150deb388ab8935022079656090d7f6bac4c9a94e0aad311a4268e082a725f8aeae0573fb12ff866a5f01ffffffff01f0ca052a010000001976a914cbc20a7664f2f69e5355aa427045bc15e7c6c77288ac00000000")
