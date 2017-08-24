@@ -61,13 +61,13 @@ let tx_parse_test raw octx =
 		assert_equal (Tx.serialize t) (Hex.to_string raw)
 ;;
 
-let tx_parse_segwit_test raw dest sizes hashes octx =
+let tx_parse_segwit_test raw dest sizes vsize hashes ?prefix:(prefix={ Address.pubkeyhash = 0x6f; scripthash = 0xc4; }) octx =
 	let raw', tx = Tx.parse (Hex.to_string raw) in
 	match tx with
 	| None -> assert_equal true false
 	| Some (t) -> 
 		assert_equal (Tx.serialize t) (Hex.to_string raw);
-		match Script.spendable_by ((List.nth t.txout 0).script) { pubkeyhash = 0x6f; scripthash = 0xc4; } with
+		match Script.spendable_by ((List.nth t.txout 0).script) prefix with
 		| None -> assert_equal true false
 		| Some (addr) -> 
 			assert_equal dest addr;
@@ -76,6 +76,7 @@ let tx_parse_segwit_test raw dest sizes hashes octx =
 			| Some (w) ->
 				assert_equal (fst sizes) t.size;
 				assert_equal (snd sizes) w.size; 
+				assert_equal vsize t.vsize;
 				assert_equal (snd hashes) w.hash;
 				assert_equal (fst hashes) t.hash
 ;;
@@ -181,26 +182,33 @@ let suite = "bitcoinml" >::: [
 	"tx.parse_witness_P2WPKH" >:: tx_parse_segwit_test 
 		(`Hex "0100000000010115e180dc28a2327e687facc33f10f2a20da717e5548406f7ae8b4c811072f8560100000000ffffffff0100b4f505000000001976a9141d7cd6c75c2e86f4cbf98eaed221b30bd9a0b92888ac02483045022100df7b7e5cda14ddf91290e02ea10786e03eb11ee36ec02dd862fe9a326bbcb7fd02203f5b4496b667e6e281cc654a2da9e4f08660c620a1051337fa8965f727eb19190121038262a6c6cec93c2d3ecd6c6072efea86d02ff8e3328bbd0242b20af3425990ac00000000") 
 		"miCsSagJ7RQDCMcBUaKFKEryaLnxbhGAPt"
-		(85, 110)
+		(85, 110) 113
 		("d869f854e1f8788bcff294cc83b280942a8c728de71eb709a2c29d10bfe21b7c", "976015741ba2fc60804dd63167326b1a1f7e94af2b66f4a0fd95b38c18ee729b");
 
 	"tx.parse_witness_P2WSH" >:: tx_parse_segwit_test 
 		(`Hex "0100000000010115e180dc28a2327e687facc33f10f2a20da717e5548406f7ae8b4c811072f8560200000000ffffffff0188b3f505000000001976a9141d7cd6c75c2e86f4cbf98eaed221b30bd9a0b92888ac02483045022100f9d3fe35f5ec8ceb07d3db95adcedac446f3b19a8f3174e7e8f904b1594d5b43022074d995d89a278bd874d45d0aea835d3936140397392698b7b5bbcdef8d08f2fd012321038262a6c6cec93c2d3ecd6c6072efea86d02ff8e3328bbd0242b20af3425990acac00000000") 
 		"miCsSagJ7RQDCMcBUaKFKEryaLnxbhGAPt"
-		(85, 112)
+		(85, 112) 113
 		("78457666f82c28aa37b74b506745a7c7684dc7842a52a457b09f09446721e11c", "12b1b3fe5e29f136bed2996d39e935442b619feb0a12d30ca832d29246689aa9");
 		
 	"tx.parse_witness_P2SH(WPKH)" >:: tx_parse_segwit_test 
 		(`Hex "0100000000010115e180dc28a2327e687facc33f10f2a20da717e5548406f7ae8b4c811072f85603000000171600141d7cd6c75c2e86f4cbf98eaed221b30bd9a0b928ffffffff019caef505000000001976a9141d7cd6c75c2e86f4cbf98eaed221b30bd9a0b92888ac02483045022100f764287d3e99b1474da9bec7f7ed236d6c81e793b20c4b5aa1f3051b9a7daa63022016a198031d5554dbb855bdbe8534776a4be6958bd8d530dc001c32b828f6f0ab0121038262a6c6cec93c2d3ecd6c6072efea86d02ff8e3328bbd0242b20af3425990ac00000000") 
 		"miCsSagJ7RQDCMcBUaKFKEryaLnxbhGAPt"
-		(108, 110)
+		(108, 110) 136
 		("8139979112e894a14f8370438a471d23984061ff83a9eba0bc7a34433327ec21", "6bf4e4dfb860cf0906f49c836700b130ac78cc391c72a0911c94cdec4dcb10ec");
 
 	"tx.parse_witness_P2SH(WSH)" >:: tx_parse_segwit_test 
 		(`Hex "0100000000010115e180dc28a2327e687facc33f10f2a20da717e5548406f7ae8b4c811072f856040000002322002001d5d92effa6ffba3efa379f9830d0f75618b13393827152d26e4309000e88b1ffffffff0188b3f505000000001976a9141d7cd6c75c2e86f4cbf98eaed221b30bd9a0b92888ac02473044022038421164c6468c63dc7bf724aa9d48d8e5abe3935564d38182addf733ad4cd81022076362326b22dd7bfaf211d5b17220723659e4fe3359740ced5762d0e497b7dcc012321038262a6c6cec93c2d3ecd6c6072efea86d02ff8e3328bbd0242b20af3425990acac00000000") 
 		"miCsSagJ7RQDCMcBUaKFKEryaLnxbhGAPt"
-		(120, 111)
+		(120, 111) 148
 		("954f43dbb30ad8024981c07d1f5eb6c9fd461e2cf1760dd1283f052af746fc88", "a5947589e2762107ff650958ba0e3a3cf341f53281d15593530bf9762c4edab1");
+
+	"tx.parse_witness_mn" >:: tx_parse_segwit_test
+		(`Hex "0200000000010140d43a99926d43eb0e619bf0b3d83b4a31f60c176beecfb9d35bf45e54d0f7420100000017160014a4b4ca48de0b3fffc15404a1acdc8dbaae226955ffffffff0100e1f5050000000017a9144a1154d50b03292b3024370901711946cb7cccc387024830450221008604ef8f6d8afa892dee0f31259b6ce02dd70c545cfcfed8148179971876c54a022076d771d6e91bed212783c9b06e0de600fab2d518fad6f15a2b191d7fbd262a3e0121039d25ab79f41f75ceaf882411fd41fa670a4c672c23ffaf0e361a969cde0692e800000000")
+		"38Segwituno6sUoEkh57ycM6K7ej5gvJhM"
+		(106, 110) 134
+		("c586389e5e4b3acb9d6c8be1c19ae8ab2795397633176f5a6442a261bbdefc3a", "b759d39a8596b70b3a46700b83e1edb247e17ba58df305421864fe7a9ac142ea")
+		~prefix:{ Address.pubkeyhash = 0x00; scripthash = 0x05; };
 
 	"tx.to_string" >:: tx_to_string_test
 		(`Hex "01000000017b1eabe0209b1fe794124575ef807057c77ada2138ae4fa8d6c4de0398a14f3f00000000494830450221008949f0cb400094ad2b5eb399d59d01c14d73d8fe6e96df1a7150deb388ab8935022079656090d7f6bac4c9a94e0aad311a4268e082a725f8aeae0573fb12ff866a5f01ffffffff01f0ca052a010000001976a914cbc20a7664f2f69e5355aa427045bc15e7c6c77288ac00000000")
