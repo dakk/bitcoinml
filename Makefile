@@ -11,3 +11,7 @@ coverage : clean
 	BISECT_ENABLE=YES jbuilder runtest
 	bisect-ppx-report -I _build/default/ -html _coverage/ `find . -name 'bisect*.out'`
 
+
+.PHONY : pin
+pin: 
+	opam pin add bitcoinml . -n && opam remove bitcoinml && opam install bitcoinml
