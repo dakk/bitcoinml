@@ -2,9 +2,9 @@ all:
 	jbuilder build @install @runtest @doc
 	cp -r _build/default/_doc/* docs/
 clean:
-	rm -f `find . -name 'bisect*.out'`
 	rm -rf _build
 
+#rm -f `find . -name 'bisect*.out'`
 
 .PHONY : coverage
 coverage : clean
