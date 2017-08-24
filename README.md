@@ -16,6 +16,7 @@ Bitcoinml provides support for the following data-structures:
 - Script (script execution, common pattern recognizer)
 - Tx (In, Out, Witness)
 - Varint (CompactSize)
+- Network parameters (for BTC, XTN and BCH)
 
 ### Segwit
 The library is now fully compatible with segwit transactions (from version 0.3.0). The parser automatically recognizes
