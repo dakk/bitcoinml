@@ -56,3 +56,5 @@ module LazyBlock : sig
 	val force_option	: l option -> t option
 	(** Force a lazy eval of an option lazy block *)
 end
+(** This module implements a LazyBlock parser, where only the header is parsed while the transaction
+	list parsing is deffered to the future *)
