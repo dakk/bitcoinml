@@ -4,7 +4,7 @@ open Varint;;
 open Hash;;
 open Sexplib;;
 open Conv;;
-open Convhelper;;
+open Conv_helper;;
 
 module Header = struct
 	type t = {

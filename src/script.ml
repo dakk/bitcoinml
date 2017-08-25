@@ -1,7 +1,7 @@
 open Base58;;
 open Sexplib;;
 open Conv;;
-open Convhelper;;
+open Conv_helper;;
 open Address;;
 
 module SStack = struct

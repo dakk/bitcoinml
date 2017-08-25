@@ -3,7 +3,7 @@ open Bitstring;;
 open Varint;;
 open Sexplib;;
 open Conv;;
-open Convhelper;;
+open Conv_helper;;
 
 module In = struct
 	type t = {

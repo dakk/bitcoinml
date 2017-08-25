@@ -1,7 +1,7 @@
 open Cryptokit;;
 open Sexplib;;
 open Conv;;
-open Convhelper;;
+open Conv_helper;;
 
 type t = string [@@deriving sexp];;
 type hash = t [@@deriving sexp];;
