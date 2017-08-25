@@ -1,5 +1,6 @@
 open Stdint
 
+(** Block header parsing / serialization module *)
 module Header : sig
 	type t = {
 		hash		: Hash.t;
@@ -12,9 +13,16 @@ module Header : sig
 	} [@@deriving sexp]
 
 	val parse 		: bytes -> t option
+	(** Parse a block header *)
+
 	val serialize	: t -> bytes
+	(** Serialize a block header *)
+
 	val to_string	: t -> string
+	(** Get a string sexp representation of a block header *)
+
 	val check_target : t -> bool
+	(** Check the nbits / hash target *)
 end
 
 type t = {
@@ -37,24 +45,3 @@ val to_string			: t -> string
 (** Get a string sexp representation of a block *)
 
 
-module LazyBlock : sig
-	type l = {
-		header	: Header.t;
-		ltxs		: Tx.t list option Lazy.t;
-		size		: int
-	}
-
-	val parse				: bytes -> l option
-	(** Lazy parse of a block *)
-	
-	val parse_legacy	: bytes -> l option
-	(** Lazy parse of a legacy block *)	
-
-	val force					: l -> t option
-	(** Force a lazy eval *)
-
-	val force_option	: l option -> t option
-	(** Force a lazy eval of an option lazy block *)
-end
-(** This module implements a LazyBlock parser, where only the header is parsed while the transaction
-	list parsing is deffered to the future *)

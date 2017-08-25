@@ -122,51 +122,5 @@ let serialize block =
 ;;
 
 
-
-
 let to_string b = sexp_of_t b |> Sexp.to_string;;
 
-
-
-
-
-module LazyBlock = struct
-	type l = {
-		header	: Header.t;
-		ltxs		: Tx.t list option Lazy.t;
-		size		: int
-	};;
-
-	let parse data = 
-		let header = Header.parse (Bytes.sub data 0 80) in
-		match header with
-		| None -> None
-		| Some (header) ->
-			let bdata = bitstring_of_string  (Bytes.sub data 80 ((Bytes.length data) - 80)) in
-			let txn, rest' = parse_varint bdata in
-			let txs = lazy (Tx.parse_all (string_of_bitstring rest') (Uint64.to_int txn)) in
-			Some ({ header= header; ltxs= txs; size= Bytes.length data })
-	;;
-
-
-	let parse_legacy data =
-		let header = Header.parse (Bytes.sub data 0 80) in
-		match header with
-		| None -> None
-		| Some (header) ->	
-			let bdata = bitstring_of_string  (Bytes.sub data 80 ((Bytes.length data) - 80)) in
-			let txn, rest' = parse_varint bdata in
-			let txs = lazy (Tx.parse_all_legacy (string_of_bitstring rest') (Uint64.to_int txn)) in
-			Some ({ header= header; ltxs= txs; size= Bytes.length data })
-	;;
-
-	let force lb = match Lazy.force lb.ltxs with
-	| None -> None
-	| Some (txs) -> Some ({ header= lb.header; txs= List.rev txs; size= lb.size })
-	;;
-
-	let force_option lb = match lb with
-	| Some (lb') -> force lb'
-	| None -> None
-	;;
-end
