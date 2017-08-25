@@ -4,7 +4,6 @@ all:
 clean:
 	rm -rf _build
 
-#rm -f `find . -name 'bisect*.out'`
 
 .PHONY : coverage
 coverage : clean

@@ -10,7 +10,7 @@ Bitcoin data-structures library for OCaml.
 
 Bitcoinml provides support for the following data-structures:
 - Address
-- Block
+- Block (and LazyBlock, with lazy parsing)
 - Hash
 - Merkleroot
 - Script (script execution, common pattern recognizer)
