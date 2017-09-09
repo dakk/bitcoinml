@@ -4,6 +4,8 @@ type prefix = {
   hrp: string;
 };;
 
+type t = string;;
+
 module Bech32 = struct
   let charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";;
 
