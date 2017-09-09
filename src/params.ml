@@ -22,7 +22,7 @@ let of_network n =
 		{ 
 			block_size = 1000000;
 			network	= BTC;
-			prefixes = { pubkeyhash = 0x00; scripthash = 0x05; };
+			prefixes = { pubkeyhash = 0x00; scripthash = 0x05; hrp = "bc" };
 
 			genesis = { 
 				hash		= "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f";
@@ -64,7 +64,7 @@ let of_network n =
 		{ 
 			block_size = 8000000;
 			network	= BCH;
-			prefixes = { pubkeyhash = 0x00; scripthash = 0x05; };
+			prefixes = { pubkeyhash = 0x00; scripthash = 0x05; hrp = "" };
 			
 			genesis = { 
 				hash		= "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f";
@@ -107,7 +107,7 @@ let of_network n =
 		{ 
 			block_size = 1000000;
 			network	= XTN;
-			prefixes = { pubkeyhash = 0x6f; scripthash = 0xc4; };
+			prefixes = { pubkeyhash = 0x6f; scripthash = 0xc4; hrp = "tb" };
 			
 			genesis = { 
 				hash		= "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943";

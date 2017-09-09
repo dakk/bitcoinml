@@ -771,5 +771,7 @@ let spendable_by scr prefix =
     (* P2PK *)
     | OP_DATA (n, pkh) :: OP_CHECKSIG :: [] when n = 33 || n = 65 ->
        Some (Address.of_pub prefix.pubkeyhash pkh)
+    (* TODO: P2WPKH *)
+    (* TODO: P2WSH *)
     | _ -> None
 ;;

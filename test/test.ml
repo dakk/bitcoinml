@@ -146,6 +146,10 @@ let merkle_of_hashes_test hl mr octx =
 		mr @@ Merkle.of_hashes hl
 ;;
 
+let address_bech32_test address ver scriptPubKey octx =
+	assert_equal true false
+;;
+
 let suite = "bitcoinml" >::: [
 	"base58.encode_check" 	>:: base58_encode_check_test;
 	
@@ -172,7 +176,7 @@ let suite = "bitcoinml" >::: [
 			Script.OP_EQUALVERIFY; Script.OP_CHECKSIG
 		], 25);
 	"script.spendable_by"	>:: script_spendable_by_test
-		{ pubkeyhash= 0x00; scripthash= 0x05 }
+		{ pubkeyhash= 0x00; scripthash= 0x05; hrp= "bc" }
 		([
 			Script.OP_DUP; Script.OP_HASH160; Script.OP_DATA (20, Hex.to_string (`Hex "89ABCDEFABBAABBAABBAABBAABBAABBAABBAABBA"));
 			Script.OP_EQUALVERIFY; Script.OP_CHECKSIG
@@ -237,6 +241,9 @@ let suite = "bitcoinml" >::: [
 	"address.of_pub" >:: address_of_pub_test 0x0 (`Hex "0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B23522CD470243453A299FA9E77237716103ABC11A1DF38855ED6F2EE187E9C582BA6") "16UwLL9Risc3QfPqBUvKofHmBQ7wMtjvM";
 	"address.of_pubhash" >:: address_of_pubhash_test 0x05 (`Hex "010966776006953D5567439E5E39F86A0D273BEE") "31nVrspaydBz8aMpxH9WkS2DuhgqS1fCuG";
 	"address.of_pubhash2" >:: address_of_pubhash_test 0x00 (`Hex "010966776006953D5567439E5E39F86A0D273BEE") "16UwLL9Risc3QfPqBUvKofHmBQ7wMtjvM";
+
+	"address.bech32" >:: address_bech32_test "BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4" 22 (`Hex "0014751e76e8199196d454941c45d1b3a323f1433bd6");
+
 
 	"merkle.of_hashes" >:: merkle_of_hashes_test ["ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"; "3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d"] "ba19cdde887c55f040e7ea751357133c23c9235709f58d5888a2059b6930b54e";
 	"merkle.of_hashes2" >:: merkle_of_hashes_test [
