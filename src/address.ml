@@ -12,7 +12,9 @@ module Bech32 = struct
     0
   ;;
 
-
+  let encode hrp witver witprog = 
+    ""
+  ;;
 end
 
 let of_pubhash prefix pkh =
@@ -27,4 +29,6 @@ let of_pub prefix pk =
 ;;
 
 
-let of_witness hrp witver pk = "";;
+let of_witness hrp witver witprog = 
+  Bech32.encode hrp witver witprog
+;;

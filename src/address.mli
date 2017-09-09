@@ -10,8 +10,7 @@ module Bech32 : sig
   val charset : string 
   val polymod : bytes -> int
 
-  (*val decode : string -> string -> string
-  val encode : string -> string -> string -> string*)
+  (* val encode : string -> string -> string -> string*)
 end
 
 
