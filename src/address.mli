@@ -9,10 +9,7 @@ type t = string
 (** Address abstract type *)
 
 module Bech32 : sig
-  val charset : string 
-  val polymod : bytes -> int
-
-  (* val encode : string -> string -> string -> string*)
+  val encode : bytes -> int -> bytes -> string
 end
 
 
