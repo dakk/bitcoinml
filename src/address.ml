@@ -1,4 +1,5 @@
 open Conv_helper;;
+open Bitstring;;
 
 type prefix = {
   pubkeyhash: int;
@@ -16,8 +17,8 @@ module Bech32 = struct
     let rec pm vl chk = match vl with 
     | [] -> chk
     | v :: vl' -> 
-      let top = chk lsl 25 in
-      let chk' = (chk land 0x1ffffff) lsr 5 lxor v in
+      let top = chk lsr 25 in
+      let chk' = (chk land 0x1ffffff) lsl (5 lxor v) in
       let rec genapply gl chk i = match gl with
       | [] -> chk
       | g::gl' -> genapply gl' (chk lxor (if ((top lsr i) land 1) = 1 then g else 0)) (i+1)
@@ -32,28 +33,37 @@ module Bech32 = struct
 
   let verify_checksum hrp data = polymod ((hrp_expand hrp) @ data) = 1;;
 
+
   let create_checksum hrp data = 
     let pm = polymod ((hrp_expand hrp) @ data @ [0; 0; 0; 0; 0; 0]) lxor 1 in
-    let rec pmp i pm = match pm with
-    | 6 -> pm
-    | i -> pmp (i+1) ((pm lsr 5 * (5 - i)) land 31)
+    let rec pmp i pm = match i with
+    | 6 -> []
+    | i -> ((pm lsr 5 * (5 - i)) land 31) :: (pmp (i+1) pm)
     in pmp 0 pm
   ;;
 
   let b32_encode hrp data = 
-    let comb = data @ [create_checksum hrp data] in
+    let comb = data @ (create_checksum hrp data) in
     let st = (List.fold_left (fun acc x -> String.make 1 (charset.[x]) ^ acc) "" comb) in
     hrp ^ "1" ^ st
   ;;
 
-  let convertbits prog fromb tob =
-    []
+  let convertbits prog frombits tobits =
+    let rec cv p = 
+      let l = if bitstring_length p >= tobits then tobits else bitstring_length p in
+      if l = 0 then [] else (
+        match%bitstring p with
+        | {| 
+          e : l : littleendian;
+          pp : -1 : bitstring
+        |} -> (Int64.to_int e) :: cv pp
+      )
+    in cv @@ bitstring_of_string prog
   ;;
 
-  let encode hrp witver witprog = 
-    b32_encode hrp @@ [witver] @ convertbits witprog 8 5
-  ;;
+  let encode hrp witver witprog = b32_encode hrp @@ [witver] @ convertbits witprog 8 5;;
 end
+
 
 let of_pubhash prefix pkh =
   let epkh = (Bytes.make 1 @@ Char.chr prefix) ^ pkh in
@@ -62,11 +72,7 @@ let of_pubhash prefix pkh =
 ;;
 
 
-let of_pub prefix pk =
-	pk |> Hash.sha256 |> Hash.ripemd160 |> of_pubhash prefix
-;;
+let of_pub prefix pk = pk |> Hash.sha256 |> Hash.ripemd160 |> of_pubhash prefix;;
 
 
-let of_witness hrp witver witprog = 
-  Bech32.encode hrp witver witprog
-;;
+let of_witness hrp witver witprog = Bech32.encode hrp witver witprog;;
