@@ -9,7 +9,7 @@ Bitcoin data-structures library for OCaml.
 ## Features
 
 Bitcoinml provides support for the following data-structures:
-- Address
+- Address (with also bech32 addresses)
 - Block
 - Block_lazy (lazy block evaluation)
 - Hash

@@ -18,10 +18,14 @@ module Bech32 = struct
     | [] -> chk
     | v :: vl' -> 
       let top = chk lsr 25 in
-      let chk' = (chk land 0x1ffffff) lsl (5 lxor v) in
+      let chk' = ((chk land 0x1ffffff) lsl 5) lxor v in
       let rec genapply gl chk i = match gl with
       | [] -> chk
-      | g::gl' -> genapply gl' (chk lxor (if ((top lsr i) land 1) = 1 then g else 0)) (i+1)
+      | g::gl' -> 
+        if ((top lsr i) land 1) = 1 then
+          genapply gl' (chk lxor g) (i+1)
+        else
+          genapply gl' chk (i+1)
       in pm vl' @@ genapply generators chk' 0
     in pm values 1
   ;;
@@ -33,35 +37,36 @@ module Bech32 = struct
 
   let verify_checksum hrp data = polymod ((hrp_expand hrp) @ data) = 1;;
 
-
   let create_checksum hrp data = 
     let pm = polymod ((hrp_expand hrp) @ data @ [0; 0; 0; 0; 0; 0]) lxor 1 in
     let rec pmp i pm = match i with
     | 6 -> []
-    | i -> ((pm lsr 5 * (5 - i)) land 31) :: (pmp (i+1) pm)
+    | i -> ((pm lsr (5 * (5 - i))) land 31) :: (pmp (i+1) pm)
     in pmp 0 pm
   ;;
 
   let b32_encode hrp data = 
     let comb = data @ (create_checksum hrp data) in
-    let st = (List.fold_left (fun acc x -> String.make 1 (charset.[x]) ^ acc) "" comb) in
+    let st = (List.fold_left (fun acc x -> acc ^ (String.make 1 (charset.[x]))) "" comb) in
     hrp ^ "1" ^ st
   ;;
 
-  let convertbits prog frombits tobits =
+  let convertbits prog frombits tobits pad =
     let rec cv p = 
       let l = if bitstring_length p >= tobits then tobits else bitstring_length p in
-      if l = 0 then [] else (
+      match l with 
+      | 0 -> []
+      (*| l when l > 0 && l < tobits -> padding? *)
+      | l ->
         match%bitstring p with
         | {| 
-          e : l : littleendian;
+          e : l : bigendian;
           pp : -1 : bitstring
         |} -> (Int64.to_int e) :: cv pp
-      )
     in cv @@ bitstring_of_string prog
   ;;
 
-  let encode hrp witver witprog = b32_encode hrp @@ [witver] @ convertbits witprog 8 5;;
+  let encode hrp witver witprog = b32_encode hrp @@ [witver] @ convertbits witprog 8 5 true;;
 end
 
 
