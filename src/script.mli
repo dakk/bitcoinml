@@ -1,5 +1,10 @@
 open Sexplib
 
+
+module Sigver : sig
+	type t = string -> string -> bool
+end
+
 module SStack : sig
 	type t = int Stack.t
 
@@ -160,7 +165,7 @@ val length              : t -> int
 val serialize           : t -> bytes
 val parse               : bytes -> t
 val parse_coinbase      : bytes -> t
-val verify              : t -> t -> bool
+val verify              : Sigver.t -> t -> t -> bool
 val to_string           : t -> string
 
 val is_spendable        : t -> bool

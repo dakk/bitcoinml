@@ -132,18 +132,15 @@ let block_to_string_test raw r octx =
 ;;
 
 let address_of_pub_test prefix pub addr octx =
-	assert_equal
-		addr @@ Address.of_pub prefix (Hex.to_string pub) 
+	assert_equal addr @@ Address.of_pub prefix (Hex.to_string pub) 
 ;;
 
 let address_of_pubhash_test prefix pub addr octx =
-	assert_equal
-		addr @@ Address.of_pubhash prefix (Hex.to_string pub) 
+	assert_equal addr @@ Address.of_pubhash prefix (Hex.to_string pub) 
 ;;
 
 let merkle_of_hashes_test hl mr octx =
-	assert_equal 
-		mr @@ Merkle.of_hashes hl
+	assert_equal mr @@ Merkle.of_hashes hl
 ;;
 
 let address_bech32_test address hrp ver script octx =

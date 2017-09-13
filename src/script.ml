@@ -4,6 +4,10 @@ open Conv;;
 open Conv_helper;;
 open Address;;
 
+module Sigver = struct
+	type t = string -> string -> bool;;
+end
+
 module SStack = struct
     type t = int Stack.t;;
 
@@ -478,18 +482,18 @@ let opcode_of_hex s =
     https://github.com/bitcoin/bitcoin/blob/master/src/script/interpreter.cpp
     https://en.bitcoin.it/wiki/Script
 *)
-let rec _eval st altst scr =
+let rec _eval sigver st altst scr =
     let rec to_endif_or_else st altst scr = match scr with
     | [] -> false
     | op::scr' -> match op with
-        | OP_ENDIF -> _eval st altst scr'
-        | OP_ELSE -> _eval st altst scr'
+        | OP_ENDIF -> _eval sigver st altst scr'
+        | OP_ELSE -> _eval sigver st altst scr'
         | _ -> to_endif_or_else st altst scr'
     in
     let rec to_endif st altst scr = match scr with
     | [] -> false
     | op::scr' -> match op with
-        | OP_ENDIF -> _eval st altst scr'
+        | OP_ENDIF -> _eval sigver st altst scr'
         | _ -> to_endif st altst scr'
     in
     match scr with
@@ -497,53 +501,53 @@ let rec _eval st altst scr =
     | op::scr' -> match op with
         (* Constants *)
         | OP_0
-        | OP_FALSE -> SStack.push 0 st; _eval st altst scr'
-        | OP_DATA (s, data) -> SStack.push_data data st; _eval st altst scr'
-        | OP_PUSHDATA1 (s, data) -> SStack.push_data data st; _eval st altst scr'
-        | OP_PUSHDATA2 (a, b, data) -> SStack.push_data data st; _eval st altst scr'
-        | OP_PUSHDATA4 (a, b, c, d, data) -> SStack.push_data data st; _eval st altst scr'
-        | OP_1NEGATE -> SStack.push (-1) st; _eval st altst scr'
+        | OP_FALSE -> SStack.push 0 st; _eval sigver st altst scr'
+        | OP_DATA (s, data) -> SStack.push_data data st; _eval sigver st altst scr'
+        | OP_PUSHDATA1 (s, data) -> SStack.push_data data st; _eval sigver st altst scr'
+        | OP_PUSHDATA2 (a, b, data) -> SStack.push_data data st; _eval sigver st altst scr'
+        | OP_PUSHDATA4 (a, b, c, d, data) -> SStack.push_data data st; _eval sigver st altst scr'
+        | OP_1NEGATE -> SStack.push (-1) st; _eval sigver st altst scr'
         | OP_1
-        | OP_TRUE -> SStack.push 1 st; _eval st altst scr'
-        | OP_2 -> SStack.push 2 st; _eval st altst scr'
-        | OP_3 -> SStack.push 3 st; _eval st altst scr'
-        | OP_4 -> SStack.push 4 st; _eval st altst scr'
-        | OP_5 -> SStack.push 5 st; _eval st altst scr'
-        | OP_6 -> SStack.push 6 st; _eval st altst scr'
-        | OP_7 -> SStack.push 7 st; _eval st altst scr'
-        | OP_8 -> SStack.push 8 st; _eval st altst scr'
-        | OP_9 -> SStack.push 9 st; _eval st altst scr'
-        | OP_10 -> SStack.push 10 st; _eval st altst scr'
-        | OP_11 -> SStack.push 11 st; _eval st altst scr'
-        | OP_12 -> SStack.push 12 st; _eval st altst scr'
-        | OP_13 -> SStack.push 13 st; _eval st altst scr'
-        | OP_14 -> SStack.push 14 st; _eval st altst scr'
-        | OP_15 -> SStack.push 15 st; _eval st altst scr'
-        | OP_16 -> SStack.push 16 st; _eval st altst scr'
+        | OP_TRUE -> SStack.push 1 st; _eval sigver st altst scr'
+        | OP_2 -> SStack.push 2 st; _eval sigver st altst scr'
+        | OP_3 -> SStack.push 3 st; _eval sigver st altst scr'
+        | OP_4 -> SStack.push 4 st; _eval sigver st altst scr'
+        | OP_5 -> SStack.push 5 st; _eval sigver st altst scr'
+        | OP_6 -> SStack.push 6 st; _eval sigver st altst scr'
+        | OP_7 -> SStack.push 7 st; _eval sigver st altst scr'
+        | OP_8 -> SStack.push 8 st; _eval sigver st altst scr'
+        | OP_9 -> SStack.push 9 st; _eval sigver st altst scr'
+        | OP_10 -> SStack.push 10 st; _eval sigver st altst scr'
+        | OP_11 -> SStack.push 11 st; _eval sigver st altst scr'
+        | OP_12 -> SStack.push 12 st; _eval sigver st altst scr'
+        | OP_13 -> SStack.push 13 st; _eval sigver st altst scr'
+        | OP_14 -> SStack.push 14 st; _eval sigver st altst scr'
+        | OP_15 -> SStack.push 15 st; _eval sigver st altst scr'
+        | OP_16 -> SStack.push 16 st; _eval sigver st altst scr'
 
         (* Flow *)
-        | OP_IF -> if SStack.pop st <> 0 then _eval st altst scr' else to_endif_or_else st altst scr'
-        | OP_NOTIF -> if SStack.pop st = 0 then _eval st altst scr' else to_endif_or_else st altst scr'
+        | OP_IF -> if SStack.pop st <> 0 then _eval sigver st altst scr' else to_endif_or_else st altst scr'
+        | OP_NOTIF -> if SStack.pop st = 0 then _eval sigver st altst scr' else to_endif_or_else st altst scr'
         | OP_ELSE -> to_endif st altst scr'
-        | OP_ENDIF -> _eval st altst scr'
+        | OP_ENDIF -> _eval sigver st altst scr'
         | OP_VERIFY -> if SStack.pop st <> 0 then true else false
         | OP_RETURN (data) -> false
 
         (* Stack *)
         | OP_TOALTSTACK ->
             let ap = SStack.pop st in SStack.push ap altst;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_FROMALTSTACK ->
             let ap = SStack.pop altst in SStack.push ap st;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_IFDUP -> true
         | OP_DEPTH -> true
         | OP_DROP ->
             SStack.pop st |> ignore;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_DUP ->
             let ap = SStack.top st in SStack.push ap st;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_NIP -> true
         | OP_OVER -> true
         | OP_PICK -> true
@@ -566,7 +570,7 @@ let rec _eval st altst scr =
             let a = SStack.top st in
             let b = SStack.top st in
             (if a = b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_EQUALVERIFY ->
             let a = SStack.top st in
             let b = SStack.top st in
@@ -575,49 +579,49 @@ let rec _eval st altst scr =
         (* Arithmetic*)
         | OP_1ADD ->
             let ap = SStack.top st in SStack.push (ap + 1) st;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_1SUB ->
             let ap = SStack.top st in SStack.push (ap - 1) st;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_NEGATE ->
             let ap = SStack.top st in SStack.push (-ap) st;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_ABS ->
             let ap = SStack.top st in SStack.push (abs ap) st;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_NOT ->
             let ap = SStack.top st in
             if ap = 0 then SStack.push 1 st else SStack.push 0 st;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_0NOTEQUAL ->
             let ap = SStack.top st in
             if ap = 0 then SStack.push 0 st else SStack.push 1 st;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_ADD ->
             let a = SStack.top st in
             let b = SStack.top st in
             SStack.push (a + b) st;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_SUB ->
             let a = SStack.top st in
             let b = SStack.top st in
             SStack.push (a - b) st;
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_BOOLAND ->
             let a = SStack.top st in
             let b = SStack.top st in
             (if a <> 0 && b <> 0 then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_BOOLOR ->
             let a = SStack.top st in
             let b = SStack.top st in
             (if a <> 0 || b <> 0 then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_NUMEQUAL ->
             let a = SStack.top st in
             let b = SStack.top st in
             (if a = b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_NUMEQUALVERIFY ->
             let a = SStack.top st in
             let b = SStack.top st in
@@ -626,43 +630,43 @@ let rec _eval st altst scr =
             let a = SStack.top st in
             let b = SStack.top st in
             (if a <> b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_LESSTHAN ->
             let a = SStack.top st in
             let b = SStack.top st in
             (if a < b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_GREATERTHAN ->
             let a = SStack.top st in
             let b = SStack.top st in
             (if a > b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_LESSTHANOREQUAL ->
             let a = SStack.top st in
             let b = SStack.top st in
             (if a <= b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_GREATERTHANOREQUAL ->
             let a = SStack.top st in
             let b = SStack.top st in
             (if a >= b then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_MIN ->
             let a = SStack.top st in
             let b = SStack.top st in
             (if a > b then SStack.push b st else SStack.push a st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_MAX ->
             let a = SStack.top st in
             let b = SStack.top st in
             (if a > b then SStack.push a st else SStack.push b st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
         | OP_WITHIN ->
             let x = SStack.top st in
             let min = SStack.top st in
             let max = SStack.top st in
             (if x >= min && x < max then SStack.push 1 st else SStack.push 0 st);
-            _eval st altst scr'
+            _eval sigver st altst scr'
 
         (* Crypto *)
         | OP_RIPEMD160 -> true
@@ -671,8 +675,18 @@ let rec _eval st altst scr =
         | OP_HASH160 -> true
         | OP_HASH256 -> true
         | OP_CODESEPARATOR -> true
-        | OP_CHECKSIG -> true
-        | OP_CHECKSIGVERIFY -> true
+        | OP_CHECKSIG -> 
+            let s = SStack.top st in
+            let pk = SStack.top st in
+            (*sigver s pk*)
+            false
+
+        | OP_CHECKSIGVERIFY -> 
+            let s = SStack.top st in
+            let pk = SStack.top st in
+            (*SStack.push @@ sigver s pk;*)
+            _eval sigver st altst scr'
+            
         | OP_CHECKMULTISIG -> true
         | OP_CHECKMULTISIGVERIFY -> true
 
@@ -693,7 +707,7 @@ let rec _eval st altst scr =
         | OP_RESERVED1 -> true
         | OP_RESERVED2 -> true
 
-        | OP_NOP (x) -> _eval st altst scr'
+        | OP_NOP (x) -> _eval sigver st altst scr'
         | _ -> false
 ;;
 
@@ -701,10 +715,10 @@ let rec _eval st altst scr =
 let to_string scr = sexp_of_t scr |> Sexp.to_string;;
 
 
-let eval scr =
+let eval sigver scr =
     let st = SStack.create () in
     let altst = SStack.create () in
-    try _eval st altst (fst scr) with _ -> false
+    try _eval sigver st altst (fst scr) with _ -> false
 ;;
 
 let join s1 s2 = ((fst s1) @ (fst s2), (snd s1) + (snd s2));;
@@ -748,7 +762,7 @@ let parse s =
 let parse_coinbase s = ([ OP_COINBASE (s) ], String.length s);;
 
 
-let verify s1 s2 = join s1 s2 |> eval;;
+let verify sigver s1 s2 = join s1 s2 |> eval sigver;;
 
 let is_spendable scr =
     let rec iss ops = match ops with
