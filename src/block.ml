@@ -38,9 +38,9 @@ module Header = struct
 		let calc_target b =
 			let b = Hash.to_bin_norev b in 
 			let exp = (Bytes.get b 3 |> Char.code) - 3 in
-			let mantissa = Bytes.sub b 0 2 in
-			let n = if 32 - exp - 2 > 0 then
-					Bytes.make (32 - exp - 2) (Char.chr 0) ^ mantissa ^ Bytes.make exp (Char.chr 0) 
+			let mantissa = (String.make 1 @@ Bytes.get b 2) ^ (String.make 1 @@ Bytes.get b 1) ^ (String.make 1 @@ Bytes.get b 0) in
+			let n = if 32 - exp - 3 > 0 then
+					Bytes.make (32 - exp - 3) (Char.chr 0) ^ mantissa ^ Bytes.make exp (Char.chr 0) 
 				else
 					mantissa ^ Bytes.make exp (Char.chr 0)
 			in
@@ -62,8 +62,7 @@ module Header = struct
 				let a' = Scanf.sscanf (String.make 1 a) "%1x" (fun i -> i) in
 				let b' = Scanf.sscanf (String.make 1 b) "%1x" (fun i -> i) in
 				if a' > b' then false else true
-		in
-		check h.hash @@ calc_target h.bits
+		in check h.hash @@ calc_target h.bits
 	;;
 
 	let parse data =
