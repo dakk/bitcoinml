@@ -37,14 +37,12 @@ module Header = struct
 	;;
 
 	let check_target h =
-		let calc_target b =
-			let exp = Int64.of_bytes_little_endian ((Bytes.sub b 0 1) ^ (Bytes.make 7 (Char.chr 0))) 0 in
-			let body = Int64.of_bytes_little_endian ((Bytes.sub b 1 3) ^ (Bytes.make 5 (Char.chr 0))) 0 in
-			Big_int.power_big_int_positive_big_int (Big_int.big_int_of_int64 body) (Big_int.big_int_of_int64 exp)
+		let calc_target b = 
+			let exp = Uint32.shift_right b 24 in
+			let body = Uint32.to_int64 @@ Uint32.sub b (Uint32.mul exp @@ Uint32.of_int 0xFFFFFF) in
+			Big_int.power_big_int_positive_big_int (Big_int.big_int_of_int64 body) (Big_int.big_int_of_int64 @@ Uint32.to_int64 exp)
 		in
-		let buf = Bytes.create 32 in
-		let _ = Uint32.to_bytes_little_endian h.bits buf 0 in
-		let t' = calc_target buf in
+		let t' = calc_target h.bits in
 		let h' = Hash.to_bigint h.hash in
 		Big_int.lt_big_int h' t'
 	;;
