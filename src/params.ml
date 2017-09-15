@@ -30,7 +30,7 @@ let of_network n =
 				prev_block 	= Hash.zero;
 				nonce		= Uint32.of_int 2083236893;
 				time		= 1231006505.0;
-				bits		= Uint32.of_int 0x1d00ffff;
+				bits		= "1d00ffff";
 				version 	= Int32.of_int 1;
 			};
 
@@ -72,7 +72,7 @@ let of_network n =
 				prev_block 	= Hash.zero;
 				nonce		= Uint32.of_int 2083236893;
 				time		= 1231006505.0;
-				bits		= Uint32.of_int 0x1d00ffff;
+				bits		= "1d00ffff";
 				version 	= Int32.of_int 1;
 			};
 
@@ -115,7 +115,7 @@ let of_network n =
 				prev_block 	= Hash.zero;
 				nonce		= Uint32.of_int 414098458;
 				time		= 1296688602.0;
-				bits		= Uint32.of_int 0x1d00ffff;
+				bits		= "1d00ffff";
 				version 	= Int32.of_int 1;
 			};
 

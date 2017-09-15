@@ -8,7 +8,7 @@ module Header : sig
 		prev_block	: Hash.t;
 		merkle_root : Hash.t;
 		time		: float;
-		bits		: uint32;
+		bits		: string;
 		nonce		: uint32;
 	} [@@deriving sexp]
 
