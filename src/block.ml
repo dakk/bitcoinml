@@ -39,7 +39,11 @@ module Header = struct
 			let b = Hash.to_bin_norev b in 
 			let exp = (Bytes.get b 3 |> Char.code) - 3 in
 			let mantissa = Bytes.sub b 0 2 in
-			let n = Bytes.make (32 - exp - 2) (Char.chr 0) ^ mantissa ^ Bytes.make exp (Char.chr 0) in
+			let n = if 32 - exp - 2 > 0 then
+					Bytes.make (32 - exp - 2) (Char.chr 0) ^ mantissa ^ Bytes.make exp (Char.chr 0) 
+				else
+					mantissa ^ Bytes.make exp (Char.chr 0)
+			in
 			Hash.of_bin_norev n
 		in
 		let rec check h t = match Bytes.length h with
