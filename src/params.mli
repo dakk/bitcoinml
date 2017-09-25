@@ -1,8 +1,10 @@
 open Stdint
-type e = BTC | XTN | BCH | SIDECHAIN | NOTFOUND
+type e = BTC | XTN | BCH | LTC | LTN | SIDECHAIN | NOTFOUND
 
 type t = { 
+	hash_function	: bytes -> bytes;
 	block_size	: int;
+	block_time	: int;
 	genesis			: Block.Header.t;
 	magic				: int;
 	port				: int;

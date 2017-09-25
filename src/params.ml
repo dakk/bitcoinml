@@ -1,10 +1,13 @@
 open Stdint;;
+open Hash;;
 
-type e = BTC | XTN | BCH | SIDECHAIN | NOTFOUND;;
+type e = BTC | XTN | BCH | LTC | LTN | SIDECHAIN | NOTFOUND;;
 
 
 type t = { 
-	block_size		: int;
+	hash_function	: bytes -> bytes;
+	block_size	: int;
+	block_time	: int;
 	genesis			: Block.Header.t;
 	magic				: int;
 	port				: int;
@@ -20,7 +23,9 @@ let of_network n =
 	match n with
 	| BTC -> 
 		{ 
+			hash_function = Hash.dsha256;
 			block_size = 1000000;
+			block_time = 600;
 			network	= BTC;
 			prefixes = { pubkeyhash = 0x00; scripthash = 0x05; hrp = "bc" };
 
@@ -60,9 +65,11 @@ let of_network n =
 				478559, "00000000000000000019f112ec0a9982926f1258cdcc558dd7c3b7e5dc7fa148";
 			];
 		}
-		| BCH -> 
+	| BCH -> 
 		{ 
+			hash_function = Hash.dsha256;
 			block_size = 8000000;
+			block_time = 600;
 			network	= BCH;
 			prefixes = { pubkeyhash = 0x00; scripthash = 0x05; hrp = "" };
 			
@@ -105,7 +112,9 @@ let of_network n =
 		}
 	| XTN -> 
 		{ 
+			hash_function = Hash.dsha256;
 			block_size = 1000000;
+			block_time = 600;
 			network	= XTN;
 			prefixes = { pubkeyhash = 0x6f; scripthash = 0xc4; hrp = "tb" };
 			
@@ -140,6 +149,78 @@ let of_network n =
 				295000, "000000000003e5a235fe2062b19f6c9d63183fadccbd10027bad1056a24e1b0d";				
 			];
 		}
+	| LTC -> 
+		{ 
+			hash_function = (fun y -> y);
+			block_size = 1000000;
+			block_time = 150;
+			network	= LTC;
+			prefixes = { pubkeyhash = 0x30; scripthash = 0x32; hrp = "tl" };
+			
+			genesis = { 
+				hash		= "12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2";
+				merkle_root	= "97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd4ced9";
+				prev_block 	= Hash.zero;
+				nonce		= Uint32.of_int 2084524493;
+				time		= 1317972665.0;
+				bits		= "1e0ffff0";
+				version 	= Int32.of_int 1;
+			};
+
+			port	= 9333;
+			magic	= 0xFBC0B6DB;
+			seeds	= [ 
+				"seed-a.litecoin.loshan.co.uk"; 
+				"dnsseed.thrasher.io";
+				"dnsseed.litecointools.com";
+				"dnsseed.litecoinpool.org";
+			];
+			checkpoints = [
+				1500, "841a2965955dd288cfa707a755d05a54e45f8bd476835ec9af4402a2b59a2967";
+				4032, "9ce90e427198fc0ef05e5905ce3503725b80e26afd35a987965fd7e3d9cf0846";
+				8064, "eb984353fc5190f210651f150c40b8a4bab9eeeff0b729fcb3987da694430d70";
+				16128, "602edf1859b7f9a6af809f1d9b0e6cb66fdc1d4d9dcd7a4bec03e12a1ccd153d";
+				23420, "d80fdf9ca81afd0bd2b2a90ac3a9fe547da58f2530ec874e978fce0b5101b507";
+				50000, "69dc37eb029b68f075a5012dcc0419c127672adb4f3a32882b2b3e71d07a20a6";
+				80000, "4fcb7c02f676a300503f49c764a89955a8f920b46a8cbecb4867182ecdb2e90a";
+				120000, "bd9d26924f05f6daa7f0155f32828ec89e8e29cee9e7121b026a7a3552ac6131";
+				161500, "dbe89880474f4bb4f75c227c77ba1cdc024991123b28b8418dbbf7798471ff43";
+				179620, "2ad9c65c990ac00426d18e446e0fd7be2ffa69e9a7dcb28358a50b2b78b9f709";
+				240000, "7140d1c4b4c2157ca217ee7636f24c9c73db39c4590c4e6eab2e3ea1555088aa";
+				383640, "2b6809f094a9215bafc65eb3f110a35127a34be94b7d0590a096c3f126c6f364";
+				409004, "487518d663d9f1fa08611d9395ad74d982b667fbdc0e77e9cf39b4f1355908a3";
+				456000, "bf34f71cc6366cd487930d06be22f897e34ca6a40501ac7d401be32456372004";
+				638902, "15238656e8ec63d28de29a8c75fcf3a5819afc953dcd9cc45cecc53baec74f38";
+				721000, "198a7b4de1df9478e2463bd99d75b714eab235a2e63e741641dc8a759a9840e5";
+			];
+		}
+	| LTN -> 
+		{ 
+			hash_function = (fun y -> y);
+			block_size = 1000000;
+			block_time = 150;
+			network	= LTN;
+			prefixes = { pubkeyhash = 0x30; scripthash = 0x32; hrp = "tl" };
+			
+			genesis = { 
+				hash		= "f5ae71e26c74beacc88382716aced69cddf3dffff24f384e1808905e0188f68f";
+				merkle_root	= "97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd4ced9";
+				prev_block 	= Hash.zero;
+				nonce		= Uint32.of_int 293345;
+				time		= 1486949366.0;
+				bits		= "1e0ffff0";
+				version 	= Int32.of_int 1;
+			};
+
+			port	= 19333;
+			magic	= 0xFCC1B7DC;
+			seeds	= [ 
+				"testnet-seed.litecointools.com";
+			];
+			checkpoints = [
+				546, "a0fea99a6897f531600c8ae53367b126824fd6a847b2b2b73817a95b8e27e602"
+			];
+		}
 	| _ -> failwith "Not available"
 ;;
 
@@ -149,6 +230,8 @@ let name_of_network n =
 	| BTC -> "Bitcoin mainnet"
 	| XTN -> "Bitcoin testnet"
 	| BCH -> "Bitcoincash mainnet"
+	| LTC -> "Litecoin mainnet"
+	| LTN -> "Litecoin testnet"
 	| _ -> ""
 ;;
 
@@ -157,5 +240,7 @@ let abbr_to_network n =
 	| "BTC" -> BTC
 	| "XTN" -> XTN
 	| "BCH" -> BCH
+	| "LTC" -> LTC 
+	| "LTN" -> LTN
 	| _ -> NOTFOUND
 ;;
