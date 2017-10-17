@@ -15,6 +15,7 @@ type t = {
 	network			: e;
 	checkpoints	: (int * Hash.t) list;
 	prefixes		: Address.prefix;
+	max_money		: Int64.t;
 };;
 
 
@@ -64,6 +65,7 @@ let of_network n =
 				295000, "00000000000000004d9b4ef50f0f9d686fd69db2e03af35a100370c64632a983";
 				478559, "00000000000000000019f112ec0a9982926f1258cdcc558dd7c3b7e5dc7fa148";
 			];
+			max_money = 2100000000000000L;
 		}
 	| BCH -> 
 		{ 
@@ -109,6 +111,7 @@ let of_network n =
 				295000, "00000000000000004d9b4ef50f0f9d686fd69db2e03af35a100370c64632a983";
 				478559, "000000000000000000651ef99cb9fcbe0dadde1d424bd9f15ff20136191a5eec";
 			];
+			max_money = 2100000000000000L;
 		}
 	| XTN -> 
 		{ 
@@ -148,6 +151,7 @@ let of_network n =
 				216116, "0000000000602ef6a29067da9f71193ba71f906da159753713a8f28204a96ee1";
 				295000, "000000000003e5a235fe2062b19f6c9d63183fadccbd10027bad1056a24e1b0d";				
 			];
+			max_money = 2100000000000000L;
 		}
 	| LTC -> 
 		{ 
@@ -193,6 +197,7 @@ let of_network n =
 				638902, "15238656e8ec63d28de29a8c75fcf3a5819afc953dcd9cc45cecc53baec74f38";
 				721000, "198a7b4de1df9478e2463bd99d75b714eab235a2e63e741641dc8a759a9840e5";
 			];
+			max_money = 2100000000000000L;
 		}
 	| LTN -> 
 		{ 
@@ -220,6 +225,7 @@ let of_network n =
 			checkpoints = [
 				546, "a0fea99a6897f531600c8ae53367b126824fd6a847b2b2b73817a95b8e27e602"
 			];
+			max_money = 2100000000000000L;
 		}
 	| _ -> failwith "Not available"
 ;;
@@ -244,3 +250,4 @@ let abbr_to_network n =
 	| "LTN" -> LTN
 	| _ -> NOTFOUND
 ;;
+

@@ -4,6 +4,7 @@ open Sexplib
 open Conv
 open Conv_helper
 
+val amount_check			: ?max_money:Int64.t -> Int64.t -> bool
 
 module In : sig
 	type t = {
@@ -75,4 +76,5 @@ val serialize_all_legacy	: t list -> bytes
 val is_witness	: t -> bool
 val is_coinbase	: t -> bool
 val to_string		: t -> string
+
 

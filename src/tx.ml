@@ -5,6 +5,8 @@ open Sexplib;;
 open Conv;;
 open Conv_helper;;
 
+let amount_check ?(max_money=2100000000000000L)  am = am >= Int64.zero && am <= max_money;;
+
 module In = struct
 	type t = {
 		out_hash			: string;
@@ -124,7 +126,9 @@ module Out = struct
 				rest''		: -1 : bitstring
 			|} ->
 			let sc = Script.parse script in
-			(rest'', Some ({ value= value; script= sc; }))
+			(match amount_check value with
+			| true -> (rest'', Some ({ value= value; script= sc; }))
+			| false -> (rest'', None))
 		| {| _ |} -> (bitstring_of_string "", None)
 	;;
 

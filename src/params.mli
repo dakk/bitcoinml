@@ -12,6 +12,7 @@ type t = {
 	network			: e;
 	checkpoints	: (int * Hash.t) list;
 	prefixes		: Address.prefix;
+	max_money		: Int64.t;
 }
 
 val of_network 			: e -> t
