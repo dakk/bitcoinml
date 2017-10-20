@@ -47,27 +47,22 @@ let of_bin_norev b =
 
 
 (* Hash to binary *)
-let to_bin h =
-	let rec to_bin' h =
-		let tob cc = String.make 1 (Char.chr (Scanf.sscanf cc "%2x" (fun i -> i))) in
-		match String.length h with
-		| 0 -> ""
-		| 1 -> failwith "Hash can't have odd size"
-		| n -> (tob (String.sub h 0 2)) ^ (to_bin' (String.sub h 2 ((String.length h) - 2)))
-	in reverse (to_bin' h)
-;;
-
-
-let to_bin_norev h =
-	let rec to_bin' h acc =
-		let tob cc = String.make 1 (Char.chr (Scanf.sscanf cc "%2x" (fun i -> i))) in
-		match String.length h with
-		| 0 -> acc
-		| 1 -> failwith "Hash can't have odd size"
-		| n -> to_bin' (String.sub h 2 ((String.length h) - 2)) @@ acc ^ (tob (String.sub h 0 2))
+let to_bin_generic rev h =
+	let dict = "0123456789abcdef" in
+	let rec to_bin' h acc = match String.length h with
+	| 0 -> acc
+	| 1 -> failwith "Hash can't have odd size"
+	| n ->
+		let spl = String.sub h 0 2 in
+		let rest = String.sub h 2 @@ n - 2 in
+		let s = Char.chr @@ (String.index dict spl.[0]) * 0x10 + (String.index dict spl.[1]) in
+		if rev then to_bin' rest @@ (String.make 1 s) ^ acc else to_bin' rest @@ acc ^ (String.make 1 s)
 	in to_bin' h ""
 ;;
 
+let to_bin h = to_bin_generic true h;;
+
+let to_bin_norev h = to_bin_generic false h;;
 
 
 let to_bigint h =
