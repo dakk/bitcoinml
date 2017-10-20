@@ -128,7 +128,7 @@ module Out = struct
 			let sc = Script.parse script in
 			(match amount_check value with
 			| true -> (rest'', Some ({ value= value; script= sc; }))
-			| false -> (rest'', None))
+			| false -> Printf.printf "amount not valid"; (rest'', None))
 		| {| _ |} -> (bitstring_of_string "", None)
 	;;
 
