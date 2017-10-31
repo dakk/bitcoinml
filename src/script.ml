@@ -787,9 +787,9 @@ let spendable_by scr prefix =
        Some (Address.of_pub prefix.pubkeyhash pkh)
     (* P2WPKH *)
     | OP_0 :: OP_DATA (20, wpkh) :: [] ->
-        Some (Address.Bech32.encode prefix.hrp 0x00 wpkh)
+        Some (Address.of_witness prefix.hrp 0x00 wpkh)
     (* P2WSH *)
     | OP_0 :: OP_DATA (32, wsh) :: [] ->
-        Some (Address.Bech32.encode prefix.hrp 0x00 wsh)
+        Some (Address.of_witness prefix.hrp 0x00 wsh)
     | _ -> None
 ;;
