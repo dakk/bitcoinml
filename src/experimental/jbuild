@@ -1,0 +1,7 @@
+(jbuild_version 1)
+
+(library
+ ((name        experimental)
+  (public_name bitcoinml.experimental)
+  (libraries (cryptokit))))
+

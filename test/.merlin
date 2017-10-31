@@ -1,4 +1,5 @@
 B ../_build/default/src
+B ../_build/default/src/experimental
 B ../_build/default/test
 FLG -w -40
 PKG base
@@ -90,3 +91,4 @@ PKG unix
 PKG variantslib
 PKG zarith
 S ../src
+S ../src/experimental

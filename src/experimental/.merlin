@@ -1,0 +1,5 @@
+B ../../_build/default/src/experimental
+FLG -open Experimental -w -40
+PKG cryptokit
+PKG unix
+PKG zarith
