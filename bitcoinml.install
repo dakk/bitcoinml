@@ -78,6 +78,11 @@ lib: [
   "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity.cmt" {"experimental/experimental__Simplicity.cmt"}
   "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity.cmti" {"experimental/experimental__Simplicity.cmti"}
   "_build/install/default/lib/bitcoinml/experimental/simplicity.mli" {"experimental/simplicity.mli"}
+  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity_test.cmi" {"experimental/experimental__Simplicity_test.cmi"}
+  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity_test.cmx" {"experimental/experimental__Simplicity_test.cmx"}
+  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity_test.cmt" {"experimental/experimental__Simplicity_test.cmt"}
+  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity_test.cmti" {"experimental/experimental__Simplicity_test.cmti"}
+  "_build/install/default/lib/bitcoinml/experimental/simplicity_test.mli" {"experimental/simplicity_test.mli"}
   "_build/install/default/lib/bitcoinml/experimental/experimental.cma" {"experimental/experimental.cma"}
   "_build/install/default/lib/bitcoinml/experimental/experimental.cmxa" {"experimental/experimental.cmxa"}
   "_build/install/default/lib/bitcoinml/experimental/experimental.a" {"experimental/experimental.a"}
