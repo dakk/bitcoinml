@@ -8,10 +8,12 @@ type t =
 | Comp of t * t
 | Case of t * t
 | Pair of t * t
+| Sum of t * t
 ;;
 
 
 module Examples = struct
+  let two = Sum (Unit, Unit);;
   let not = Comp (
     (Pair (Iden, Unit)),
     (Case (Injr Unit, Injl Unit))
