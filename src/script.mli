@@ -161,12 +161,14 @@ val opcode_of_hex       : bytes -> opcode * bytes
 
 type t = opcode list * int [@@deriving sexp]
 
+val empty								: t
 val length              : t -> int
 val serialize           : t -> bytes
 val parse               : bytes -> t
 val parse_coinbase      : bytes -> t
 val verify              : Sigver.t -> t -> t -> bool
 val to_string           : t -> string
+val of_opcodes					: opcode list -> t
 
 val is_spendable        : t -> bool
 val spendable_by        : t -> Address.prefix -> string option

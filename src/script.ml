@@ -167,6 +167,8 @@ type opcode =
 
 type t = opcode list * int [@@deriving sexp];;
 
+let empty = ([], 0);;
+
 let opcode_to_string oc = sexp_of_opcode oc |> Sexp.to_string;;
 
 let opcode_to_hex oc =
@@ -761,6 +763,7 @@ let parse s =
 
 let parse_coinbase s = ([ OP_COINBASE (s) ], String.length s);;
 
+let of_opcodes ops = (ops, List.length ops);;
 
 let verify sigver s1 s2 = join s1 s2 |> eval sigver;;
 

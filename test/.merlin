@@ -1,5 +1,4 @@
 B ../_build/default/src
-B ../_build/default/src/experimental
 B ../_build/default/test
 FLG -w -40
 PKG base
@@ -28,8 +27,6 @@ PKG oUnit.advanced
 PKG ocaml-compiler-libs.common
 PKG ocaml-compiler-libs.shadow
 PKG ocaml-migrate-parsetree
-PKG ocplib-endian
-PKG ocplib-endian.bigstring
 PKG octavius
 PKG ppx_assert
 PKG ppx_assert.runtime-lib
@@ -91,4 +88,3 @@ PKG unix
 PKG variantslib
 PKG zarith
 S ../src
-S ../src/experimental

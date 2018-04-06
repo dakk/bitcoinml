@@ -50,6 +50,22 @@ lib: [
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmt"
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmti"
   "_build/install/default/lib/bitcoinml/script.mli"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_multisig.cmi"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_multisig.cmx"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_multisig.cmt"
+  "_build/install/default/lib/bitcoinml/script_multisig.ml"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_pubkey.cmi"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_pubkey.cmx"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_pubkey.cmt"
+  "_build/install/default/lib/bitcoinml/script_pubkey.ml"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_pubkeyhash.cmi"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_pubkeyhash.cmx"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_pubkeyhash.cmt"
+  "_build/install/default/lib/bitcoinml/script_pubkeyhash.ml"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_templates.cmi"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_templates.cmx"
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_templates.cmt"
+  "_build/install/default/lib/bitcoinml/script_templates.ml"
   "_build/install/default/lib/bitcoinml/bitcoinml__Tx.cmi"
   "_build/install/default/lib/bitcoinml/bitcoinml__Tx.cmx"
   "_build/install/default/lib/bitcoinml/bitcoinml__Tx.cmt"
@@ -64,29 +80,6 @@ lib: [
   "_build/install/default/lib/bitcoinml/bitcoinml.cmxa"
   "_build/install/default/lib/bitcoinml/bitcoinml.a"
   "_build/install/default/lib/bitcoinml/bitcoinml.cmxs"
-  "_build/install/default/lib/bitcoinml/experimental/experimental.cmi" {"experimental/experimental.cmi"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental.cmx" {"experimental/experimental.cmx"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental.cmt" {"experimental/experimental.cmt"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental.ml-gen" {"experimental/experimental.ml-gen"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Mast.cmi" {"experimental/experimental__Mast.cmi"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Mast.cmx" {"experimental/experimental__Mast.cmx"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Mast.cmt" {"experimental/experimental__Mast.cmt"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Mast.cmti" {"experimental/experimental__Mast.cmti"}
-  "_build/install/default/lib/bitcoinml/experimental/mast.mli" {"experimental/mast.mli"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity.cmi" {"experimental/experimental__Simplicity.cmi"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity.cmx" {"experimental/experimental__Simplicity.cmx"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity.cmt" {"experimental/experimental__Simplicity.cmt"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity.cmti" {"experimental/experimental__Simplicity.cmti"}
-  "_build/install/default/lib/bitcoinml/experimental/simplicity.mli" {"experimental/simplicity.mli"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity_test.cmi" {"experimental/experimental__Simplicity_test.cmi"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity_test.cmx" {"experimental/experimental__Simplicity_test.cmx"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity_test.cmt" {"experimental/experimental__Simplicity_test.cmt"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental__Simplicity_test.cmti" {"experimental/experimental__Simplicity_test.cmti"}
-  "_build/install/default/lib/bitcoinml/experimental/simplicity_test.mli" {"experimental/simplicity_test.mli"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental.cma" {"experimental/experimental.cma"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental.cmxa" {"experimental/experimental.cmxa"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental.a" {"experimental/experimental.a"}
-  "_build/install/default/lib/bitcoinml/experimental/experimental.cmxs" {"experimental/experimental.cmxs"}
 ]
 doc: [
   "_build/install/default/doc/bitcoinml/README.md"

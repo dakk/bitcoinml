@@ -1,7 +1,6 @@
 B ../_build/default/src
-B ../_build/default/src/experimental
 FLG -open Bitcoinml -w -40
-FLG -ppx "../_build/default/.ppx/ppx_bitstring+ppx_jane+ppx_driver.runner/ppx.exe --as-ppx --cookie 'library-name="bitcoinml"' -no-check"
+FLG -ppx '/home/dakk/Repositories/MyRepos/bitcoinml/_build/default/.ppx/ppx_bitstring+ppx_jane+ppx_driver.runner/ppx.exe --as-ppx --cookie '\''library-name="bitcoinml"'\'' -no-check'
 PKG base
 PKG base.caml
 PKG base.shadow_stdlib
@@ -84,4 +83,3 @@ PKG typerep
 PKG unix
 PKG variantslib
 PKG zarith
-S experimental
