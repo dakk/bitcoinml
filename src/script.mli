@@ -1,19 +1,6 @@
 open Sexplib
 
 
-module Sigver : sig
-	type t = string -> string -> bool
-end
-
-module SStack : sig
-	type t = int Stack.t
-
-	val create      : unit -> t
-	val pop         : t -> int
-	val top         : t -> int
-	val push        : int -> t -> unit
-	val push_data   : bytes -> t -> unit
-end
 
 
 type data = bytes
@@ -164,12 +151,10 @@ type t = opcode list * int [@@deriving sexp]
 val empty								: t
 val length              : t -> int
 val serialize           : t -> bytes
+val join								: t -> t -> t
 val parse               : bytes -> t
 val parse_coinbase      : bytes -> t
-val verify              : Sigver.t -> t -> t -> bool
 val to_string           : t -> string
 val of_opcodes					: opcode list -> t
 
-val is_spendable        : t -> bool
-val spendable_by        : t -> Address.prefix -> string option
 

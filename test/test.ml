@@ -43,12 +43,12 @@ let script_serialize_test sc scdec octx =
 	assert_equal (Hex.to_string sc) s
 ;;
 
-let script_is_spendable_test sc octx =
-	assert_equal (Script.is_spendable sc) true
+let script_verify_is_spendable_test sc octx =
+	assert_equal (Script_verify.is_spendable sc) true
 ;;
 
-let script_spendable_by_test prefix sc adr octx =
-	let s = Script.spendable_by sc prefix in
+let script_verify_spendable_by_test prefix sc adr octx =
+	let s = Script_verify.spendable_by sc prefix in
 	assert_equal s (Some adr)
 ;;
 
@@ -67,7 +67,7 @@ let tx_parse_segwit_test raw dest sizes vsize hashes ?prefix:(prefix=(Params.of_
 	| None -> assert_equal true false
 	| Some (t) -> 
 		assert_equal (Tx.serialize t) (Hex.to_string raw);
-		match Script.spendable_by ((List.nth t.txout 0).script) prefix with
+		match Script_verify.spendable_by ((List.nth t.txout 0).script) prefix with
 		| None -> assert_equal true false
 		| Some (addr) -> 
 			assert_equal dest addr;
@@ -174,12 +174,12 @@ let suite = "bitcoinml" >::: [
 			Script.OP_DUP; Script.OP_HASH160; Script.OP_DATA (20, Hex.to_string (`Hex "89ABCDEFABBAABBAABBAABBAABBAABBAABBAABBA"));
 			Script.OP_EQUALVERIFY; Script.OP_CHECKSIG
 		], 25);
-	"script.is_spendable"	>:: script_is_spendable_test
+	"script_verify.is_spendable"	>:: script_verify_is_spendable_test
 		([
 			Script.OP_DUP; Script.OP_HASH160; Script.OP_DATA (20, Hex.to_string (`Hex "89ABCDEFABBAABBAABBAABBAABBAABBAABBAABBA"));
 			Script.OP_EQUALVERIFY; Script.OP_CHECKSIG
 		], 25);
-	"script.spendable_by"	>:: script_spendable_by_test
+	"script_verify.spendable_by"	>:: script_verify_spendable_by_test
 		{ pubkeyhash= 0x00; scripthash= 0x05; hrp= "bc" }
 		([
 			Script.OP_DUP; Script.OP_HASH160; Script.OP_DATA (20, Hex.to_string (`Hex "89ABCDEFABBAABBAABBAABBAABBAABBAABBAABBA"));

@@ -93,9 +93,9 @@ module Out = struct
 
 	let to_string txout = sexp_of_t txout |> Sexp.to_string;;
 
-	let is_spendable txout = Script.is_spendable txout.script;;
+	let is_spendable txout = Script_verify.is_spendable txout.script;;
 
-	let spendable_by txout prefix = Script.spendable_by txout.script prefix;;
+	let spendable_by txout prefix = Script_verify.spendable_by txout.script prefix;;
 
 	let serialize txout =
 		let value = Bitstring.string_of_bitstring ([%bitstring {| txout.value : 64 : littleendian |}]) in
