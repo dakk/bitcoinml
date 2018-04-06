@@ -1,4 +1,6 @@
 open Script_templates;;
+open Address;;
+open Script;;
 
 let op_int_base = Script.OP_RESERVED;;
 
@@ -21,5 +23,7 @@ end)
     m= 0;
     pubkeys= []
   };;
+
+  let spendable_by s prefix = "";;
 end)  
 ;;

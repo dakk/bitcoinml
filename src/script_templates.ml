@@ -6,6 +6,7 @@ module type Script_template_output = sig
   val encode: t -> Script.t
   val decode: Script.t -> t
   val check: Script.t -> bool
+  val spendable_by: Script.t -> Address.prefix -> Address.t
 end
 
 module type Script_template_input = sig

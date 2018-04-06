@@ -1,6 +1,6 @@
 open Script_templates;;
 open Script;;
-
+open Address;;
 
 module Script_scripthash = Make_template
 (struct 
@@ -25,5 +25,7 @@ end)
     | OP_HASH160 :: OP_DATA (20, sh) :: OP_EQUAL :: [] -> sh
     | _ -> ""
   ;;
+
+  let spendable_by s prefix = decode s |> Address.of_pubhash prefix.scripthash;; 
 end)  
 ;;

@@ -1,5 +1,6 @@
 open Script_templates;;
 open Script;;
+open Address;;
 
 
 module Script_pubkeyhash = Make_template
@@ -27,5 +28,7 @@ end)
     | OP_DUP :: OP_HASH160 :: OP_DATA (20, pkh) :: OP_EQUALVERIFY :: OP_CHECKSIG :: [] -> pkh
     | _ -> ""
   ;;
+
+  let spendable_by s prefix = decode s |> Address.of_pubhash prefix.pubkeyhash;; 
 end)  
 ;;

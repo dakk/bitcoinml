@@ -1,5 +1,6 @@
 open Script_templates;;
 open Script;;
+open Address;;
 
 
 module Script_pubkey = Make_template
@@ -25,5 +26,7 @@ end)
     | OP_DATA (n, pk) :: OP_CHECKSIG :: [] when n = 33 || n = 65 -> pk
     | _ -> ""
   ;;
+
+  let spendable_by s prefix = decode s |> Address.of_pub prefix.pubkeyhash;;
 end)  
 ;;
