@@ -298,3 +298,9 @@ let spendable_by scr prefix =
         Some (Address.of_witness prefix.hrp 0x00 wsh)
     | _ -> None
 ;;
+
+(*
+this will get the matching template
+
+let spendable_by2 src prefix =
+*)
