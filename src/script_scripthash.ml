@@ -1,8 +1,7 @@
-open Script_templates;;
 open Script;;
 open Address;;
 
-module Script_scripthash = Make_template
+module Script_scripthash = Script_template.Make_template
 (struct 
   type t = int;;
   let check v = true;;

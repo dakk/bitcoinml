@@ -1,9 +1,8 @@
-open Script_templates;;
 open Script;;
 open Address;;
 
 
-module Script_pubkey = Make_template
+module Script_pubkey = Script_template.Make_template
 (struct 
   type t = int;;
   let check v = true;;

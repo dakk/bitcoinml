@@ -1,10 +1,9 @@
-open Script_templates;;
 open Address;;
 open Script;;
 
 let op_int_base = Script.OP_RESERVED;;
 
-module Script_multisig = Make_template
+module Script_multisig = Script_template.Make_template
 (struct 
   type t = int;;
   let check v = true;;
