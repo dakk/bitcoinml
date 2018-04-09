@@ -23,5 +23,6 @@ module Make_template (ITemplate: Script_template_input) (OTemplate: Script_templ
 
   let check_input s = ITemplate.check s;;
   let check_output s = OTemplate.check s;;
+  let spendable_by s = OTemplate.spendable_by s;;
 end
 

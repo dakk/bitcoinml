@@ -278,29 +278,28 @@ let is_spendable scr =
 
 (* Check for common pattern: http://bitcoin.stackexchange.com/questions/35456/which-bitcoin-script-forms-should-be-detected-when-tracking-wallet-balance*)
 (* https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses *)
-(* TODO this will replaced by templates output spendable_by *)
-let spendable_by scr prefix =
-    match fst scr with
-    (* P2PH *)
-    | OP_DUP :: OP_HASH160 :: OP_DATA (20, pkh) :: OP_EQUALVERIFY :: OP_CHECKSIG :: [] ->
-        Some (Address.of_pubhash prefix.pubkeyhash pkh)
-    (* P2SH *)
-    | OP_HASH160 :: OP_DATA (20, pkh) :: OP_EQUAL :: [] ->
-        Some (Address.of_pubhash prefix.scripthash pkh)
-    (* P2PK *)
-    | OP_DATA (n, pkh) :: OP_CHECKSIG :: [] when n = 33 || n = 65 ->
-       Some (Address.of_pub prefix.pubkeyhash pkh)
-    (* P2WPKH *)
-    | OP_0 :: OP_DATA (20, wpkh) :: [] ->
-        Some (Address.of_witness prefix.hrp 0x00 wpkh)
-    (* P2WSH *)
-    | OP_0 :: OP_DATA (32, wsh) :: [] ->
-        Some (Address.of_witness prefix.hrp 0x00 wsh)
-    | _ -> None
+open Script_pubkeyhash;;
+open Script_pubkey;;
+open Script_scripthash;;
+open Script_multisig;;
+open Script_witnessscripthash;;
+open Script_witnesspubkeyhash;;
+
+let spendable_by src prefix =
+    let checks = (
+        Script_pubkeyhash.check_output src, 
+        Script_pubkey.check_output src, 
+        Script_scripthash.check_output src,
+        Script_multisig.check_output src,
+        Script_witnessscripthash.check_output src,
+        Script_witnesspubkeyhash.check_output src
+    ) in 
+    match checks with
+    | true, _, _, _, _, _ -> Some (Script_pubkeyhash.spendable_by src prefix)
+    | _, true, _, _, _, _ -> Some (Script_pubkey.spendable_by src prefix)
+    | _, _, true, _, _, _ -> Some (Script_scripthash.spendable_by src prefix)
+    | _, _, _, true, _, _ -> Some (Script_multisig.spendable_by src prefix)
+    | _, _, _, _, true, _ -> Some (Script_witnessscripthash.spendable_by src prefix)
+    | _, _, _, _, _, true -> Some (Script_witnesspubkeyhash.spendable_by src prefix)
+    | _, _, _, _, _, _ -> None
 ;;
-
-(*
-this will get the matching template
-
-let spendable_by2 src prefix =
-*)
