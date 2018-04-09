@@ -1,14 +1,14 @@
 open Script;;
 open Address;;
 
-module Script_scripthash = Script_template.Make_template
-(struct 
+module Input = struct 
   type t = int;;
   let check v = true;;
   let encode v = Script.empty;;
   let decode v = 0;;
-end)
-(struct 
+end
+
+module Output = struct 
   type t = string;;
 
   let check s = 
@@ -26,5 +26,12 @@ end)
   ;;
 
   let spendable_by s prefix = decode s |> Address.of_pubhash prefix.scripthash;; 
-end)  
+end
+
+
+(*
+module Script_scripthash = Script_template.Make_template
+  (Input)
+  (Output)  
 ;;
+*)

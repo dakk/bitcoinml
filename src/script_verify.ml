@@ -268,38 +268,22 @@ let eval sigver scr =
 
 let verify sigver s1 s2 = Script.join s1 s2 |> eval sigver;;
 
-let is_spendable scr =
-    let rec iss ops = match ops with
-    | [] -> true
-    | OP_RETURN (data) :: xl' -> false
-    | _ :: xl' -> iss xl'
-    in iss (fst scr)
-;;
+let is_spendable scr = not (Script_nulldata.Output.check scr);;
 
 (* Check for common pattern: http://bitcoin.stackexchange.com/questions/35456/which-bitcoin-script-forms-should-be-detected-when-tracking-wallet-balance*)
 (* https://en.bitcoin.it/wiki/Technical_background_of_version_1_Bitcoin_addresses *)
-open Script_pubkeyhash;;
-open Script_pubkey;;
-open Script_scripthash;;
-open Script_multisig;;
-open Script_witnessscripthash;;
-open Script_witnesspubkeyhash;;
-
 let spendable_by src prefix =
-    let checks = (
-        Script_pubkeyhash.check_output src, 
-        Script_pubkey.check_output src, 
-        Script_scripthash.check_output src,
-        Script_multisig.check_output src,
-        Script_witnessscripthash.check_output src,
-        Script_witnesspubkeyhash.check_output src
-    ) in 
-    match checks with
-    | true, _, _, _, _, _ -> Some (Script_pubkeyhash.spendable_by src prefix)
-    | _, true, _, _, _, _ -> Some (Script_pubkey.spendable_by src prefix)
-    | _, _, true, _, _, _ -> Some (Script_scripthash.spendable_by src prefix)
-    | _, _, _, true, _, _ -> Some (Script_multisig.spendable_by src prefix)
-    | _, _, _, _, true, _ -> Some (Script_witnessscripthash.spendable_by src prefix)
-    | _, _, _, _, _, true -> Some (Script_witnesspubkeyhash.spendable_by src prefix)
-    | _, _, _, _, _, _ -> None
+    let ml = [
+        (module Script_pubkeyhash.Output: Script_template.Output);
+        (module Script_pubkey.Output: Script_template.Output);
+        (module Script_scripthash.Output: Script_template.Output);
+        (module Script_multisig.Output: Script_template.Output);
+        (module Script_witnessscripthash.Output: Script_template.Output);
+        (module Script_witnesspubkeyhash.Output: Script_template.Output)
+    ] in
+    let rec icheck l = match l with
+    | [] -> None
+    | (module M: Script_template.Output) :: ml -> 
+        if M.check src then Some (M.spendable_by src prefix) else icheck ml
+    in icheck ml
 ;;

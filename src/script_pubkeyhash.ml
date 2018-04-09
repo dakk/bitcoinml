@@ -2,14 +2,32 @@ open Script;;
 open Address;;
 
 
-module Script_pubkeyhash = Script_template.Make_template
-(struct 
-  type t = int;;
-  let check v = true;;
-  let encode v = Script.empty;;
-  let decode v = 0;;
-end)
-(struct 
+module Input = struct 
+  type t = {
+    signature: string;
+    pubkey: string
+  };;
+
+  let check v = 
+    (* TODO check if [0] it's a canonical DER signaure (bip66) and [1] is a canonicalpubkey*) 
+    match fst v with 
+    | OP_DATA (n, sign) :: OP_DATA (n', pk) :: [] -> true
+    | _ -> false
+  ;;
+
+  let encode v = Script.of_opcodes [
+    OP_DATA (String.length v.signature, v.signature);
+    OP_DATA (String.length v.pubkey, v.pubkey)
+  ];;
+
+  let decode v = 
+    match fst v with
+    | OP_DATA (n, sign) :: OP_DATA (n', pk) :: [] -> { signature= sign; pubkey= pk }
+    | _ -> { signature= ""; pubkey= "" }
+  ;;
+end
+
+module Output = struct 
   type t = string;;
 
   let check s = 
@@ -29,5 +47,11 @@ end)
   ;;
 
   let spendable_by s prefix = decode s |> Address.of_pubhash prefix.pubkeyhash;; 
-end)  
+end
+
+(*
+module Script_pubkeyhash = Script_template.Make_template
+  (Input)
+  (Output)  
 ;;
+*)
