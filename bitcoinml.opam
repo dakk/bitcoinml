@@ -26,6 +26,8 @@ depends: [
   "stdint" {>= "0.5.1"}
   "sexplib" {>= "v0.12.0"}
   "cryptokit" {>= "1.13"}
+  "bignum" {>= "v0.12.0"}
+  "ppx_jane" {>= "v0.12.0"}
   
   "hex" {test & >= "1.3.0"}
   "ounit" {test & >= "2.0.8"}

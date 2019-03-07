@@ -1,21 +1,5 @@
 EXCLUDE_QUERY_DIR
-B /usr/home/dakk/.opam/4.05.0/lib/bitstring
-B /usr/home/dakk/.opam/4.05.0/lib/bytes
-B /usr/home/dakk/.opam/4.05.0/lib/cryptokit
-B /usr/home/dakk/.opam/4.05.0/lib/ocaml
-B /usr/home/dakk/.opam/4.05.0/lib/sexplib
-B /usr/home/dakk/.opam/4.05.0/lib/sexplib/0
-B /usr/home/dakk/.opam/4.05.0/lib/stdint
-B /usr/home/dakk/.opam/4.05.0/lib/zarith
 B ../_build/default/src/.bitcoinml.objs/byte
-S /usr/home/dakk/.opam/4.05.0/lib/bitstring
-S /usr/home/dakk/.opam/4.05.0/lib/bytes
-S /usr/home/dakk/.opam/4.05.0/lib/cryptokit
-S /usr/home/dakk/.opam/4.05.0/lib/ocaml
-S /usr/home/dakk/.opam/4.05.0/lib/sexplib
-S /usr/home/dakk/.opam/4.05.0/lib/sexplib/0
-S /usr/home/dakk/.opam/4.05.0/lib/stdint
-S /usr/home/dakk/.opam/4.05.0/lib/zarith
 S .
-FLG -ppx '/usr/home/dakk/Repositories/MyRepos/bitcoinml/_build/default/.ppx/e179f4748bf65c18740096bdc9df0399/ppx.exe --as-ppx --cookie '\''library-name="bitcoinml"'\'''
+FLG -ppx '/usr/home/dakk/Repositories/MyRepos/bitcoinml/_build/default/.ppx/43ceda7e87fb1d263cac5ee2d67aa244/ppx.exe --as-ppx --cookie '\''library-name="bitcoinml"'\'''
 FLG -open Bitcoinml -w -40

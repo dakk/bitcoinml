@@ -1,28 +1,4 @@
 EXCLUDE_QUERY_DIR
-B /usr/home/dakk/.opam/4.05.0/lib/bitstring
-B /usr/home/dakk/.opam/4.05.0/lib/bytes
-B /usr/home/dakk/.opam/4.05.0/lib/cryptokit
-B /usr/home/dakk/.opam/4.05.0/lib/cstruct
-B /usr/home/dakk/.opam/4.05.0/lib/hex
-B /usr/home/dakk/.opam/4.05.0/lib/oUnit
-B /usr/home/dakk/.opam/4.05.0/lib/ocaml
-B /usr/home/dakk/.opam/4.05.0/lib/sexplib
-B /usr/home/dakk/.opam/4.05.0/lib/sexplib/0
-B /usr/home/dakk/.opam/4.05.0/lib/stdint
-B /usr/home/dakk/.opam/4.05.0/lib/zarith
-B ../_build/default/src/.bitcoinml.objs/byte
 B ../_build/default/test/.test.eobjs/byte
-S /usr/home/dakk/.opam/4.05.0/lib/bitstring
-S /usr/home/dakk/.opam/4.05.0/lib/bytes
-S /usr/home/dakk/.opam/4.05.0/lib/cryptokit
-S /usr/home/dakk/.opam/4.05.0/lib/cstruct
-S /usr/home/dakk/.opam/4.05.0/lib/hex
-S /usr/home/dakk/.opam/4.05.0/lib/oUnit
-S /usr/home/dakk/.opam/4.05.0/lib/ocaml
-S /usr/home/dakk/.opam/4.05.0/lib/sexplib
-S /usr/home/dakk/.opam/4.05.0/lib/sexplib/0
-S /usr/home/dakk/.opam/4.05.0/lib/stdint
-S /usr/home/dakk/.opam/4.05.0/lib/zarith
-S ../src
 S .
 FLG -w -40
