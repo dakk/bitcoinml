@@ -28,10 +28,6 @@ lib: [
   "_build/install/default/lib/bitcoinml/bitcoinml__Block_lazy.cmt" {"bitcoinml__Block_lazy.cmt"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Block_lazy.cmti" {"bitcoinml__Block_lazy.cmti"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Block_lazy.cmx" {"bitcoinml__Block_lazy.cmx"}
-  "_build/install/default/lib/bitcoinml/bitcoinml__Conv_helper.cmi" {"bitcoinml__Conv_helper.cmi"}
-  "_build/install/default/lib/bitcoinml/bitcoinml__Conv_helper.cmt" {"bitcoinml__Conv_helper.cmt"}
-  "_build/install/default/lib/bitcoinml/bitcoinml__Conv_helper.cmti" {"bitcoinml__Conv_helper.cmti"}
-  "_build/install/default/lib/bitcoinml/bitcoinml__Conv_helper.cmx" {"bitcoinml__Conv_helper.cmx"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Hash.cmi" {"bitcoinml__Hash.cmi"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Hash.cmt" {"bitcoinml__Hash.cmt"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Hash.cmti" {"bitcoinml__Hash.cmti"}
@@ -88,8 +84,6 @@ lib: [
   "_build/install/default/lib/bitcoinml/block.mli" {"block.mli"}
   "_build/install/default/lib/bitcoinml/block_lazy.ml" {"block_lazy.ml"}
   "_build/install/default/lib/bitcoinml/block_lazy.mli" {"block_lazy.mli"}
-  "_build/install/default/lib/bitcoinml/conv_helper.ml" {"conv_helper.ml"}
-  "_build/install/default/lib/bitcoinml/conv_helper.mli" {"conv_helper.mli"}
   "_build/install/default/lib/bitcoinml/dune-package" {"dune-package"}
   "_build/install/default/lib/bitcoinml/hash.ml" {"hash.ml"}
   "_build/install/default/lib/bitcoinml/hash.mli" {"hash.mli"}

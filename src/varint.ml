@@ -1,17 +1,18 @@
 open Stdint;;
+open Bytes;;
 
 let parse_varint bits =
 	let parse_tag_byte bits =
 		match%bitstring bits with
-		| {| tag : 1*8 : string; rest : -1 : bitstring |} -> (Uint8.of_bytes_little_endian tag 0, rest)
+		| {| tag : 1*8 : string; rest : -1 : bitstring |} -> (Uint8.of_bytes_little_endian (of_string tag) 0, rest)
 	in
-	let parse_value bits bytesize =
+	let parse_value bits stringize =
 		match%bitstring bits with
-		| {| value : bytesize * 8 : string; rest : -1 : bitstring |} -> 
-			match bytesize with
-			| 8 -> (Uint64.of_bytes_little_endian value 0, rest)
-			| 4 -> (Uint32.to_uint64 (Uint32.of_bytes_little_endian value 0), rest)
-			| 2 -> (Uint16.to_uint64 (Uint16.of_bytes_little_endian value 0), rest)
+		| {| value : stringize * 8 : string; rest : -1 : bitstring |} -> 
+			match stringize with
+			| 8 -> (Uint64.of_bytes_little_endian (of_string value) 0, rest)
+			| 4 -> (Uint32.to_uint64 (Uint32.of_bytes_little_endian (of_string value) 0), rest)
+			| 2 -> (Uint16.to_uint64 (Uint16.of_bytes_little_endian (of_string value) 0), rest)
 			| _ -> failwith "Varint parse error"
 	in
 	let tag, rest = parse_tag_byte bits in

@@ -7,10 +7,10 @@ type t = {
   size		: int
 }
 
-val parse				: bytes -> t option
+val parse				: string -> t option
 (** Lazy parse of a block *)
 
-val parse_legacy	: bytes -> t option
+val parse_legacy	: string -> t option
 (** Lazy parse of a legacy block *)	
 
 val force					: t -> Block.t option

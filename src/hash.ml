@@ -2,7 +2,7 @@ open Cryptokit;;
 
 type t = string;;
 type hash = t;;
-type b = bytes;;
+type b = string;;
 
 
 (* Helper *)

@@ -10,7 +10,7 @@ module SStack : sig
 	val pop         : t -> int
 	val top         : t -> int
 	val push        : int -> t -> unit
-	val push_data   : bytes -> t -> unit
+	val push_data   : string -> t -> unit
 end
 
 val verify              : Sigver.t -> Script.t -> Script.t -> bool

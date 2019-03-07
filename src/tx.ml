@@ -155,7 +155,7 @@ module Witness = struct
 			let rec serws ws' = match ws' with
 			| [] -> ""
 			| si :: ws'' ->
-				(string_of_bitstring @@ Varint.bitstring_of_varint (Int64.of_int (Bytes.length si)))
+				(string_of_bitstring @@ Varint.bitstring_of_varint (Int64.of_int (String.length si)))
 				^ si 
 				^ serws ws''
 			in
@@ -226,8 +226,8 @@ let parse_legacy ?(coinbase=false) data =
 				rest		: -1 : bitstring
 			|} -> 
 				let rest''' = string_of_bitstring rest in
-				let txlen = (Bytes.length data) - (Bytes.length rest''') in
-				let txhash = Hash.of_bin (Hash.hash256 (Bytes.sub data 0 txlen)) in
+				let txlen = (String.length data) - (String.length rest''') in
+				let txhash = Hash.of_bin (Hash.hash256 (String.sub data 0 txlen)) in
 				(rest''', Some ({
 					hash	= txhash;
 					version	= version;
@@ -263,16 +263,16 @@ let parse ?(coinbase=false) data = match coinbase with
 			| Some (txin), Some (txout) ->
 				let rest''', fields = Witness.parse_fields rest'' @@ List.length txin in 
 				match fields with | None -> ("", None) | Some (fields') ->
-				let witlen = (Bytes.length @@ string_of_bitstring rest'') - (Bytes.length @@ string_of_bitstring rest''') + 2 in
+				let witlen = (String.length @@ string_of_bitstring rest'') - (String.length @@ string_of_bitstring rest''') + 2 in
 				match%bitstring rest''' with
 				| {|
 					locktime	: 32 : littleendian;
 					rest		: -1 : bitstring
 				|} -> 
 					let rest''' = string_of_bitstring rest in
-					let txlen = (Bytes.length data) - (Bytes.length rest''') in
+					let txlen = (String.length data) - (String.length rest''') in
 					let vsize = int_of_float @@ ceil ((3. *. float_of_int (txlen - witlen) +. float_of_int txlen) /. 4.) in
-					let withash = Hash.of_bin (Hash.hash256 (Bytes.sub data 0 txlen)) in
+					let withash = Hash.of_bin (Hash.hash256 (String.sub data 0 txlen)) in
 					let txhash = Hash.of_bin @@ Hash.dsha256 (
 						Bitstring.string_of_bitstring ([%bitstring {| version : 32 : littleendian |}]) 
 						^ (In.serialize_all txin) 

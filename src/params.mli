@@ -2,7 +2,7 @@ open Stdint
 type e = BTC | XTN | BCH | LTC | LTN | SIDECHAIN | NOTFOUND
 
 type t = { 
-	hash_function	: bytes -> bytes;
+	hash_function	: string -> string;
 	block_size	: int;
 	block_time	: int;
 	genesis			: Block.Header.t;

@@ -1,5 +1,6 @@
 open Stdint;;
 open Bitstring;;
+open Bytes;;
 open Varint;;
 open Hash;;
 
@@ -23,31 +24,31 @@ module Header = struct
 			h.version 							: 4*8 : littleendian;
 			Hash.to_bin h.prev_block			: 32*8: string;
 			Hash.to_bin h.merkle_root			: 32*8: string;
-			btime								: 32 : string;
-			Hash.to_bin_norev h.bits	: 32 : string;
-			bnonce								: 32 : string
+			to_string btime				: 32 : string;
+			Hash.to_bin_norev h.bits			: 32 : string;
+			to_string bnonce				: 32 : string
 		|} in Bitstring.string_of_bitstring bs
 	;;
 
 	let check_target h =
 		let calc_target b =
 			let b = Hash.to_bin_norev b in 
-			let exp = (Bytes.get b 3 |> Char.code) - 3 in
-			let mantissa = (String.make 1 @@ Bytes.get b 2) ^ (String.make 1 @@ Bytes.get b 1) ^ (String.make 1 @@ Bytes.get b 0) in
+			let exp = (String.get b 3 |> Char.code) - 3 in
+			let mantissa = (String.make 1 @@ String.get b 2) ^ (String.make 1 @@ String.get b 1) ^ (String.make 1 @@ String.get b 0) in
 			let n = if 32 - exp - 3 > 0 then
-					Bytes.make (32 - exp - 3) (Char.chr 0) ^ mantissa ^ Bytes.make exp (Char.chr 0) 
+					String.make (32 - exp - 3) (Char.chr 0) ^ mantissa ^ String.make exp (Char.chr 0) 
 				else
-					mantissa ^ Bytes.make exp (Char.chr 0)
+					mantissa ^ String.make exp (Char.chr 0)
 			in
 			Hash.of_bin_norev n
 		in
-		let rec check h t = match Bytes.length h with
+		let rec check h t = match String.length h with
 		| 0 -> true
 		| n ->
-			let fh = Bytes.get h 0 in
-			let ft = Bytes.get t 0 in
-			let resth = if n = 1 then "" else Bytes.sub h 1 (n-1) in
-			let restt = if n = 1 then "" else Bytes.sub t 1 (n-1) in
+			let fh = String.get h 0 in
+			let ft = String.get t 0 in
+			let resth = if n = 1 then "" else String.sub h 1 (n-1) in
+			let restt = if n = 1 then "" else String.sub t 1 (n-1) in
 			match (fh, ft) with
 			| '0', '0' -> check resth restt 
 			| '0', b when b <> '0' -> true
@@ -77,9 +78,9 @@ module Header = struct
 				version			= version;
 				prev_block		= Hash.of_bin prev_block;
 				merkle_root		= Hash.of_bin merkle_root;
-				time			= Uint32.to_float (Uint32.of_bytes_little_endian time 0);
+				time			= Uint32.to_float (Uint32.of_bytes_little_endian (of_string time) 0);
 				bits			= Hash.of_bin_norev bits;
-				nonce			= Uint32.of_bytes_little_endian nonce 0;
+				nonce			= Uint32.of_bytes_little_endian (of_string nonce) 0;
 			})
 		| {| _ |} -> None
 	;;
@@ -95,24 +96,24 @@ type t = {
 
 
 let parse data =
-	let header = Header.parse (Bytes.sub data 0 80) in
+	let header = Header.parse (String.sub data 0 80) in
 	match header with
 	| None -> None
 	| Some (header) ->
-		let bdata = bitstring_of_string  (Bytes.sub data 80 ((Bytes.length data) - 80)) in
+		let bdata = bitstring_of_string  (String.sub data 80 ((String.length data) - 80)) in
 		let txn, rest' = parse_varint bdata in
 		let txs = Tx.parse_all (string_of_bitstring rest') (Uint64.to_int txn) in
 		match txs with
-		| Some (txs) -> Some ({ header= header; txs= List.rev txs; size= Bytes.length data })
+		| Some (txs) -> Some ({ header= header; txs= List.rev txs; size= String.length data })
 		| None -> None
 ;;
 
 let parse_legacy data =
-	let header = Header.parse (Bytes.sub data 0 80) in
+	let header = Header.parse (String.sub data 0 80) in
 	match header with
 	| None -> None
 	| Some (header) ->	
-		let bdata = bitstring_of_string  (Bytes.sub data 80 ((Bytes.length data) - 80)) in
+		let bdata = bitstring_of_string  (String.sub data 80 ((String.length data) - 80)) in
 		let txn, rest' = parse_varint bdata in
 		let txs = Tx.parse_all_legacy (string_of_bitstring rest') (Uint64.to_int txn) in
 		match txs with
@@ -128,6 +129,6 @@ let parse_legacy data =
 
 let serialize block =
 	let d = Header.serialize (block.header) in
-	let d = Bytes.cat d (string_of_bitstring (bitstring_of_varint (Int64.of_int (List.length block.txs)))) in
-	Bytes.cat d (Tx.serialize_all block.txs)
+	let d = String.concat d [string_of_bitstring (bitstring_of_varint (Int64.of_int (List.length block.txs)))] in
+	String.concat d [Tx.serialize_all block.txs]
 ;;

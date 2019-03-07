@@ -1,5 +1,12 @@
-open Conv_helper;;
 open Bitstring;;
+open Stdint;;
+
+let rec b2l t = match String.length t with 
+| 0 -> []
+| n ->
+  let ch = String.get t 0 |> Char.code in
+  ch :: (b2l @@ String.sub t 1 (n-1))
+;;
 
 type prefix = {
   pubkeyhash: int;
@@ -31,7 +38,7 @@ module Bech32 = struct
   ;;
 
   let hrp_expand hrp =
-    let hrl = Conv_helper.b2l hrp in
+    let hrl = b2l hrp in
     (List.map (fun x -> x lsr 5) hrl) @ [0] @ (List.map (fun x -> x land 31) hrl)
   ;;
 
@@ -71,8 +78,8 @@ end
 
 
 let of_pubhash prefix pkh =
-  let epkh = (Bytes.make 1 @@ Char.chr prefix) ^ pkh in
-  let shrip = Bytes.sub (Hash.dsha256 epkh) 0 4 in
+  let epkh = (String.make 1 @@ Char.chr prefix) ^ pkh in
+  let shrip = String.sub (Hash.dsha256 epkh) 0 4 in
   (epkh ^ shrip) |> Base58.encode_check
 ;;
 

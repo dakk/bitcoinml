@@ -1,6 +1,6 @@
 type t = string
 type hash = t
-type b = bytes
+type b = string
 
 val reverse				: string -> string
 
@@ -14,11 +14,11 @@ val zero					: t
 
 
 
-val sha1		  	: bytes -> bytes
-val sha256			: bytes -> bytes
-val ripemd160		: bytes -> bytes
+val sha1		  	: t -> t
+val sha256			: t -> t
+val ripemd160		: t -> t
 
-val hash160			: bytes -> bytes
-val hash256			: bytes -> bytes
-val dsha256			: bytes -> bytes
-val checksum4 	: bytes -> bytes
+val hash160			: t -> t
+val hash256			: t -> t
+val dsha256			: t -> t
+val checksum4 	    : t -> t

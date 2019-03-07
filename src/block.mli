@@ -12,10 +12,10 @@ module Header : sig
 		nonce		: uint32;
 	}
 
-	val parse 		: bytes -> t option
+	val parse 		: string -> t option
 	(** Parse a block header *)
 
-	val serialize	: t -> bytes
+	val serialize	: t -> string
 	(** Serialize a block header *)
 
 	val check_target : t -> bool
@@ -29,13 +29,13 @@ type t = {
 }
 
 
-val parse					: bytes -> t option
+val parse					: string -> t option
 (** Parse a block *)
 
-val parse_legacy	: bytes -> t option
+val parse_legacy	: string -> t option
 (** Parse a legacy block *)
 
-val serialize			: t -> bytes
+val serialize			: t -> string
 (** Serialize a block *)
 
 

@@ -1,8 +1,8 @@
-type data = bytes
+type data = string
 
 
 type opcode =
-	| OP_COINBASE of bytes
+	| OP_COINBASE of string
 
 	(* Constants *)
 	| OP_0
@@ -134,19 +134,17 @@ type opcode =
 	| OP_NOP of int
 
 	
-val opcode_to_string    : opcode -> string
 val opcode_to_hex       : opcode -> int list
-val opcode_of_hex       : bytes -> opcode * bytes
+val opcode_of_hex       : string -> opcode * string
 
 type t = opcode list * int
 
 val empty								: t
 val length              : t -> int
-val serialize           : t -> bytes
+val serialize           : t -> string
 val join								: t -> t -> t
-val parse               : bytes -> t
-val parse_coinbase      : bytes -> t
-val to_string           : t -> string
+val parse               : string -> t
+val parse_coinbase      : string -> t
 val of_opcodes					: opcode list -> t
 
 

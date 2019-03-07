@@ -14,11 +14,11 @@ module SStack = struct
 
     let top st = Stack.top st;;
 
-    let rec push_data d st = match Bytes.length d with
+    let rec push_data d st = match String.length d with
     | 0 -> ()
     | n ->
-        Stack.push (Char.code (Bytes.get d 0)) st;
-        push_data (Bytes.sub d 1 (n-1)) st
+        Stack.push (Char.code (String.get d 0)) st;
+        push_data (String.sub d 1 (n-1)) st
     ;;
 
     let push v st = Stack.push v st;;

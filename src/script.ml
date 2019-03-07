@@ -1,9 +1,7 @@
 open Base58;;
-open Conv;;
-open Conv_helper;;
 open Address;;
 
-type data = bytes;;
+type data = string;;
 
 type opcode =
 | OP_COINBASE of data
@@ -39,7 +37,7 @@ type opcode =
 | OP_ELSE
 | OP_ENDIF
 | OP_VERIFY
-| OP_RETURN of bytes
+| OP_RETURN of string
 
 (* Stack *)
 | OP_TOALTSTACK
@@ -142,9 +140,9 @@ type t = opcode list * int;;
 let empty = ([], 0);;
 
 let opcode_to_hex oc =
-    let rec data_to_bytearray d = match Bytes.length d with
+    let rec data_to_bytearray d = match String.length d with
     | 0 -> []
-    | n -> (Char.code @@ Bytes.get d 0) :: data_to_bytearray (Bytes.sub d 1 (n-1))
+    | n -> (Char.code @@ String.get d 0) :: data_to_bytearray (String.sub d 1 (n-1))
     in
     match oc with
     | OP_COINBASE (d) -> data_to_bytearray d
@@ -282,38 +280,38 @@ let opcode_to_hex oc =
 
 let opcode_of_hex s =
     let consume_next s =
-        match Bytes.length s with
-        | 0 -> failwith "Not enough bytes"
-        | 1 -> (Bytes.get s 0 |> Char.code, "")
+        match String.length s with
+        | 0 -> failwith "Not enough data"
+        | 1 -> (String.get s 0 |> Char.code, "")
         | n ->
-            let c = Bytes.get s 0 |> Char.code in
-            let s' = Bytes.sub s 1 @@ n - 1 in
+            let c = String.get s 0 |> Char.code in
+            let s' = String.sub s 1 @@ n - 1 in
             (c, s')
     in
-    let consume_bytes s sizea =
+    let consume_string s sizea =
         let sizea = List.fold_left (fun acc x -> acc * 0xFF + x) 0 sizea in
-        if sizea > Bytes.length s then
-           (Bytes.sub s 0 (Bytes.length s), "")
+        if sizea > String.length s then
+           (String.sub s 0 (String.length s), "")
         else
-           (Bytes.sub s 0 sizea, Bytes.sub s sizea ((Bytes.length s) - sizea))
+           (String.sub s 0 sizea, String.sub s sizea ((String.length s) - sizea))
     in
     let c, s' = consume_next s in
-    match (Bytes.length s', c) with
+    match (String.length s', c) with
     (* Constants *)
     | l, 0x00 -> (OP_0, s')
     | l, x when x >= 0x01 && x <= 0x4b ->
-        let d, s'' = consume_bytes s' [x] in
+        let d, s'' = consume_string s' [x] in
         (OP_DATA (x, d), s'')
     | l, 0x4c when l >= 1 ->
         let c', s'' = consume_next s' in
-        let d, s'' = consume_bytes s'' [c'] in
+        let d, s'' = consume_string s'' [c'] in
         (OP_PUSHDATA1 (c', d), s'')
     | l, 0x4c when l < 1 ->
         (OP_NOP (0x4c), s')
     | l, 0x4d when l >= 2 ->
         let c', s'' = consume_next s' in
         let c'', s'' = consume_next s'' in
-        let d, s'' = consume_bytes s'' [c'; c''] in
+        let d, s'' = consume_string s'' [c'; c''] in
         (OP_PUSHDATA2 (c', c'', d), s'')
     | l, 0x4d when l < 2 ->
         (OP_NOP (0x4d), s')
@@ -322,7 +320,7 @@ let opcode_of_hex s =
         let c'', s'' = consume_next s'' in
         let c''', s'' = consume_next s'' in
         let c'''', s'' = consume_next s'' in
-        let d, s'' = consume_bytes s'' [c'; c''; c'''; c''''] in
+        let d, s'' = consume_string s'' [c'; c''; c'''; c''''] in
         (OP_PUSHDATA4 (c', c'', c''', c'''', d), s'')
     | l, 0x4e when l < 4 ->
         (OP_NOP (0x4e), s')
@@ -460,25 +458,25 @@ let serialize scr =
     | [] -> acc
     | op::scr' ->
         let r = List.fold_right
-            (fun x acc' -> (Bytes.make 1 (Char.chr x)) ^ acc')
+            (fun x acc' -> (String.make 1 (Char.chr x)) ^ acc')
             (opcode_to_hex op) ""
         in serialize' scr' (acc ^ r)
     in
     let s = serialize' (fst scr) "" in
-    match (snd scr, Bytes.length s) with
+    match (snd scr, String.length s) with
     | (n, n') when n = n' -> s
     | (n, n') -> Printf.printf "Wrong size %d %d\n%!" n n'; failwith "Wrong serialize size"
 ;;
 
 let parse s =
-    let rec chunkize s acc = match Bytes.length s with
+    let rec chunkize s acc = match String.length s with
     | 0 -> acc
     | n when n <= 8192 -> acc @ [ OP_COINBASE (s) ]
     | n ->
-        let chunk = Bytes.sub s 0 8192 in
-        chunkize (Bytes.sub s 8192 @@ n - 8192) (acc @ [ OP_COINBASE (chunk)])
+        let chunk = String.sub s 0 8192 in
+        chunkize (String.sub s 8192 @@ n - 8192) (acc @ [ OP_COINBASE (chunk)])
     in
-    let rec parse' s acc = match Bytes.length s with
+    let rec parse' s acc = match String.length s with
     | 0 -> acc
     | n -> 
         let op, s' = opcode_of_hex s in 

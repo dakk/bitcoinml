@@ -14,8 +14,8 @@ module In : sig
 
 	val parse 			: ?coinbase:bool -> bitstring -> bitstring * t option
 	val parse_all		: ?coinbase:bool -> bitstring -> bitstring * t list option
-	val serialize		: t -> bytes
-	val serialize_all	: t list -> bytes
+	val serialize		: t -> string
+	val serialize_all	: t list -> string
 	val has_witness	: t -> bool
 end
 
@@ -27,8 +27,8 @@ module Out : sig
 
 	val parse			: bitstring -> bitstring * t option
 	val parse_all		: bitstring -> bitstring * t list option
-	val serialize		: t -> bytes
-	val serialize_all	: t list -> bytes
+	val serialize		: t -> string
+	val serialize_all	: t list -> string
 
 	val is_spendable	: t -> bool
 	val spendable_by	: t -> Address.prefix -> string option
@@ -42,8 +42,8 @@ module Witness : sig
 		size		: int;
 	}
 
-	val serialize_fields 	: In.t list -> bytes
-	val parse_fields			: bitstring -> int -> bitstring * bytes list list option
+	val serialize_fields 	: In.t list -> string
+	val parse_fields			: bitstring -> int -> bitstring * string list list option
 end
 
 
@@ -58,15 +58,15 @@ type t = {
 	witness		: Witness.t option;
 }
 
-val parse 						: ?coinbase:bool -> bytes -> bytes * t option
-val parse_legacy			: ?coinbase:bool -> bytes -> bytes * t option
-val parse_all					: bytes -> int -> t list option
-val parse_all_legacy	: bytes -> int -> t list option
+val parse 						: ?coinbase:bool -> string -> string * t option
+val parse_legacy			: ?coinbase:bool -> string -> string * t option
+val parse_all					: string -> int -> t list option
+val parse_all_legacy	: string -> int -> t list option
 
-val serialize							: t -> bytes
-val serialize_legacy			: t -> bytes
-val serialize_all					: t list -> bytes
-val serialize_all_legacy	: t list -> bytes
+val serialize							: t -> string
+val serialize_legacy			: t -> string
+val serialize_all					: t list -> string
+val serialize_all_legacy	: t list -> string
 
 val is_witness	: t -> bool
 val is_coinbase	: t -> bool

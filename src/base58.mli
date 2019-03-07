@@ -1,2 +1,2 @@
-val encode_check : bytes -> string
+val encode_check : string -> string
 (** Base58 encode check *)
