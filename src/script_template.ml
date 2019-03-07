@@ -1,5 +1,3 @@
-open Script;;
-
 module type Output = sig
   type t 
 

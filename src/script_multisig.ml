@@ -1,4 +1,3 @@
-open Address;;
 open Script;;
 
 let op_int_base = Script.opcode_to_hex OP_RESERVED;;

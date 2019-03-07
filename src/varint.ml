@@ -1,5 +1,4 @@
 open Stdint;;
-open Bitstring;; 
 
 let parse_varint bits =
 	let parse_tag_byte bits =

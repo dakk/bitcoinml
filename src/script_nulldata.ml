@@ -1,7 +1,4 @@
-open Address;;
 open Script;;
-
-
 
 module Output = struct 
   type t = Script.data;;
@@ -22,7 +19,6 @@ module Output = struct
 
   let spendable_by s prefix = "";;
 end
-
 
 (*
 module Script_nulldata = Script_template.Make_template

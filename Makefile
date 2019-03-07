@@ -1,5 +1,5 @@
 all:
-	dune build @install @runtest @doc
+	dune build @install @runtest @doc --profile release
 	cp -r _build/default/_doc/* docs/
 clean:
 	rm -rf _build
