@@ -1,0 +1,10 @@
+(executable
+ (name test)
+ (libraries bitcoinml oUnit hex))
+
+(alias
+ (name runtest)
+ (deps
+  (:< test.exe))
+ (action
+  (run %{<})))
