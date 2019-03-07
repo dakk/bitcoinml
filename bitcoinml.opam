@@ -21,9 +21,9 @@ build-doc: [
 ]
 
 depends: [
-  "ocaml-base-compiler" {>= "4.06.0"}
+  "ocaml-base-compiler" {>= "4.05.0"}
   
-  "dune" {build & >= "1.7.3"}
+  "dune" {build & >= "1.6.0"}
   "bitstring" {>= "3.1.0"}
   "stdint" {>= "0.5.1"}
   "cryptokit" {>= "1.13"}
