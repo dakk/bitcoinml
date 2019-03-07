@@ -29,7 +29,7 @@ depends: [
   "cryptokit" {>= "1.13"}
   "bignum" {>= "v0.12.0"}
   
-  "hex" {test & >= "1.2.0"}
+  "hex" {test & = "1.2.0"}
   "ounit" {test & >= "2.0.8"}
   "odoc" {test & >= "1.3.0"}
 ]
