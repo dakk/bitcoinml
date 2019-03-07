@@ -1,6 +1,6 @@
 (library
  (name bitcoinml)
  (public_name bitcoinml)
- (libraries bitstring cryptokit stdint sexplib bignum)
+ (libraries bitstring cryptokit stdint sexplib)
  (preprocess
   (pps bitstring.ppx)))
