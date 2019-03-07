@@ -1,6 +1,6 @@
 all:
 	dune build @install @runtest @doc --profile release
-	cp -r _build/default/_doc/* docs/
+	cp -r _build/default/_doc/_html/bitcoinml/Bitcoinml/* docs/
 clean:
 	rm -rf _build
 

@@ -129,6 +129,6 @@ let parse_legacy data =
 
 let serialize block =
 	let d = Header.serialize (block.header) in
-	let d = String.concat d [string_of_bitstring (bitstring_of_varint (Int64.of_int (List.length block.txs)))] in
-	String.concat d [Tx.serialize_all block.txs]
+	let d = String.concat "" [d; string_of_bitstring (bitstring_of_varint (Int64.of_int (List.length block.txs)))] in
+	String.concat "" [d; Tx.serialize_all block.txs]
 ;;

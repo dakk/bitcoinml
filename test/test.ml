@@ -96,8 +96,7 @@ let block_lazy_test raw octx =
 	let b = Block_lazy.force_option bl in
 	match b with
 	| None -> assert_equal true false
-	| Some (b) -> 
-		assert_equal (Hex.to_string raw) @@ Block.serialize b
+	| Some (b) -> assert_equal (Hex.to_string raw) @@ Block.serialize b
 ;;
 
 let block_merkle_verify_test raw octx =
