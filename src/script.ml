@@ -1,13 +1,9 @@
 open Base58;;
-open Sexplib;;
 open Conv;;
 open Conv_helper;;
 open Address;;
 
 type data = bytes;;
-
-let data_of_sexp b = Hash.to_bin_norev (string_of_sexp b);;
-let sexp_of_data b = sexp_of_string (Hash.of_bin_norev b);;
 
 type opcode =
 | OP_COINBASE of data
@@ -139,13 +135,11 @@ type opcode =
 | OP_RESERVED1
 | OP_RESERVED2
 | OP_NOP of int
-[@@deriving sexp];;
+;;
 
-type t = opcode list * int [@@deriving sexp];;
+type t = opcode list * int;;
 
 let empty = ([], 0);;
-
-let opcode_to_string oc = sexp_of_opcode oc |> Sexp.to_string;;
 
 let opcode_to_hex oc =
     let rec data_to_bytearray d = match Bytes.length d with
@@ -455,10 +449,6 @@ let opcode_of_hex s =
     | l, x -> (OP_NOP (x), s')
 
 ;;
-
-
-
-let to_string scr = sexp_of_t scr |> Sexp.to_string;;
 
 
 let join s1 s2 = ((fst s1) @ (fst s2), (snd s1) + (snd s2));;

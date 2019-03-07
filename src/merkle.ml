@@ -1,4 +1,4 @@
-type t = Hash.t [@@deriving sexp];;
+type t = Hash.t;;
 
 let of_hashes hashl =
 	let rec mround hs = match hs with

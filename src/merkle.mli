@@ -1,4 +1,4 @@
-type t = Hash.t [@@deriving sexp]
+type t = Hash.t
 
 val of_txs    : Tx.t list -> t
 (** Get the merkle root hash of a transaction list *)

@@ -1,9 +1,6 @@
 open Stdint;;
 open Bitstring;;
 open Varint;;
-open Sexplib;;
-open Conv;;
-open Conv_helper;;
 
 let amount_check ?(max_money=2100000000000000L)  am = am >= Int64.zero && am <= max_money;;
 
@@ -14,14 +11,12 @@ module In = struct
 		script				: Script.t;
 		witness_script: Script.data list option;
 		sequence			: uint32;
-	} [@@deriving sexp];;
+	};;
 
 	let has_witness txin = match txin.witness_script with
 	| None -> false
 	| Some (wl) -> true
 	;;
-
-	let to_string txin = sexp_of_t txin |> Sexp.to_string;;
 
 	let serialize txin =
 		let out = Bitstring.string_of_bitstring ([%bitstring {|
@@ -89,9 +84,7 @@ module Out = struct
 	type t = {
 		value	: int64;
 		script	: Script.t;
-	} [@@deriving sexp];;
-
-	let to_string txout = sexp_of_t txout |> Sexp.to_string;;
+	};;
 
 	let is_spendable txout = Script_verify.is_spendable txout.script;;
 
@@ -152,7 +145,7 @@ module Witness = struct
 		marker	: int;
 		flag		: int;
 		size		: int;
-	} [@@deriving sexp]
+	}
 
 	let rec serialize_fields ins = match ins with 
 	| [] -> ""
@@ -209,10 +202,7 @@ type t = {
 	size			: int;
 	vsize			: int;
 	witness		: Witness.t option;
-} [@@deriving sexp];;
-
-
-let to_string tx = sexp_of_t tx |> Sexp.to_string;;
+};;
 
 
 let parse_legacy ?(coinbase=false) data =

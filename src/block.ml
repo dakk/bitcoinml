@@ -2,9 +2,6 @@ open Stdint;;
 open Bitstring;;
 open Varint;;
 open Hash;;
-open Sexplib;;
-open Conv;;
-open Conv_helper;;
 
 module Header = struct
 	type t = {
@@ -15,9 +12,7 @@ module Header = struct
 		time		: float;
 		bits		: string;
 		nonce		: uint32;
-	} [@@deriving sexp];;
-
-	let to_string h = sexp_of_t h |> Sexp.to_string;;
+	};;
 
 	let serialize h =
 		let btime = Bytes.create 4 in
@@ -94,7 +89,7 @@ type t = {
 	header	: Header.t;
 	txs			: Tx.t list;
 	size		: int;
-} [@@deriving sexp];;
+};;
 
 
 
@@ -136,7 +131,3 @@ let serialize block =
 	let d = Bytes.cat d (string_of_bitstring (bitstring_of_varint (Int64.of_int (List.length block.txs)))) in
 	Bytes.cat d (Tx.serialize_all block.txs)
 ;;
-
-
-let to_string b = sexp_of_t b |> Sexp.to_string;;
-

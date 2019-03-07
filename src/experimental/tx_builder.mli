@@ -1,13 +1,10 @@
 open Stdint
 open Bitstring
-open Sexplib
-open Conv
-open Conv_helper
 
 
 type t = {
 	version		: int
-} [@@deriving sexp]
+}
 
 
 

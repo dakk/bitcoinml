@@ -1,12 +1,5 @@
-open Sexplib
-
-
-
-
 type data = bytes
 
-val data_of_sexp : Sexp.t -> Bytes.t
-val sexp_of_data : Bytes.t -> Sexp.t
 
 type opcode =
 	| OP_COINBASE of bytes
@@ -139,14 +132,13 @@ type opcode =
 	| OP_RESERVED1
 	| OP_RESERVED2
 	| OP_NOP of int
-	[@@deriving sexp]
 
 	
 val opcode_to_string    : opcode -> string
 val opcode_to_hex       : opcode -> int list
 val opcode_of_hex       : bytes -> opcode * bytes
 
-type t = opcode list * int [@@deriving sexp]
+type t = opcode list * int
 
 val empty								: t
 val length              : t -> int

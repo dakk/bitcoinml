@@ -1,6 +1,6 @@
-type t = string [@@deriving sexp]
-type hash = t [@@deriving sexp]
-type b = bytes [@@deriving sexp]
+type t = string
+type hash = t
+type b = bytes
 
 val reverse				: string -> string
 

@@ -10,16 +10,13 @@ module Header : sig
 		time		: float;
 		bits		: string;
 		nonce		: uint32;
-	} [@@deriving sexp]
+	}
 
 	val parse 		: bytes -> t option
 	(** Parse a block header *)
 
 	val serialize	: t -> bytes
 	(** Serialize a block header *)
-
-	val to_string	: t -> string
-	(** Get a string sexp representation of a block header *)
 
 	val check_target : t -> bool
 	(** Check the nbits / hash target *)
@@ -29,7 +26,7 @@ type t = {
 	header	: Header.t;
 	txs			: Tx.t list;
 	size		:	int;
-} [@@deriving sexp]
+}
 
 
 val parse					: bytes -> t option
@@ -41,7 +38,5 @@ val parse_legacy	: bytes -> t option
 val serialize			: t -> bytes
 (** Serialize a block *)
 
-val to_string			: t -> string
-(** Get a string sexp representation of a block *)
 
 
