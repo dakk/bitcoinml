@@ -5,3 +5,4 @@ script: bash -ex .travis-opam.sh
 env:
   matrix:
   - OCAML_VERSION=4.06 PACKAGE="bitcoinml" TESTS=true
+  - OCAML_VERSION=4.05 PACKAGE="bitcoinml" TESTS=true
