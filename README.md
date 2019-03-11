@@ -24,38 +24,6 @@ The library is now fully compatible with segwit transactions (from version 0.3.0
 a segwit transaction, and parses/serializes it correctly. For those who want to avoid this behaviour, there are the
 `*_legacy` functions which disable segwit.
 
-### Sexp serialization
-For every type of the library, bitcoinml also offers sexp `to_string` readable serialization:
-
-```sexp
-(
-    (hash 8139979112e894a14f8370438a471d23984061ff83a9eba0bc7a34433327ec21)
-    (version 1)
-    (txin(
-        (
-            (out_hash 56f87210814c8baef7068454e517a70da2f2103fc3ac7f687e32a228dc80e115)
-            (out_n 3)
-            (script(((OP_DATA 22 00141d7cd6c75c2e86f4cbf98eaed221b30bd9a0b928))23))
-            (witness_script(            
-                (3045022100f764287d3e99b1474da9bec7f7ed236d6c81e793b20c4b5aa1f3051b9a7daa63022016a198031d5554dbb855bdbe8534776a4be6958bd8d530dc001c32b828f6f0ab01 038262a6c6cec93c2d3ecd6c6072efea86d02ff8e3328bbd0242b20af3425990ac)))
-            (sequence -1))))
-    (txout(
-        (
-            (value 99987100)
-            (script((OP_DUP OP_HASH160(OP_DATA 20 1d7cd6c75c2e86f4cbf98eaed221b30bd9a0b928)OP_EQUALVERIFY OP_CHECKSIG)25)))))
-    (locktime 0)
-    (size 108)
-    (vsize 136)
-    (witness((
-        (hash 6bf4e4dfb860cf0906f49c836700b130ac78cc391c72a0911c94cdec4dcb10ec)
-        (marker 0)
-        (flag 1)
-        (size 110))))
-)
-```
-
-This implies that for each type there are the ```t_of_sexp``` and ```sexp_of_t``` conversion functions.
-
 
 ## Installation
 
@@ -85,7 +53,7 @@ You can find some examples in the _test/test.ml_ file.
 ## License
 
 ```
-Copyright (c) 2016-2017 Davide Gessa
+Copyright (c) 2016-2019 Davide Gessa
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
