@@ -12,7 +12,9 @@ B /usr/home/dakk/.opam/4.06.1/lib/bytes
 B /usr/home/dakk/.opam/4.06.1/lib/core_kernel
 B /usr/home/dakk/.opam/4.06.1/lib/core_kernel/base_for_tests
 B /usr/home/dakk/.opam/4.06.1/lib/cryptokit
+B /usr/home/dakk/.opam/4.06.1/lib/cstruct
 B /usr/home/dakk/.opam/4.06.1/lib/fieldslib
+B /usr/home/dakk/.opam/4.06.1/lib/hex
 B /usr/home/dakk/.opam/4.06.1/lib/jane-street-headers
 B /usr/home/dakk/.opam/4.06.1/lib/num
 B /usr/home/dakk/.opam/4.06.1/lib/ocaml
@@ -49,7 +51,9 @@ S /usr/home/dakk/.opam/4.06.1/lib/bytes
 S /usr/home/dakk/.opam/4.06.1/lib/core_kernel
 S /usr/home/dakk/.opam/4.06.1/lib/core_kernel/base_for_tests
 S /usr/home/dakk/.opam/4.06.1/lib/cryptokit
+S /usr/home/dakk/.opam/4.06.1/lib/cstruct
 S /usr/home/dakk/.opam/4.06.1/lib/fieldslib
+S /usr/home/dakk/.opam/4.06.1/lib/hex
 S /usr/home/dakk/.opam/4.06.1/lib/jane-street-headers
 S /usr/home/dakk/.opam/4.06.1/lib/num
 S /usr/home/dakk/.opam/4.06.1/lib/ocaml

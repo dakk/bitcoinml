@@ -51,7 +51,12 @@ let tx_parse_test raw octx =
 	match tx with
 	| None -> assert_equal true false
 	| Some (t) -> 
-		assert_equal (Tx.serialize t) (Hex.to_string raw)
+		assert_equal (Tx.serialize t) (Hex.to_string raw);
+	let raw', tx = Tx.parse ~hex:true (raw |> show) in
+	match tx with
+	| None -> assert_equal true false
+	| Some (t) -> 
+		assert_equal (Tx.serialize ~hex:true t) (raw |> show)
 ;;
 
 let tx_parse_and_check_hash raw hash octx = 

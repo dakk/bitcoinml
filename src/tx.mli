@@ -58,13 +58,13 @@ type t = {
 	witness		: Witness.t option;
 }
 
-val parse 						: ?coinbase:bool -> string -> string * t option
-val parse_legacy			: ?coinbase:bool -> string -> string * t option
+val parse 						: ?coinbase:bool -> ?hex:bool -> string -> string * t option
+val parse_legacy			: ?coinbase:bool -> ?hex:bool -> string -> string * t option
 val parse_all					: string -> int -> t list option
 val parse_all_legacy	: string -> int -> t list option
 
-val serialize							: t -> string
-val serialize_legacy			: t -> string
+val serialize							: ?hex:bool -> t -> string
+val serialize_legacy			: ?hex:bool -> t -> string
 val serialize_all					: t list -> string
 val serialize_all_legacy	: t list -> string
 

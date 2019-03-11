@@ -29,13 +29,13 @@ type t = {
 }
 
 
-val parse					: string -> t option
+val parse					: ?hex:bool -> string -> t option
 (** Parse a block *)
 
-val parse_legacy	: string -> t option
+val parse_legacy	: ?hex:bool -> string -> t option
 (** Parse a legacy block *)
 
-val serialize			: t -> string
+val serialize			: ?hex:bool -> t -> string
 (** Serialize a block *)
 
 

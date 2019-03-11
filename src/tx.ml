@@ -204,27 +204,29 @@ type t = {
 	witness		: Witness.t option;
 };;
 
-let serialize_legacy tx =
-	Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}]) 
+let serialize_legacy ?(hex=false) tx =
+	let bdata = Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}]) 
 	^ (In.serialize_all tx.txin) 
 	^ (Out.serialize_all tx.txout)
-	^ Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}])
+	^ Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}]) in
+	if hex then Hex.of_string bdata |> Hex.show else bdata
 ;;
 
-let serialize tx = match tx.witness with
-| None -> serialize_legacy tx
+let serialize ?(hex=false) tx = match tx.witness with
+| None -> serialize_legacy ~hex:hex tx
 | Some (w) -> 
-	Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}])
+	let bdata = Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}])
 	^ Bitstring.string_of_bitstring ([%bitstring {| w.marker : 8 : littleendian |}])
 	^ Bitstring.string_of_bitstring ([%bitstring {| w.flag : 8 : littleendian |}])
 	^ (In.serialize_all tx.txin) 
 	^ (Out.serialize_all tx.txout)
 	^ (Witness.serialize_fields tx.txin)
-	^ Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}])
+	^ Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}]) in
+	if hex then Hex.of_string bdata |> Hex.show else bdata
 ;;
 
-let parse_legacy ?(coinbase=false) data =
-	let bdata = bitstring_of_string data in
+let parse_legacy ?(coinbase=false) ?(hex=false) data =
+	let bdata = bitstring_of_string (if hex then Hex.to_string @@ `Hex data else data) in
 	match%bitstring bdata with
 	| {|
 		version		: 32 : littleendian;
@@ -259,10 +261,10 @@ let parse_legacy ?(coinbase=false) data =
 			| {| _ |} -> ("", None)
 ;;
 
-let parse ?(coinbase=false) data = match coinbase with
+let parse ?(coinbase=false) ?(hex=false) data = match coinbase with
 | true -> parse_legacy ~coinbase:true data
 | false -> 
-	let bdata = bitstring_of_string data in
+	let bdata = bitstring_of_string (if hex then Hex.to_string @@ `Hex data else data) in
 	match%bitstring bdata with
 	| {|
 		version		: 32 : littleendian;

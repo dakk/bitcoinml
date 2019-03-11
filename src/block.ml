@@ -95,7 +95,8 @@ type t = {
 
 
 
-let parse data =
+let parse ?(hex=false) bdata =
+	let data = (if hex then Hex.to_string @@ `Hex bdata else bdata) in
 	let header = Header.parse (String.sub data 0 80) in
 	match header with
 	| None -> None
@@ -108,7 +109,8 @@ let parse data =
 		| None -> None
 ;;
 
-let parse_legacy data =
+let parse_legacy ?(hex=false) bdata =
+	let data = (if hex then Hex.to_string @@ `Hex bdata else bdata) in
 	let header = Header.parse (String.sub data 0 80) in
 	match header with
 	| None -> None
@@ -127,8 +129,9 @@ let parse_legacy data =
 
 
 
-let serialize block =
+let serialize ?(hex=false) block =
 	let d = Header.serialize (block.header) in
 	let d = String.concat "" [d; string_of_bitstring (bitstring_of_varint (Int64.of_int (List.length block.txs)))] in
-	String.concat "" [d; Tx.serialize_all block.txs]
+	let bdata = String.concat "" [d; Tx.serialize_all block.txs] in
+	if hex then Hex.of_string bdata |> Hex.show else bdata
 ;;
