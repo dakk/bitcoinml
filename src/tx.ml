@@ -204,6 +204,24 @@ type t = {
 	witness		: Witness.t option;
 };;
 
+let serialize_legacy tx =
+	Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}]) 
+	^ (In.serialize_all tx.txin) 
+	^ (Out.serialize_all tx.txout)
+	^ Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}])
+;;
+
+let serialize tx = match tx.witness with
+| None -> serialize_legacy tx
+| Some (w) -> 
+	Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}])
+	^ Bitstring.string_of_bitstring ([%bitstring {| w.marker : 8 : littleendian |}])
+	^ Bitstring.string_of_bitstring ([%bitstring {| w.flag : 8 : littleendian |}])
+	^ (In.serialize_all tx.txin) 
+	^ (Out.serialize_all tx.txout)
+	^ (Witness.serialize_fields tx.txin)
+	^ Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}])
+;;
 
 let parse_legacy ?(coinbase=false) data =
 	let bdata = bitstring_of_string data in
@@ -273,11 +291,16 @@ let parse ?(coinbase=false) data = match coinbase with
 					let txlen = (String.length data) - (String.length rest''') in
 					let vsize = int_of_float @@ ceil ((3. *. float_of_int (txlen - witlen) +. float_of_int txlen) /. 4.) in
 					let withash = Hash.of_bin (Hash.hash256 (String.sub data 0 txlen)) in
-					let txhash = Hash.of_bin @@ Hash.dsha256 (
-						Bitstring.string_of_bitstring ([%bitstring {| version : 32 : littleendian |}]) 
-						^ (In.serialize_all txin) 
-						^ (Out.serialize_all txout)
-						^ Bitstring.string_of_bitstring ([%bitstring {| locktime : 32 : littleendian |}])) in
+					let txhash = Hash.of_bin @@ Hash.dsha256 (serialize_legacy ({
+						hash= "";
+						version	= version;
+						txin	= txin;
+						txout	= List.rev txout;
+						locktime= Uint32.of_int32 locktime;
+						size= txlen - witlen;
+						vsize= vsize;
+						witness= None
+						})) in
 					let txin' = List.mapi (fun j tin -> { tin with In.witness_script= Some (List.nth fields' j) }) (List.rev txin) in
 					(rest''', Some ({
 						hash= txhash;
@@ -298,24 +321,6 @@ let parse ?(coinbase=false) data = match coinbase with
 ;;
 
 
-let serialize_legacy tx =
-	Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}]) 
-	^ (In.serialize_all tx.txin) 
-	^ (Out.serialize_all tx.txout)
-	^ Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}])
-;;
-
-let serialize tx = match tx.witness with
-| None -> serialize_legacy tx
-| Some (w) -> 
-	Bitstring.string_of_bitstring ([%bitstring {| tx.version : 32 : littleendian |}])
-	^ Bitstring.string_of_bitstring ([%bitstring {| w.marker : 8 : littleendian |}])
-	^ Bitstring.string_of_bitstring ([%bitstring {| w.flag : 8 : littleendian |}])
-	^ (In.serialize_all tx.txin) 
-	^ (Out.serialize_all tx.txout)
-	^ (Witness.serialize_fields tx.txin)
-	^ Bitstring.string_of_bitstring ([%bitstring {| Uint32.to_int32 tx.locktime : 32 : littleendian |}])
-;;
 
 
 

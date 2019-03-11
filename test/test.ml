@@ -51,9 +51,18 @@ let tx_parse_test raw octx =
 	match tx with
 	| None -> assert_equal true false
 	| Some (t) -> 
-		(*Printf.printf "Serialized:\n%s\n\nRaw:\n%s\n----------\n" (Hex.hexdump_s @@ Hex.of_string (Tx.serialize t)) (Hex.hexdump_s @@ raw);*)
 		assert_equal (Tx.serialize t) (Hex.to_string raw)
 ;;
+
+let tx_parse_and_check_hash raw hash octx = 
+	let raw', tx = Tx.parse (Hex.to_string raw) in
+	match tx with
+	| None -> assert_equal true false
+	| Some (t) -> 
+		assert_equal (t.hash) (hash);
+		assert_equal (Tx.serialize t) (Hex.to_string raw)
+;;
+
 
 let tx_parse_segwit_test raw dest sizes vsize hashes ?prefix:(prefix=(Params.of_network XTN).prefixes) octx =
 	let raw', tx = Tx.parse (Hex.to_string raw) in
@@ -165,6 +174,7 @@ let suite = "bitcoinml" >::: [
 		"1DYwPTpZuLjY2qApmJdHaSAuWRvEF5skCN";
 
 	"tx.parse" 		>:: tx_parse_test (`Hex "01000000017b1eabe0209b1fe794124575ef807057c77ada2138ae4fa8d6c4de0398a14f3f00000000494830450221008949f0cb400094ad2b5eb399d59d01c14d73d8fe6e96df1a7150deb388ab8935022079656090d7f6bac4c9a94e0aad311a4268e082a725f8aeae0573fb12ff866a5f01ffffffff01f0ca052a010000001976a914cbc20a7664f2f69e5355aa427045bc15e7c6c77288ac00000000");
+	"tx.parse2" 		>:: tx_parse_and_check_hash (`Hex "020000000001018123858b74cc156be287dbac5442508483bfe6d9a4165712e5bd0b65a9120a210100000000ffffffff0250c30000000000002200207110c7d8cf7bfa8c93d190d699571c128eac6e922ce0ca3bdf0bc3495109dffc14d606000000000016001499b9280ca4f5eeea13e51770e7a30eb512ed473702483045022100952394943abe1e75d20d4b20622416d0618585bb3266a8122894024a7cfcc6c8022051465780d56717548951fad188fe038f8820c1e054d3a9b90533084cb06625cf012102a3a3756f1e06a4b4764cc3fcf2e804257727e4431b548741f8be057f1628e39900000000") "d80c367ee53355ff52bb818545e73f806965a056d2085771e5c3c994af9f640a";
 	"tx.parse_big" >:: tx_parse_test (`Hex ("0100000001bbbd750cbb2929e03cf7e6dfcfddc8fc507edb7f9edcec0bcde93ad82137c767010000006b4830450221008fbeab67d9a2f5534a8bb9cae029a4e4d0431519e224a115aff9448b6dc987d902206e1123e87c2a6ec2467021326e7dd5cb356483f4d327a585738c5e7c7acdba560121027ad5e81a327971750392e620827774f7c768d1280d4e8dfe8a7b5c5ba3dcddd7ffffffff010000000000000000fe703a0f00" ^ (String.make 1996000 'F') ^ "00000000" ));
 	"tx.parse_witness_P2WPKH" >:: tx_parse_segwit_test 
 		(`Hex "0100000000010115e180dc28a2327e687facc33f10f2a20da717e5548406f7ae8b4c811072f8560100000000ffffffff0100b4f505000000001976a9141d7cd6c75c2e86f4cbf98eaed221b30bd9a0b92888ac02483045022100df7b7e5cda14ddf91290e02ea10786e03eb11ee36ec02dd862fe9a326bbcb7fd02203f5b4496b667e6e281cc654a2da9e4f08660c620a1051337fa8965f727eb19190121038262a6c6cec93c2d3ecd6c6072efea86d02ff8e3328bbd0242b20af3425990ac00000000") 
