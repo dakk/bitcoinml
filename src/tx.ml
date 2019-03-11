@@ -272,7 +272,7 @@ let parse ?(coinbase=false) ?(hex=false) data = match coinbase with
 		flag			: 8 : littleendian;
 		rest			: -1: bitstring
 	|} ->
-		if marker <> 0x00 || flag <> 0x01 then parse_legacy ~coinbase:false data
+		if marker <> 0x00 || flag <> 0x01 then parse_legacy ~coinbase:false ~hex:hex data
 		else 
 			let rest', txin = In.parse_all rest in
 			let rest'', txout = Out.parse_all rest' in

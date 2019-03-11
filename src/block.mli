@@ -12,10 +12,10 @@ module Header : sig
 		nonce		: uint32;
 	}
 
-	val parse 		: string -> t option
+	val parse 		: ?hex:bool -> string -> t option
 	(** Parse a block header *)
 
-	val serialize	: t -> string
+	val serialize	: ?hex:bool -> t -> string
 	(** Serialize a block header *)
 
 	val check_target : t -> bool

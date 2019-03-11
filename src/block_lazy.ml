@@ -9,7 +9,8 @@ type t = {
   size		: int
 };;
 
-let parse data = 
+let parse ?(hex=false) data' = 
+  let data = (if hex then Hex.to_string @@ `Hex data' else data') in
   let header = Block.Header.parse (String.sub data 0 80) in
   match header with
   | None -> None
@@ -21,7 +22,8 @@ let parse data =
 ;;
 
 
-let parse_legacy data =
+let parse_legacy ?(hex=false) data' =
+  let data = (if hex then Hex.to_string @@ `Hex data' else data') in
   let header = Block.Header.parse (String.sub data 0 80) in
   match header with
   | None -> None

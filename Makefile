@@ -13,4 +13,4 @@ coverage : clean
 
 .PHONY : pin
 pin: 
-	opam pin add bitcoinml . -n && opam remove bitcoinml && opam install bitcoinml
+	opam pin add bitcoinml . -n --working-dir && opam remove bitcoinml && opam install bitcoinml --working-dir

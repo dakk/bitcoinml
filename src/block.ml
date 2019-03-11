@@ -15,7 +15,7 @@ module Header = struct
 		nonce		: uint32;
 	};;
 
-	let serialize h =
+	let serialize ?(hex=false) h =
 		let btime = Bytes.create 4 in
 		Uint32.to_bytes_little_endian (Uint32.of_float h.time) btime 0;
 		let bnonce = Bytes.create 4 in
@@ -27,7 +27,9 @@ module Header = struct
 			to_string btime				: 32 : string;
 			Hash.to_bin_norev h.bits			: 32 : string;
 			to_string bnonce				: 32 : string
-		|} in Bitstring.string_of_bitstring bs
+		|} in 
+		let bdata = Bitstring.string_of_bitstring bs in
+		if hex then Hex.of_string bdata |> Hex.show else bdata
 	;;
 
 	let check_target h =
@@ -61,8 +63,9 @@ module Header = struct
 		in check h.hash @@ calc_target h.bits
 	;;
 
-	let parse data =
-		let bdata = bitstring_of_string data in
+	let parse ?(hex=false) data =
+		let data' = (if hex then Hex.to_string @@ `Hex data else data) in
+		let bdata = bitstring_of_string data' in
 		match%bitstring bdata with
 		| {|
 			version 	: 4*8 : littleendian;
@@ -72,7 +75,7 @@ module Header = struct
 			bits		: 32 : string;
 			nonce		: 32 : string
 		|} ->
-			let hash = Hash.of_bin (hash256 data) in
+			let hash = Hash.of_bin (hash256 data') in
 			Some ({
 				hash			= hash;
 				version			= version;
