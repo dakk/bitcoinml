@@ -262,7 +262,7 @@ let parse_legacy ?(coinbase=false) ?(hex=false) data =
 ;;
 
 let parse ?(coinbase=false) ?(hex=false) data = match coinbase with
-| true -> parse_legacy ~coinbase:true data
+| true -> parse_legacy ~coinbase:true ~hex:hex data
 | false -> 
 	let bdata = bitstring_of_string (if hex then Hex.to_string @@ `Hex data else data) in
 	match%bitstring bdata with
