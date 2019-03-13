@@ -1,3 +1,5 @@
+(** Block serialization and parsing module *)
+
 open Stdint
 
 (** Block header parsing / serialization module *)
@@ -13,13 +15,15 @@ module Header : sig
 	}
 
 	val parse 		: ?hex:bool -> string -> t option
-	(** Parse a block header *)
+	(** [parse ~hex:bool data] parses the [data] and returns a [t] option; [data] could be
+			a binary data, or an hex human readable string if [~hex] is true *)
 
 	val serialize	: ?hex:bool -> t -> string
-	(** Serialize a block header *)
+	(** [serialize ~hex:bool header] serializes a block [header] and returns a binary string
+			or an hex human readable string if [~hex] is true *)
 
 	val check_target : t -> bool
-	(** Check the nbits / hash target *)
+	(** [check_target header] checks the nbits / hash target *)
 end
 
 type t = {
@@ -30,13 +34,15 @@ type t = {
 
 
 val parse					: ?hex:bool -> string -> t option
-(** Parse a block *)
+(** [parse ~hex:bool data] parses the [data] and returns a [t] option; [data] could be
+    a binary data, or an hex human readable string if [~hex] is true *)
 
 val parse_legacy	: ?hex:bool -> string -> t option
-(** Parse a legacy block *)
+(** [parse_legacy ~hex:bool data]; same as [parse] but disable segwit *)	
 
 val serialize			: ?hex:bool -> t -> string
-(** Serialize a block *)
+(** [serialize ~hex:bool block] serializes a block [block] and returns a binary string
+		or an hex human readable string if [~hex] is true *)
 
 
 

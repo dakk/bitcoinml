@@ -1,3 +1,4 @@
+(** Script is a forth-like language used in Bitcoin transactions *)
 type data = string
 
 
@@ -135,16 +136,33 @@ type opcode =
 
 	
 val opcode_to_hex       : opcode -> int list
+(** [opcode_to_hex op] transform an opcode to binary as [int list] *)
+
 val opcode_of_hex       : string -> opcode * string
+(** [opcode_of_hex s] parse [s] and return the opcode plus the rest string *)
 
 type t = opcode list * int
+(** Script.t defined as a list of opcodes *)
 
 val empty								: t
+(** [empty] returns an empty script *)
+
 val length              : t -> int
+(** [length s] returns the length of [s] *)
+
 val serialize           : t -> string
+(** [serialize s] serializes the script [s] and returns binary data *)
+
 val join								: t -> t -> t
+(** [join s1 s2] joins script [s1] with [s2] *)
+
 val parse               : string -> t
+(** [parse data] parses binary data and returns the script *)
+
 val parse_coinbase      : string -> t
+(** [parse_coinbase data] parses coinbase script *)
+
 val of_opcodes					: opcode list -> t
+(** [of_opcodes ops] returns the script of a list [ops] of opcodes *)
 
 
