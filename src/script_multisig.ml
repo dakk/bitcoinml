@@ -17,7 +17,7 @@ module Output = struct
 
   let check v = true;;
   
-  let encode v = Script.of_opcodes [ OP_CHECKMULTISIG];;
+  let encode v = Script.of_opcodes [ OP_CHECKMULTISIG ];;
 
   let decode s = {
     m= 0;
