@@ -41,7 +41,8 @@ You can find some examples in the test files.
 
 - Block: https://github.com/dakk/bitcoinml/blob/master/test/block_test.ml
 - Address: https://github.com/dakk/bitcoinml/blob/master/test/address_test.ml
-- Transaction: https://github.com/dakk/bitcoinml/blob/master/test/transaction_test.ml
+- Transaction: https://github.com/dakk/bitcoinml/blob/master/test/tx_test.ml
+- Proto: https://github.com/dakk/bitcoinml/blob/master/test/proto_test.ml
 - Other: https://github.com/dakk/bitcoinml/blob/master/test/test_test.ml
 
 

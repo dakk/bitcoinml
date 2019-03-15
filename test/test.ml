@@ -22,10 +22,10 @@ let varint_serialize_test bl res octx =
 ;;
 
 
-let suite = "bitcoinml" >::: Address_test.tlist @ Block_test.tlist @ Transaction_test.tlist @ [
-	"base58.encode_check" 	>:: base58_encode_check_test;	
-	"varint.parse" 			>:: varint_parse_test (`Hex "16") 0x16;
-	"varint.parse2" 		>:: varint_parse_test (`Hex "FE32323232") 0x32323232;
+let suite = "bitcoinml" >::: Address_test.tlist @ Block_test.tlist @ Tx_test.tlist @ Proto_test.tlist @ [
+	"base58.encode_check"	>:: base58_encode_check_test;	
+	"varint.parse" 				>:: varint_parse_test (`Hex "16") 0x16;
+	"varint.parse2" 			>:: varint_parse_test (`Hex "FE32323232") 0x32323232;
 	(*"varint.parse3" 		>:: varint_parse_test (`Hex "FF3232323232323232") 0x3232323232323232;*)
 	"varint.serialize"		>:: varint_serialize_test (`Hex "16") 0x16;
 	"varint.serialize2" 	>:: varint_serialize_test (`Hex "FE32323232") 0x32323232;
