@@ -40,6 +40,10 @@ lib: [
   "_build/install/default/lib/bitcoinml/bitcoinml__Params.cmt" {"bitcoinml__Params.cmt"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Params.cmti" {"bitcoinml__Params.cmti"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Params.cmx" {"bitcoinml__Params.cmx"}
+  "_build/install/default/lib/bitcoinml/bitcoinml__Proto.cmi" {"bitcoinml__Proto.cmi"}
+  "_build/install/default/lib/bitcoinml/bitcoinml__Proto.cmt" {"bitcoinml__Proto.cmt"}
+  "_build/install/default/lib/bitcoinml/bitcoinml__Proto.cmti" {"bitcoinml__Proto.cmti"}
+  "_build/install/default/lib/bitcoinml/bitcoinml__Proto.cmx" {"bitcoinml__Proto.cmx"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmi" {"bitcoinml__Script.cmi"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmt" {"bitcoinml__Script.cmt"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Script.cmti" {"bitcoinml__Script.cmti"}
@@ -92,6 +96,8 @@ lib: [
   "_build/install/default/lib/bitcoinml/opam" {"opam"}
   "_build/install/default/lib/bitcoinml/params.ml" {"params.ml"}
   "_build/install/default/lib/bitcoinml/params.mli" {"params.mli"}
+  "_build/install/default/lib/bitcoinml/proto.ml" {"proto.ml"}
+  "_build/install/default/lib/bitcoinml/proto.mli" {"proto.mli"}
   "_build/install/default/lib/bitcoinml/script.ml" {"script.ml"}
   "_build/install/default/lib/bitcoinml/script.mli" {"script.mli"}
   "_build/install/default/lib/bitcoinml/script_multisig.ml" {"script_multisig.ml"}
