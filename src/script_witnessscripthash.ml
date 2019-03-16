@@ -10,6 +10,7 @@ end
 
 module Output = struct 
   type t = string;;
+  let name = "p2wsh";;
 
   let check s = 
     match fst s with
@@ -29,9 +30,4 @@ module Output = struct
 end
 
 
-(*
-module Script_witnessscripthash = Script_template.Make_template
-  (Input)
-  (Output)  
-;;
-*)
+module Script_witnessscripthash = Script_template.Make_template (Input) (Output);;

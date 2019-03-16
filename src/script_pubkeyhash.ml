@@ -29,6 +29,7 @@ end
 
 module Output = struct 
   type t = string;;
+  let name = "p2pkh";;
 
   let check s = 
     match fst s with
@@ -49,9 +50,5 @@ module Output = struct
   let spendable_by s prefix = decode s |> Address.of_pubhash prefix.pubkeyhash;; 
 end
 
-(*
-module Script_pubkeyhash = Script_template.Make_template
-  (Input)
-  (Output)  
-;;
-*)
+
+module Script_pubkeyhash = Script_template.Make_template (Input) (Output);;

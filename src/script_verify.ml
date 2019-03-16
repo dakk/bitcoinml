@@ -287,3 +287,20 @@ let spendable_by src prefix =
         if M.check src then Some (M.spendable_by src prefix) else icheck ml
     in icheck ml
 ;;
+
+
+let classify_output src =
+    let ml = [
+        (module Script_pubkeyhash.Output: Script_template.Output);
+        (module Script_pubkey.Output: Script_template.Output);
+        (module Script_scripthash.Output: Script_template.Output);
+        (module Script_multisig.Output: Script_template.Output);
+        (module Script_witnessscripthash.Output: Script_template.Output);
+        (module Script_witnesspubkeyhash.Output: Script_template.Output)
+    ] in
+    let rec icheck l = match l with
+    | [] -> ""
+    | (module M: Script_template.Output) :: ml -> 
+        if M.check src then M.name else icheck ml
+    in icheck ml
+;;

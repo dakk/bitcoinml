@@ -14,6 +14,7 @@ module Output = struct
     m: int;
     pubkeys: string list;
   };;
+  let name = "p2ms";;
 
   let check v = true;;
   
@@ -28,9 +29,4 @@ module Output = struct
 end
 
 
-(*
-module Script_multisig = Script_template.Make_template
-  (Input)
-  (Output)
-;;
-*)
+module Script_multisig = Script_template.Make_template (Script_template.EmptyInput) (Output);;

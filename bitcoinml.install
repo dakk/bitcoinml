@@ -70,6 +70,9 @@ lib: [
   "_build/install/default/lib/bitcoinml/bitcoinml__Script_verify.cmt" {"bitcoinml__Script_verify.cmt"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Script_verify.cmti" {"bitcoinml__Script_verify.cmti"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Script_verify.cmx" {"bitcoinml__Script_verify.cmx"}
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_witnesscommitment.cmi" {"bitcoinml__Script_witnesscommitment.cmi"}
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_witnesscommitment.cmt" {"bitcoinml__Script_witnesscommitment.cmt"}
+  "_build/install/default/lib/bitcoinml/bitcoinml__Script_witnesscommitment.cmx" {"bitcoinml__Script_witnesscommitment.cmx"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Script_witnesspubkeyhash.cmi" {"bitcoinml__Script_witnesspubkeyhash.cmi"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Script_witnesspubkeyhash.cmt" {"bitcoinml__Script_witnesspubkeyhash.cmt"}
   "_build/install/default/lib/bitcoinml/bitcoinml__Script_witnesspubkeyhash.cmx" {"bitcoinml__Script_witnesspubkeyhash.cmx"}
@@ -108,6 +111,7 @@ lib: [
   "_build/install/default/lib/bitcoinml/script_template.ml" {"script_template.ml"}
   "_build/install/default/lib/bitcoinml/script_verify.ml" {"script_verify.ml"}
   "_build/install/default/lib/bitcoinml/script_verify.mli" {"script_verify.mli"}
+  "_build/install/default/lib/bitcoinml/script_witnesscommitment.ml" {"script_witnesscommitment.ml"}
   "_build/install/default/lib/bitcoinml/script_witnesspubkeyhash.ml" {"script_witnesspubkeyhash.ml"}
   "_build/install/default/lib/bitcoinml/script_witnessscripthash.ml" {"script_witnessscripthash.ml"}
   "_build/install/default/lib/bitcoinml/tx.ml" {"tx.ml"}

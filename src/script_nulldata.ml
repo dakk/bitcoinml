@@ -1,7 +1,10 @@
 open Script;;
 
+module Input = Script_template.EmptyInput;;
+
 module Output = struct 
   type t = Script.data;;
+  let name = "nulldata";;
 
   let check s = 
     match fst s with
@@ -20,9 +23,5 @@ module Output = struct
   let spendable_by s prefix = "";;
 end
 
-(*
-module Script_nulldata = Script_template.Make_template
-  (Input)
-  (Output)
-;;
-*)
+
+module Script_nulldata = Script_template.Make_template (Input) (Output);;

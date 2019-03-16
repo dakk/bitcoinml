@@ -11,6 +11,7 @@ end
 
 module Output = struct 
   type t = string;;
+  let name = "p2wpkh";;
 
   let check s = 
     match fst s with
@@ -29,9 +30,4 @@ module Output = struct
   let spendable_by s prefix = decode s |> Address.of_witness prefix.hrp 0x00;; 
 end
 
-(*
-module Script_witnesspubkeyhash = Script_template.Make_template
-  (Input)
-  (Output)  
-;;
-*)
+module Script_witnesspubkeyhash = Script_template.Make_template (Input) (Output);;

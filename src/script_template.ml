@@ -1,6 +1,16 @@
+
+module EmptyInput = struct 
+  type t = string;;
+  let check v = false;;
+  let encode v = Script.empty;;
+  let decode v = "";;
+end
+
+
 module type Output = sig
   type t 
 
+  val name: string
   val encode: t -> Script.t
   val decode: Script.t -> t
   val check: Script.t -> bool
@@ -15,13 +25,11 @@ module type Input = sig
   val check: Script.t -> bool
 end
 
-(*
+
 module Make_template (ITemplate: Input) (OTemplate: Output) = struct 
   type t_inp = ITemplate;;
   type t_out = OTemplate;;
 
-  let check_input s = ITemplate.check s;;
-  let check_output s = OTemplate.check s;;
-  let spendable_by s = OTemplate.spendable_by s;;
+  let input = ITemplate;;
+  let output = OTemplate;;
 end
-*)

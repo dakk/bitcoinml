@@ -25,3 +25,7 @@ val is_spendable        : Script.t -> bool
 val spendable_by        : Script.t -> Address.prefix -> string option
 (** [spendable_by s prefix] returns the address (using [prefix]) which is able to
 		spend the given script *)
+
+
+val classify_output		: Script.t -> string
+(** [classify_output s] returns the template name of the output script [s] if any *)
