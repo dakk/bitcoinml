@@ -55,7 +55,6 @@ module In = struct
 					| true -> Script.parse_coinbase script
 					| false -> Script.parse script
 				in
-
 				(rest', Some ({
 					out_hash= Hash.of_bin out_hash;
 					out_n= Uint32.of_int32 out_n;
