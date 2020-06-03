@@ -49,7 +49,7 @@ You can find some examples in the test files.
 ## License
 
 ```
-Copyright (c) 2016-2019 Davide Gessa
+Copyright (c) 2016-2020 Davide Gessa
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
